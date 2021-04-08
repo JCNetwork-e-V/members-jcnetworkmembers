@@ -1,0 +1,44 @@
+# YAML für Anthony <3
+spring:
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      file-size-threshold: 3KB
+      max-file-size: 2MB
+      max-request-size: 20MB
+      resolve-lazily: true
+  sendgrid:
+    api-key: ENC(ctVZdtruYY5dlD2J28yHlyKCw6l1lvEriBF5Q6wNNQpkLXjrfGPgBYoo3I2VVsarrrN+g0s7dM+h/mnM3yKqETHGFZtwLpx7/6a9cSMsWR0=)
+
+# Security and authentication settings
+security:
+  # A comma seperated list of paths that are whitelisted and don't require authentication
+  whitelistedUrls: /test,/signup,/logoutSuccess,/passwordForgotten,/plugins/**,/custom/**,/images/**,/build/**,/webjars/**
+  api:
+    # Lifetime of bearer tokens for API usage in minutes
+    tokenLifetime: 60
+    tokenSigningKey: blub68b74qb9n038v67n98qa4nmq46b0nq3846nb9q38467q3467nq34896 #TODO real key and ENCRYPTED!!!
+  logoutRedirect: /logoutSuccess
+
+# Mail properties
+mail:
+  from: support@jcnetwork.de
+  name: JCNetowrk Members Support
+  
+# Centralized logging platform
+sentry:
+  dsn: ENC(FNs8U2NecIvjaa5zpSMwUpes9AidH1TG1kHiTSZxPDVHekV3jOn496cFNwl+k5v9Olaphd7BroYkgitI0QweJvw48u3oBGFvRbfSc5e0tH+TKxVSTlSZZQ==)
+
+# Azure AD integration properties
+azure:
+  activedirectory:
+    tenant-id: 1df44b8c-a3e8-4df1-81c7-8a8f417aa519
+    client-id: b1cec55c-00cd-4908-a31d-b3b6f8c4adec
+    client-secret: ENC(+SA18ReVHTNJNgrY3jMQU77MKANaAhFI6oAFtwV0LbUi2DaSoZHgk7Gr5ZfNl2sS)
+    logout-url: https://login.microsoftonline.com/{TENANT-ID}/oauth2/logout?post_logout_redirect_uri=
+    authorization-clients:
+      graph:
+        scopes:
+          - https://graph.microsoft.com/User.Read
+          - https://graph.microsoft.com/Directory.AccessAsUser.All

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nutzerdaten vervollständigen | JCNetwork Members</title>
+
+    <!-- Base Stylesheets -->
+    <div th:replace="fragments/base :: stylesheets"></div>
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="/plugins/bs-stepper/css/bs-stepper.css">
+    <!-- Croppie -->
+    <link rel="stylesheet" href="/plugins/croppie/css/croppie.css">
+</head>
+<body class="registration-page">
+
+<div class="registration-box">
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <h2 class="card-title">Bitte vervollständige deine Profilinformationen, um fortfahren zu können.</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="bs-stepper">
+                <div class="bs-stepper-header" role="tablist">
+                    <!-- Steps -->
+                    <div class="step" data-target="#personal-info">
+                        <button type="button" class="step-trigger" role="tab" aria-controls="personal-info" id="personal-info-trigger">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">Persönliche<br> Informationen</span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#profile-picture">
+                        <button type="button" class="step-trigger" role="tab" aria-controls="profile-picture" id="profile-picture-trigger">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">Profilbild</span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#additional-info">
+                        <button type="button" class="step-trigger" role="tab" aria-controls="additional-info" id="additional-info-trigger">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">Zusätzliche<br> Informationen</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bs-stepper-content">
+                    <form th:action="@{/userRegistration}" th:object="${userDetails}" method="post" enctype="multipart/form-data">
+                        <!-- Steps content -->
+                        <div id="personal-info" class="content" role="tabpanel" aria-labelledby="personal-info-trigger">
+                            <div class="form-group">
+                                <label for="firstNameInput">Vorname</label>
+                                <input type="text" class="form-control" th:field="*{firstName}" id="firstNameInput" placeholder="Vorname">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastNameInput">Nachname</label>
+                                <input type="text" class="form-control" th:field="*{lastName}" id="lastNameInput" placeholder="Nachname" accept="image/*">
+
+                            </div>
+                            <a class="btn btn-jcnetwork" onclick="stepper.next()">Weiter</a>
+                        </div>
+
+                        <div id="profile-picture" class="content" role="tabpanel" aria-labelledby="profile-picture-trigger">
+                            <div class="form-group">
+                                <label for="profilePictureFile">Profilbild</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input"  id="profilePictureFile">
+                                        <label class="custom-file-label" for="profilePictureFile" id="profilePictureLabel">Wähle Datei</label>
+                                    </div>
+                                </div>
+
+                                <div class="profile-picture-crop-container" id="profilePictureCropContainer">
+                                    <div id="uploadProfilePicture"></div>
+                                    <input type="hidden" th:field="*{profilePictureBase64}" id="croppedProfilePictureField">
+                                </div>
+
+                            </div>
+
+                            <a class="btn btn-jcnetwork" onclick="stepper.previous()">Zurück</a>
+                            <a class="btn btn-jcnetwork" id="cropNext">Weiter</a>
+                        </div>
+
+                        <div id="additional-info" class="content" role="tabpanel" aria-labelledby="additional-info-trigger">
+                            <div class="form-group">
+                                <label for="privateMailInput">Private E-Mail</label>
+                                <input type="email" class="form-control" th:field="*{privateMail}" id="privateMailInput" placeholder="E-Mail">
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumberInput">Telefonnummer</label>
+                                <input type="text" class="form-control" th:field="*{phoneNumber}" id="phoneNumberInput" placeholder="Telefonnummer">
+                            </div>
+                            <a class="btn btn-jcnetwork" onclick="stepper.previous()">Zurück</a>
+                            <button type="submit" class="btn btn-jcnetwork">Bestätigen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+
+<!-- Base Scripts -->
+<div th:replace="fragments/base :: scripts"></div>
+<!-- BS-Stepper -->
+<script src="/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<!-- Croppie -->
+<script src="/plugins/croppie/js/croppie.min.js"></script>
+
+<script>
+    // BS-Stepper init
+    document.addEventListener('DOMContentLoaded', function () {
+        window.stepper = new Stepper(document.querySelector('.bs-stepper'), {
+            linear: false,
+            animation: true,
+        })
+    });
+
+    // Profile picture upload path
+    document.getElementById('profilePictureFile').onchange = function () {
+        document.getElementById('profilePictureLabel').innerHTML = this.value.replace(/.*[\/\\]/, '');
+    };
+
+    // Croppie implementation
+    $(function() {
+        var $profilePictureCrop;
+
+        function readFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#profilePictureCropContainer').addClass('ready');
+                    $profilePictureCrop.croppie('bind', {
+                        url: e.target.result
+                    });
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                swal("Dein Browser unterstützt leider nicht die FileReader API");
+            }
+        }
+
+        $profilePictureCrop = $('#uploadProfilePicture').croppie({
+            viewport: {
+                width: 200,
+                height: 200,
+                type: 'circle'
+            },
+        });
+
+        $('#profilePictureFile').on('change', function () {
+            readFile(this);
+        });
+        $('#cropNext').on('click', function (ev) {
+            $profilePictureCrop.croppie('result', {
+                type: 'base64',
+                size: 'viewport'
+            }).then(function (resp) {
+                $('#croppedProfilePictureField').val(resp);
+                stepper.next();
+            });
+        });
+    });
+
+    // Prevent submition by hitting enter key
+    $(document).ready(function() {
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

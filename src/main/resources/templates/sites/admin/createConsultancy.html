@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainLayout.html}">
+<head>
+    <title>Verein anlegen | JCNetwork Members</title>
+</head>
+<body>
+<div layout:fragment="mainContent" class="container-fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lege einen neuen Verein an und versende die Zugangsdaten.</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <form th:action="@{/admin/createConsultancy}" th:object="${consultancy}" method="post">
+                        <div class="form-group">
+                            <label for="inputName">Vereinsname</label>
+                            <input type="text" id="inputName" class="form-control" th:field="*{name}">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputCity">Stadt</label>
+                            <input type="text" id="inputCity" class="form-control" th:field="*{city}">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDomain">Domain</label>
+                            <input type="text" id="inputDomain" class="form-control" th:field="*{domain}">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputMail">E-Mail Adresse des Vorstandes/Verantwortlichen</label>
+                            <input type="email" id="inputMail" class="form-control" th:field="*{mail}">
+                        </div>
+                        <button type="submit" class="btn btn-jcnetwork">Verein anlegen</button>
+                    </form>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+</div>
+</body>
+</html>

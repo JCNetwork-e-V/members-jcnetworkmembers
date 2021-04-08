@@ -1,0 +1,3 @@
+mongo:
+  connectionString: #TODO get prod connection
+  databaseName: #TODO get prod db

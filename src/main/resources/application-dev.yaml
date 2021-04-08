@@ -1,0 +1,21 @@
+debug: true
+
+spring:
+  mvc:
+    log-request-details: true
+
+# Server settings
+server:
+  baseUrl: localhost:8080
+  port: 8080
+  ssl:
+    key-store-type: JKS
+    key-store: classpath:self_signed_cert.jks
+    key-password: changeit
+    key-alias: members
+    enabled: false
+
+# MongoDB settings
+mongo:
+  connectionString: mongodb://localhost:27017/members
+  databaseName: members

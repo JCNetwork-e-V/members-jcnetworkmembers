@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/loginAndRegister.html}">
+<head>
+  <title>Login | JCNetwork Members</title>
+</head>
+<body>
+
+<div layout:fragment="form" class="card-body">
+  <p class="login-box-msg">Bitte melde dich an um fortzufahren.</p>
+
+  <form th:action="@{/login}" method="post">
+    <div class="input-group mb-3">
+      <input type="text" name="username" class="form-control" placeholder="Benutzer" required="" />
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <span class="fas fa-envelope"></span>
+        </div>
+      </div>
+    </div>
+    <div class="input-group mb-3">
+      <input type="password" name="password" class="form-control" placeholder="Passwort" required="" />
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <span class="fas fa-lock"></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-7">
+        <div class="icheck-jcnetwork">
+          <input type="checkbox" name="remember-me" id="remember">
+          <label for="remember">
+            Login speichern
+          </label>
+        </div>
+      </div>
+      <!-- /.col -->
+      <div class="col-5">
+        <button type="submit" class="btn btn-jcnetwork btn-block">Anmelden</button>
+      </div>
+      <!-- /.col -->
+    </div>
+  </form>
+
+  <div class="social-auth-links text-center mt-2 mb-3">
+    <a href="/oauth2/authorization/azure" class="btn btn-block btn-jcnetwork">
+      <i class="fab fa-windows mr-2"></i> Mit Vereinsaccount anmelden
+    </a>
+  </div>
+  <!-- /.social-auth-links -->
+
+  <p class="mb-1">
+    <a href="/passwordForgotten">Passwort vergessen?</a>
+  </p>
+  <p class="mb-0">
+    <a href="/signup" class="text-center">Account erstellen</a>
+  </p>
+</div>
+<!-- /.card-body -->
+
+</body>
+</html>

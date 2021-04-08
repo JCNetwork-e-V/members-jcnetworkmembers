@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JCNetwork Members | Lockscreen</title>
+
+  <!-- Base Stylesheets -->
+  <div th:replace="fragments/base :: stylesheets"></div>
+</head>
+<body class="hold-transition lockscreen">
+<!-- Automatic element centering -->
+<div class="lockscreen-wrapper">
+  <div class="lockscreen-logo">
+    <a href="/home">
+      <img class="header-logo" src="/images/Logo_JCNetwork_Members.svg" alt="JCNetwork Members">
+    </a>
+  </div>
+  <!-- User name -->
+  <div class="lockscreen-name" th:text="${userDetails.firstName} + ' ' + ${userDetails.lastName}"></div>
+
+  <!-- START LOCK SCREEN ITEM -->
+  <div class="lockscreen-item">
+    <!-- lockscreen image -->
+    <div class="lockscreen-image">
+      <img th:src="${userDetails.getProfilePictureBase64()}" alt="User Image">
+    </div>
+    <!-- /.lockscreen-image -->
+
+    <!-- lockscreen credentials (contains the form) -->
+    <form th:action="@{/login}" method="post">
+      <div class="input-group">
+        <input type="password" name="password" class="form-control" placeholder="Passwort" required="" />
+        <input type="hidden" name="email" th:field="${}" /> <!-- TODO provide mail if not azure -->
+        <div class="input-group-append">
+          <button type="button" class="btn">
+            <i class="fas fa-arrow-right text-muted"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <!-- /.lockscreen credentials -->
+
+  </div>
+  <!-- /.lockscreen-item -->
+  <div class="help-block text-center">
+    Gib dein Passwort ein, um deine Session wiederherzustellen.
+  </div>
+  <div class="text-center">
+    <a href="/login">Oder melde dich mit einem anderen Account an</a>
+  </div>
+  <div class="lockscreen-footer text-center">
+    Copyright &copy; 2021 <b><a href="https://jcnetwork.de" class="text-black">JCNetwork</a></b>
+  </div>
+</div>
+<!-- /.center -->
+
+<!-- Base Scripts -->
+<div th:replace="fragments/base :: scripts"></div>
+</body>
+</html>

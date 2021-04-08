@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<!-- Sidebar Navigation Elements -->
+<div th:fragment="navItem(navItem)" th:remove="tag">
+
+    <li class="nav-item" th:classappend="${not #lists.isEmpty(navItem.subItems) && navItem.active} ? 'menu-open'">
+
+        <a th:href="${navItem.getLink()}" class="nav-link" th:classappend="${navItem.active} ? 'active'">
+            <i class="nav-icon fas" th:classappend="${navItem.getIcon()}"></i>
+            <p th:inline="text">
+                [[${navItem.getLabel()}]]
+                <i th:if="${not #lists.isEmpty(navItem.subItems)}" class="fas fa-angle-left right"></i>
+            </p>
+        </a>
+
+        <!-- Generate SubNavItems -->
+        <th:block th:if="${not #lists.isEmpty(navItem.subItems)}">
+            <ul class="nav nav-treeview">
+
+            <th:block th:each="subNavItem : ${navItem.subItems}">
+                <div th:replace="fragments/menu :: navItem(navItem = ${subNavItem})"></div>
+            </th:block>
+
+            </ul>
+        </th:block>
+    </li>
+
+</div>
+
+<!-- Content Header -->
+<div th:fragment="contentHeader(contentHeader)" th:remove="tag"></div>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 th:text="*{contentHeader}">Test</h1>
+                </div>
+                <!-- TODO add breadcrum menu -->
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+</div>
+
+</html>

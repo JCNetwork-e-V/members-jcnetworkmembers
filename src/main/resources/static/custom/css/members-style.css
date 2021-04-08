@@ -1,0 +1,63 @@
+.header-logo {
+    width: 100%;
+}
+
+.card-header-logo {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 0px;
+    position: relative;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.registration-page {
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #fff;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    height: 100vh !important;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.registration-box {
+    width: 720px;
+}
+
+.btn-jcnetwork {
+    color: #fff;
+    background-color: rgb(51, 102, 153);
+    border-color: rgb(51, 102, 153);
+    box-shadow: none;
+}
+
+.icheck-jcnetwork > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-jcnetwork > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: rgb(51, 102, 153);
+}
+
+.icheck-jcnetwork > input:first-child:not(:checked):not(:disabled):focus + label::before,
+.icheck-jcnetwork > input:first-child:not(:checked):not(:disabled):focus + input[type="hidden"] + label::before {
+    border-color: rgb(51, 102, 153);
+}
+
+.icheck-jcnetwork > input:first-child:checked + label::before,
+.icheck-jcnetwork > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: rgb(51, 102, 153);
+    border-color: rgb(51, 102, 153);
+}
+
+.profile-picture-crop-container {
+    width: 300px;
+    height: 300px;
+    margin: 40px auto 0 auto;
+    display: none;
+}
+
+.ready {
+    display: block;
+}

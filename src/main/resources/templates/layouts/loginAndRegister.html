@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | JCNetwork Members</title>
+
+    <!-- Base Stylesheets -->
+    <div th:replace="fragments/base :: stylesheets"></div>
+
+</head>
+<body class="hold-transition login-page">
+
+<div class="login-box">
+    <!-- /.login-logo -->
+    <div class="card card-outline card-primary">
+        <div class="card-header-logo text-center">
+            <a href="/home" class="h3">
+                <img class="header-logo" src="/images/Logo_JCNetwork_Members.svg" alt="JCNetwork Members">
+            </a>
+        </div>
+        <div layout:fragment="form" class="card-body"></div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<!-- Base Scripts -->
+<div th:replace="fragments/base :: scripts"></div>
+</body>
+</html>
