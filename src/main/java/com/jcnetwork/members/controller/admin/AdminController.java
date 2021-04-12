@@ -1,6 +1,6 @@
-package com.jcnetwork.members.controller;
+package com.jcnetwork.members.controller.admin;
 
-import com.jcnetwork.members.dto.ConsultancyCreationDto;
+import com.jcnetwork.members.model.dto.ConsultancyCreationDto;
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.UserDetails;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
@@ -60,7 +60,7 @@ public class AdminController {
 
         Optional<Consultancy> consultancyExists = consultancyService.getByName(consultancyCreationDto.getName());
         if (consultancyExists.isPresent()) {
-            // TODO send back to site with message
+            // TODO send back to site with InternalMessage
         } else {
             Consultancy registered = consultancyService.registerNewConsultancy(consultancyCreationDto);
         }

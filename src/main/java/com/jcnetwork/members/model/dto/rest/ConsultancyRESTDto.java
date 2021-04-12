@@ -1,4 +1,4 @@
-package com.jcnetwork.members.model.rest;
+package com.jcnetwork.members.model.dto.rest;
 
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.Department;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ConsultancyRESTModel {
+public class ConsultancyRESTDto {
 
     private String id;
     private String name;
@@ -19,10 +19,10 @@ public class ConsultancyRESTModel {
     private int numberOfMembers;
     private List<Department> departments;
 
-    public ConsultancyRESTModel(Consultancy consultancy) {
+    public ConsultancyRESTDto(Consultancy consultancy) {
         this.id = consultancy.getId();
-        this.name = consultancy.getName();
-        this.city = consultancy.getCity();
+        this.name = consultancy.getConsultancyDetails().getName();
+        this.city = consultancy.getConsultancyDetails().getCity();
         this.numberOfMembers = consultancy.getMembers().size();
         this.departments = consultancy.getDepartments();
     }

@@ -1,5 +1,6 @@
 package com.jcnetwork.members.security.service;
 
+import com.jcnetwork.members.security.model.Account;
 import com.jcnetwork.members.security.model.AccountRole;
 import com.jcnetwork.members.security.model.User;
 import io.jsonwebtoken.Claims;
@@ -18,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class TokenService {
+public class ApiTokenService {
 
     @Value("${security.api.tokenLifetime}")
     private int tokenLifetime;
@@ -64,6 +65,7 @@ public class TokenService {
                 .collect(Collectors.toSet());
 
         User apiUser = new User();
+        apiUser.setAccount(new Account());
         apiUser.getAccount().setUsername(username);
         apiUser.setRoles(roles);
 

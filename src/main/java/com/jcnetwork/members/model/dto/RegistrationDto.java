@@ -1,4 +1,4 @@
-package com.jcnetwork.members.dto;
+package com.jcnetwork.members.model.dto;
 
 import com.jcnetwork.members.security.model.Account;
 import lombok.Getter;

@@ -14,7 +14,7 @@ spring:
 # Security and authentication settings
 security:
   # A comma seperated list of paths that are whitelisted and don't require authentication
-  whitelistedUrls: /test,/signup,/logoutSuccess,/passwordForgotten,/plugins/**,/custom/**,/images/**,/build/**,/webjars/**
+  whitelistedUrls: /test,/signup,/logoutSuccess,/passwordForgotten,/registrationConfirmation,/plugins/**,/custom/**,/images/**,/build/**,/webjars/**
   api:
     # Lifetime of bearer tokens for API usage in minutes
     tokenLifetime: 60

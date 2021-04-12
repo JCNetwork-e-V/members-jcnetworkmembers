@@ -1,7 +1,7 @@
 package com.jcnetwork.members.security.handler;
 
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
 import com.jcnetwork.members.security.model.User;
+import com.jcnetwork.members.security.service.MembersUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -22,36 +21,25 @@ public class UserAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
     private MembersUserDetailsService userDetailsService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication)
+            throws IOException, ServletException {
 
-        HttpSession session = request.getSession();
+        if (!isAccountEnabled(authentication)) request.logout();
+        super.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    private Boolean isAccountEnabled(Authentication authentication){
+
         Object principal = authentication.getPrincipal();
 
-        if(principal instanceof DefaultOidcUser) {
-
-            DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
-            String userMail = oidcUser.getClaim("preferred_username");
-
-            Optional<User> user = userDetailsService.findUserByUsername(userMail);
-            session.setAttribute("user", userMail);
-
-            if(user.isEmpty()) {
-                response.sendRedirect("/userRegistration");
-            } else {
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
-
+        if (principal instanceof DefaultOidcUser) {
+            return true;
         } else {
-            String userMail = authentication.getName();
-
-            Optional<User> user = userDetailsService.findUserByUsername(userMail);
-            session.setAttribute("user", userMail);
-
-            if(user.get().getUserDetails() == null) {
-                response.sendRedirect("/userRegistration");
-            } else {
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
+            Optional<User> user = userDetailsService.findUserByUsername(authentication.getName());
+            return user.get().getAccount().getIsAccountEnabled();
         }
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jcnetwork.members.security.AccountDetails;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.MembersUserDetailsService;
-import com.jcnetwork.members.security.service.TokenService;
+import com.jcnetwork.members.security.service.ApiTokenService;
 import com.jcnetwork.members.security.model.JwtRequest;
 import com.jcnetwork.members.security.model.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class LoginRESTController {
     private MembersUserDetailsService userDetailsService;
 
     @Autowired
-    private TokenService tokenService;
+    private ApiTokenService apiTokenService;
 
     @PostMapping("/generateToken")
     public ResponseEntity generateToken(@RequestBody JwtRequest authenticationRequest) throws JsonProcessingException {
@@ -41,7 +41,7 @@ public class LoginRESTController {
 
         final Optional<User> apiUser = userDetailsService.findUserByUsername(
                 authenticationRequest.getUsername());
-        final String token = tokenService.generateToken(apiUser.get());
+        final String token = apiTokenService.generateToken(apiUser.get());
 
         return ResponseEntity.ok(new JwtResponse(token));
     }

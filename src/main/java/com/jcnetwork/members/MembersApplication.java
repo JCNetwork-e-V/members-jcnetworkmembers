@@ -10,8 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableEncryptableProperties
-@SpringBootApplication
 @EnableMongoRepositories(basePackages = "com.jcnetwork.members.repository")
+@SpringBootApplication
 public class MembersApplication {
 
 	public static void main(String[] args) {

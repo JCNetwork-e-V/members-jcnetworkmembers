@@ -1,8 +1,9 @@
 package com.jcnetwork.members.controller;
 
-import com.jcnetwork.members.model.data.UserDetails;
-import com.jcnetwork.members.service.MailService;
-import com.jcnetwork.members.utils.ControllerUtils;
+import com.jcnetwork.members.model.InternalMessage;
+import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.service.ConsultancyService;
+import com.jcnetwork.members.service.InternalMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,27 +15,20 @@ import org.springframework.web.servlet.ModelAndView;
 public class TestController {
 
     @Autowired
-    private ControllerUtils utils;
+    private ConsultancyService consultancyService;
 
     @Autowired
-    private MailService mailService;
+    private InternalMessageService messageService;
 
     @GetMapping("/test")
-    public ModelAndView test() {
-        ModelAndView modelAndView = new ModelAndView();
+    public String test() {
 
+        Consultancy consultancy = consultancyService.getByName("testverein").get();
+        InternalMessage message = new InternalMessage(consultancy, consultancy, "TextNachricht", "Dies ist nur eine Testnachricht. Blablabla");
+        messageService.sendMessage(message);
+
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/");
-        return modelAndView;
-    }
-
-    @GetMapping("/home")
-    public ModelAndView getUserRegistrationForm() {
-
-        UserDetails userDetails = utils.getUserDetailsFromContext();
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("userDetails", userDetails);
-        modelAndView.setViewName("mainLayout");
-        return modelAndView;
+        return "test";
     }
 }

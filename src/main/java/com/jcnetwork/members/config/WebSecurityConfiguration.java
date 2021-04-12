@@ -4,7 +4,7 @@ import com.jcnetwork.members.filter.JwtAuthenticationFilter;
 import com.jcnetwork.members.security.handler.UserAuthenticationSuccessHandler;
 import com.jcnetwork.members.security.handler.UserLogoutSuccessHandler;
 import com.jcnetwork.members.security.service.MembersUserDetailsService;
-import com.jcnetwork.members.security.service.TokenService;
+import com.jcnetwork.members.security.service.ApiTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,10 +41,10 @@ public class WebSecurityConfiguration {
     @Order(1)
     public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
-        private final TokenService tokenService;
+        private final ApiTokenService apiTokenService;
 
-        public ApiWebSecurityConfigurationAdapter(TokenService tokenService) {
-            this.tokenService = tokenService;
+        public ApiWebSecurityConfigurationAdapter(ApiTokenService apiTokenService) {
+            this.apiTokenService = apiTokenService;
         }
 
         @Autowired
@@ -73,13 +73,13 @@ public class WebSecurityConfiguration {
             http
                     .mvcMatcher("/api/**")
                     .csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                    //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    //.and() TODO find out if making api stateful has any negative consequences
                         .authorizeRequests()
                             .mvcMatchers("/api/generateToken").permitAll()
                             .mvcMatchers("/api/**").authenticated()
                     .and()
-                        .addFilterBefore(new JwtAuthenticationFilter(tokenService),
+                        .addFilterBefore(new JwtAuthenticationFilter(apiTokenService),
                             UsernamePasswordAuthenticationFilter.class);
         }
     }
@@ -125,10 +125,10 @@ public class WebSecurityConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
 
             http
-                    .csrf().disable()
-                        .authorizeRequests()
-                            .antMatchers(whitelistedUrls).permitAll()
-                            .anyRequest().authenticated()
+                    .authorizeRequests()
+                        .antMatchers(whitelistedUrls).permitAll()
+                        .antMatchers("/consultancyRegistration").hasRole("CONSULTANCY_ADMIN")
+                        .anyRequest().authenticated()
                     .and()
                         .formLogin()
                             .loginPage("/login")

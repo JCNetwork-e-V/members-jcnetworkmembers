@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainLayout.html}">
+<head>
+    <title>Nachrichten | JCNetwork Members</title>
+</head>
+<body>
+<div layout:fragment="mainContent">
+
+    <div th:replace="fragments/mailbox :: mailbox"></div>
+
+</div>
+
+<!-- Page scripts -->
+<th:block layout:fragment="script">
+
+   <th:block th:replace="fragments/mailbox :: mailbox-scripts"></th:block>
+
+</th:block>
+
+</body>
+</html>

@@ -11,22 +11,14 @@ import java.util.List;
 @Document
 public class Consultancy extends MongoDocument{
 
-    @NonNull
-    private String name;
-    @NonNull
-    private String city;
-    private String domain;
-    private String profilePictureBase64;
+    private ConsultancyDetails consultancyDetails;
 
     private List<Department> departments = new ArrayList<>();
     private List<Member> members = new ArrayList<>();
 
     private Boolean enabled;
 
-    public Consultancy(String name, String city, String domain) {
-        this.name = name;
-        this.city = city;
-        this.domain = domain;
+    public Consultancy() {
         this.enabled = false;
     }
 }

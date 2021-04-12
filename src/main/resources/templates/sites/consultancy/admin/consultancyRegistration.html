@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Nutzerdaten vervollständigen | JCNetwork Members</title>
+    <title>Vereinsdaten vervollständigen | JCNetwork Members</title>
 
     <!-- Base Stylesheets -->
     <div th:replace="fragments/base :: stylesheets"></div>
@@ -19,7 +19,7 @@
 <div class="registration-box">
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
-            <h2 class="card-title">Bitte vervollständige deine Profilinformationen, um fortfahren zu können.</h2>
+            <h2 class="card-title">Bitte vervollständige eure Vereinsinformationen, um fortfahren zu können.</h2>
         </div>
         <div class="card-body p-0">
             <div class="bs-stepper">
@@ -28,14 +28,14 @@
                     <div class="step" data-target="#personal-info">
                         <button type="button" class="step-trigger" role="tab" aria-controls="personal-info" id="personal-info-trigger">
                             <span class="bs-stepper-circle">1</span>
-                            <span class="bs-stepper-label">Persönliche<br> Informationen</span>
+                            <span class="bs-stepper-label">Allgemeine<br> Informationen</span>
                         </button>
                     </div>
                     <div class="line"></div>
                     <div class="step" data-target="#profile-picture">
                         <button type="button" class="step-trigger" role="tab" aria-controls="profile-picture" id="profile-picture-trigger">
                             <span class="bs-stepper-circle">2</span>
-                            <span class="bs-stepper-label">Profilbild</span>
+                            <span class="bs-stepper-label">Vereinsicon</span>
                         </button>
                     </div>
                     <div class="line"></div>
@@ -47,24 +47,23 @@
                     </div>
                 </div>
                 <div class="bs-stepper-content">
-                    <form th:action="@{/userRegistration}" th:object="${userDetails}" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/consultancyRegistration}" th:object="${consultancyDetails}" method="post" enctype="multipart/form-data">
                         <!-- Steps content -->
                         <div id="personal-info" class="content" role="tabpanel" aria-labelledby="personal-info-trigger">
                             <div class="form-group">
-                                <label for="firstNameInput">Vorname</label>
-                                <input type="text" class="form-control" th:field="*{firstName}" id="firstNameInput" placeholder="Vorname">
+                                <label for="cityInput">Stadt</label>
+                                <input type="text" class="form-control" th:field="*{city}" id="cityInput" placeholder="Nachname">
                             </div>
                             <div class="form-group">
-                                <label for="lastNameInput">Nachname</label>
-                                <input type="text" class="form-control" th:field="*{lastName}" id="lastNameInput" placeholder="Nachname">
-
+                                <label for="domainInput">Domain</label>
+                                <input type="text" class="form-control" th:field="*{domain}" id="domainInput" placeholder="vereinsdomain.de">
                             </div>
                             <a class="btn btn-jcnetwork" onclick="stepper.next()">Weiter</a>
                         </div>
 
                         <div id="profile-picture" class="content" role="tabpanel" aria-labelledby="profile-picture-trigger">
                             <div class="form-group">
-                                <label for="profilePictureFile">Profilbild</label>
+                                <label for="profilePictureFile">Vereinsicon</label>
                                 <div class="input-group">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input"  id="profilePictureFile" accept="image/*">
@@ -74,7 +73,7 @@
 
                                 <div class="profile-picture-crop-container" id="profilePictureCropContainer">
                                     <div id="uploadProfilePicture"></div>
-                                    <input type="hidden" th:field="*{profilePictureBase64}" id="croppedProfilePictureField">
+                                    <input type="hidden" th:field="*{iconBase64}" id="croppedProfilePictureField">
                                 </div>
 
                             </div>
@@ -85,14 +84,15 @@
 
                         <div id="additional-info" class="content" role="tabpanel" aria-labelledby="additional-info-trigger">
                             <div class="form-group">
-                                <label for="privateMailInput">Private E-Mail</label>
-                                <input type="email" class="form-control" th:field="*{privateMail}" id="privateMailInput" placeholder="E-Mail">
+                                <label for="primaryColorInput">Primärfarbe</label>
+                                <input type="text" class="form-control" th:field="*{primaryColour}" id="primaryColorInput" placeholder="#000000 oder rgb(0,0,0)" data-jscolor="">
                             </div>
                             <div class="form-group">
-                                <label for="phoneNumberInput">Telefonnummer</label>
-                                <input type="text" class="form-control" th:field="*{phoneNumber}" id="phoneNumberInput" placeholder="Telefonnummer">
+                                <label for="secondaryColorInput">Sekundärfarbe</label>
+                                <input type="text" class="form-control" th:field="*{secondaryColour}" id="secondaryColorInput" placeholder="#000000 oder rgb(0,0,0)" data-jscolor="">
                             </div>
                             <a class="btn btn-jcnetwork" onclick="stepper.previous()">Zurück</a>
+                            <input type="hidden" th:field="*{name}">
                             <button type="submit" class="btn btn-jcnetwork">Bestätigen</button>
                         </div>
                     </form>
@@ -110,6 +110,15 @@
 <script src="/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 <!-- Croppie -->
 <script src="/plugins/croppie/js/croppie.min.js"></script>
+<!-- JSColor -->
+<script src="/plugins/jscolor/jscolor.js"></script>
+
+<script>
+    jscolor.presets.default = {
+        alphaChannel:false, borderWidth:0, borderRadius:3, padding:6,
+        shadowBlur:4
+    };
+</script>
 
 <script>
     // BS-Stepper init

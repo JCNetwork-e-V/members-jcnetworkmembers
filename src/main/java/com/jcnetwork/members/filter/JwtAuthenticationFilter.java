@@ -1,9 +1,10 @@
 package com.jcnetwork.members.filter;
 
 import com.jcnetwork.members.security.model.User;
-import com.jcnetwork.members.security.service.TokenService;
+import com.jcnetwork.members.security.service.ApiTokenService;
 import com.jcnetwork.members.security.model.AccountRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +22,10 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final TokenService tokenService;
+    private final ApiTokenService apiTokenService;
 
-    public JwtAuthenticationFilter(TokenService tokenService) {
-        this.tokenService = tokenService;
+    public JwtAuthenticationFilter(ApiTokenService apiTokenService) {
+        this.apiTokenService = apiTokenService;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeaderIsInvalit(authorizationHeader)) {
+        if (authorizationHeaderIsInvalid(authorizationHeader)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,14 +47,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean authorizationHeaderIsInvalit(String authorizationHeader) {
+    private boolean authorizationHeaderIsInvalid(String authorizationHeader) {
         return authorizationHeader == null || !authorizationHeader.startsWith("Bearer ");
     }
 
     private UsernamePasswordAuthenticationToken createToken(String authorizationHeader) {
 
         String token = authorizationHeader.replace("Bearer ", "");
-        User user = tokenService.parseToken(token);
+        User user = apiTokenService.parseToken(token);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-package com.jcnetwork.members.dto;
+package com.jcnetwork.members.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;

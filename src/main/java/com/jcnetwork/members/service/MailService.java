@@ -42,6 +42,20 @@ public class MailService {
         }
     }
 
+    public void sendUserVerificationMail(String mailTo, String token) {
+
+        String subject = "Verifizierung deines JCNetwork Members Accounts";
+
+        String mailContent =
+                "Hallo,\n" +
+                "herzlich willkommen bei JCNetwork Members. Dein Account wurde angelegt und muss nun nur noch von dir bestätigt werden. Bitte klicke dazu auf den unteren Link. \n \n" +
+                baseUrl + "/registrationConfirmation?token=" + token + "\n \n" +
+                "Viele Grüße \n" +
+                "Dein JCNetwork Members Team";
+
+        sendMail(subject, mailTo, mailContent);
+    }
+
     public void sendConsultancyCreationMail(
             String mailTo,
             String consultancyName,
@@ -50,7 +64,7 @@ public class MailService {
 
         String subject = "Aktivierung eures JCNetwork Members Accounts";
 
-        String mailcontent =
+        String mailContent =
                 "Liebes " + consultancyName + "-Team, \n" +
                 "herzlich willkommen bei JCNetwork Members. Euer Vereinsaccount wurde angelegt und ist ab sofort erreichbar. Um die Aktivierung abzuschließen müsst ihr euch nur noch mit eurem Admin-Nutzer anmelden und eure Einstellungen anpassen. \n \n" +
                 "Nutzername: " + username + "\n" +
@@ -58,7 +72,7 @@ public class MailService {
                 "Viele Grüße \n" +
                 "Euer JCNetwork Members Team";
 
-        sendMail(subject, mailTo, mailcontent);
+        sendMail(subject, mailTo, mailContent);
 
     }
 }

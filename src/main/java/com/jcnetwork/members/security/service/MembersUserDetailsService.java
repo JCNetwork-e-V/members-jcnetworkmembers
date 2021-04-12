@@ -3,9 +3,11 @@ package com.jcnetwork.members.security.service;
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.repository.AccountRoleRepository;
 import com.jcnetwork.members.repository.UserRepository;
+import com.jcnetwork.members.repository.VerificationTokenRepository;
 import com.jcnetwork.members.security.AccountDetails;
 import com.jcnetwork.members.security.model.Account;
 import com.jcnetwork.members.security.model.User;
+import com.jcnetwork.members.security.model.VerificationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +26,9 @@ public class MembersUserDetailsService implements UserDetailsService {
     private AccountRoleRepository roleRepository;
 
     @Autowired
+    private VerificationTokenRepository tokenRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Optional<User> findUserByUsername(String username) {
@@ -34,10 +39,14 @@ public class MembersUserDetailsService implements UserDetailsService {
          return user;
     }
 
+    public Optional<User> findUserById(String id) {
+        return userRepository.findById(id);
+    }
+
     public User createNewUser(Account account, Consultancy consultancy, String roleName) {
 
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
-        account.setIsAccountEnabled(true); // TODO token verification
+        account.setIsAccountEnabled(false);
         account.setIsAccountNonLocked(true);
 
         User user = new User();
@@ -51,6 +60,15 @@ public class MembersUserDetailsService implements UserDetailsService {
 
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(user, token);
+        tokenRepository.save(myToken);
+    }
+
+    public Optional<VerificationToken> getVerificationToken(String VerificationToken) {
+        return tokenRepository.findByToken(VerificationToken);
     }
 
     @Override

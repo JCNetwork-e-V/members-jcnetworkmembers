@@ -2,7 +2,7 @@ package com.jcnetwork.members.controller.rest;
 
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.rest.ConsultancyRESTModel;
+import com.jcnetwork.members.model.dto.rest.ConsultancyRESTDto;
 import com.jcnetwork.members.service.ConsultancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class ConsultancyRESTController {
         Consultancy consultancy = consultancyService.getById(id)
                 .orElseThrow(() -> new ItemNotFoundException("Invalid Item ID"));
 
-        ConsultancyRESTModel consultancyRESTModel = new ConsultancyRESTModel(consultancy);
+        ConsultancyRESTDto consultancyRESTDto = new ConsultancyRESTDto(consultancy);
 
-        return ResponseEntity.ok(consultancyRESTModel);
+        return ResponseEntity.ok(consultancyRESTDto);
     }
 }

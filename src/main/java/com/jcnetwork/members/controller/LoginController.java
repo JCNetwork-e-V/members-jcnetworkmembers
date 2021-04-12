@@ -1,10 +1,7 @@
 package com.jcnetwork.members.controller;
 
-import com.jcnetwork.members.dto.PasswordResetDto;
-import com.jcnetwork.members.dto.RegistrationDto;
-import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.dto.PasswordResetDto;
 import com.jcnetwork.members.security.service.MembersUserDetailsService;
-import com.jcnetwork.members.security.model.Account;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
@@ -19,7 +16,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -38,43 +34,6 @@ public class LoginController {
     public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("sites/login/login");
-        return modelAndView;
-    }
-
-    @GetMapping("/signup")
-    public ModelAndView signup() {
-        ModelAndView modelAndView = new ModelAndView();
-
-        RegistrationDto registration = new RegistrationDto();
-        List<String> consultancies = consultancyService.getAllConsultancyNames();
-
-        modelAndView.addObject("registration", registration);
-        modelAndView.addObject("consultancies", consultancies);
-        modelAndView.setViewName("sites/login/signup");
-        return modelAndView;
-    }
-
-    @PostMapping("/signup")
-    public ModelAndView createNewUser(@Valid RegistrationDto registration, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-        Optional<Consultancy> consultancy = consultancyService.getByName(registration.getSelectedConsultancy());
-        Account account = registration.getAccount();
-
-        Optional<User> existingUser = userDetailsService.findUserByUsername(account.getUsername());
-        if (existingUser.isPresent()) {
-            bindingResult
-                    .rejectValue("email", "error.user",
-                            "There is already a user registered with the username provided");
-        }
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("sites/login/signup");
-        } else {
-            userDetailsService.createNewUser(account, consultancy.get(), "USER");
-            modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("account", new Account());
-            modelAndView.setViewName("sites/login/login");
-
-        }
         return modelAndView;
     }
 

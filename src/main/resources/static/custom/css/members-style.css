@@ -61,3 +61,52 @@
 .ready {
     display: block;
 }
+
+.messagebox-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.messagebox-small-element {
+    width: 64px;
+}
+
+.messagebox-sender {
+    width: 50px;
+    text-align: center;
+    background-color: lightgray;
+    border-radius: 50%;
+    height: 50px;
+    display: block;
+    line-height: 50px;
+    margin-top: 8px;
+    padding: 0px !important;
+}
+
+.messagebox-subject {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding-left: 60px !important;
+    line-height: 42px;
+}
+
+.mailbox-date {
+    width: 120px;
+}
+
+.mailbox-profile-picture {
+    width: 50px;
+    vertical-align: top !important;
+}
+
+#messages_table tr:hover td {
+    background: rgba(0, 0, 0, 0.075);
+}
+
+.mailbox-no-messages {
+    width: 100%;
+    text-align: center;
+    line-height: 42px;
+}

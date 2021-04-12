@@ -1,7 +1,8 @@
 package com.jcnetwork.members.service;
 
-import com.jcnetwork.members.dto.ConsultancyCreationDto;
+import com.jcnetwork.members.model.dto.ConsultancyCreationDto;
 import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.data.ConsultancyDetails;
 import com.jcnetwork.members.model.data.UserDetails;
 import com.jcnetwork.members.repository.ConsultancyRepository;
 import com.jcnetwork.members.security.model.Account;
@@ -31,13 +32,16 @@ public class ConsultancyService {
 
     public Consultancy registerNewConsultancy(ConsultancyCreationDto consultancyCreationDto) {
 
-        Consultancy consultancy = new Consultancy(
-                consultancyCreationDto.getName(),
-                consultancyCreationDto.getCity(),
-                consultancyCreationDto.getDomain()
-        );
+        Consultancy consultancy = new Consultancy();
+        ConsultancyDetails consultancyDetails = new ConsultancyDetails();
+        consultancyDetails.setName(consultancyCreationDto.getName());
+        consultancyDetails.setCity(consultancyCreationDto.getCity());
+        consultancyDetails.setDomain(consultancyCreationDto.getDomain());
+        consultancy.setConsultancyDetails(consultancyDetails);
+
         consultancy = save(consultancy);
-        String username = consultancy.getName() + "_Admin";
+
+        String username = consultancy.getConsultancyDetails().getName() + "_Admin";
         String passwordPlain = RandomStringUtils.randomAlphabetic(10);
 
         Account account = new Account();
@@ -45,9 +49,10 @@ public class ConsultancyService {
         account.setPassword(passwordPlain);
 
         User technicalUser = userDetailsService.createNewUser(account, consultancy, "CONSULTANCY_ADMIN");
+        technicalUser.getAccount().setIsAccountEnabled(true);
 
         UserDetails userDetails = new UserDetails();
-        userDetails.setFirstName(consultancy.getName());
+        userDetails.setFirstName(consultancy.getConsultancyDetails().getName());
         userDetails.setLastName("Admin");
 
         technicalUser.setUserDetails(userDetails);
@@ -55,7 +60,7 @@ public class ConsultancyService {
 
         mailService.sendConsultancyCreationMail(
                 consultancyCreationDto.getMail(),
-                consultancy.getName(),
+                consultancy.getConsultancyDetails().getName(),
                 username,
                 passwordPlain);
 
@@ -66,9 +71,13 @@ public class ConsultancyService {
 
     public Optional<Consultancy> getById(String id) {return consultancyRepository.findById(id);}
 
-    public Optional<Consultancy> getByName(String name) {return consultancyRepository.findByName(name);}
+    public Optional<Consultancy> getByName(String name) {
+        return consultancyRepository.findByConsultancyDetailsNameIgnoreCase(name);
+    }
 
-    public Optional<Consultancy> getByDomain(String domain) {return consultancyRepository.findByDomain(domain);}
+    public Optional<Consultancy> getByDomain(String domain) {
+        return consultancyRepository.findByConsultancyDetailsDomain(domain);
+    }
 
     public List<Consultancy> getAll() {return consultancyRepository.findAll();}
 
@@ -77,7 +86,7 @@ public class ConsultancyService {
         List<String> consultancyNames = new ArrayList();
         List<Consultancy> consultancies = consultancyRepository.findAllNames();
         for(Consultancy consultancy : consultancies){
-            consultancyNames.add(consultancy.getName());
+            consultancyNames.add(consultancy.getConsultancyDetails().getName());
         }
 
         return consultancyNames;

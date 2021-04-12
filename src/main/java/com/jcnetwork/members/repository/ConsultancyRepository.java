@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface ConsultancyRepository  extends MongoRepository<Consultancy, String> {
 
-    Optional<Consultancy> findByName(String name);
+    Optional<Consultancy> findByConsultancyDetailsNameIgnoreCase(String name);
 
-    Optional<Consultancy> findByDomain(String domain);
+    Optional<Consultancy> findByConsultancyDetailsDomain(String domain);
 
     @Query(value = "{}", fields = "{ name : 1, _id : 0 }")
-    public List findAllNames();
+    List findAllNames();
 }

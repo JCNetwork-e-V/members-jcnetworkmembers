@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="mailbox">
+    <div class="row">
+        <div class="col-md-3">
+            <a href="compose.html" class="btn btn-jcnetwork btn-block mb-3">Neue Nachricht</a>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ordner</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a id="inbox" name="folderLink" class="nav-link" onclick="changeFolder('Inbox')">
+                                <i class="fas fa-inbox"></i> Inbox
+                                <span class="badge bg-primary float-right">12</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="gesendet" name="folderLink" class="nav-link" onclick="changeFolder('Gesendet')">
+                                <i class="far fa-envelope"></i> Gesendet
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="entwürfe" name="folderLink" class="nav-link" onclick="changeFolder('Entwürfe')">
+                                <i class="far fa-file-alt"></i> Entwürfe
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="papierkorb" name="folderLink" class="nav-link" onclick="changeFolder('Papierkorb')">
+                                <i class="far fa-trash-alt"></i> Papierkorb
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title"></h3>
+
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" placeholder="Suche">
+                            <div class="input-group-append">
+                                <div class="btn btn-jcnetwork">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+
+                    <div th:replace="fragments/mailbox :: mailbox-controls"></div>
+
+                    <div class="table-responsive mailbox-messages">
+                        <table id="messages_table" class="table table-striped messagebox-table">
+                            <tbody>
+                            <!-- Table automatically generated -->
+                            </tbody>
+                        </table>
+                        <!-- /.table -->
+                    </div>
+                    <!-- /.mail-box-messages -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer p-0">
+
+                    <div th:replace="fragments/mailbox :: mailbox-controls"></div>
+
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
+
+<div th:fragment="mailbox-controls" class="mailbox-controls">
+    <!-- Check all button -->
+    <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
+    </button>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default btn-sm" onclick="moveSelectedToFolder('Papierkorb')">
+            <i class="fas fa-trash"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm">
+            <i class="fas fa-reply"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm">
+            <i class="fas fa-share"></i>
+        </button>
+    </div>
+    <!-- /.btn-group -->
+    <button type="button" class="btn btn-default btn-sm" onclick="getMessages()">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+    <div class="float-right">
+        <span class="message-entries-count"></span>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" onclick="previousPage()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" onclick="nextPage()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        <!-- /.btn-group -->
+    </div>
+    <!-- /.float-right -->
+</div>
+
+<th:block th:fragment="mailbox-scripts">
+    <script>
+
+        var currentPage = 0;
+        var pageSize = 10;
+        var totalPages;
+        var folder = "Inbox";
+
+        // Load messages on first request
+        $(document).ready(
+            setFolderLinkActive("Inbox"),
+            $('.card-title').text("Inbox"),
+            getMessages()
+        );
+
+        function changeFolder(newFolder) {
+            if(newFolder !== folder) {
+                folder = newFolder;
+                setFolderLinkActive(newFolder);
+                $('.card-title').text(newFolder);
+                getMessages();
+            }
+        }
+
+        function setFolderLinkActive(folderName) {
+            $("a[name='folderLink']").each(function (){
+                if($(this).attr("id") === folderName){
+                    $(this).addClass("active");
+                } else {
+                    $(this).removeClass("active");
+                }
+            });
+        }
+
+        function nextPage(){
+            if(currentPage < (totalPages - 1)) {
+                currentPage++;
+                getMessages();
+            }
+        }
+
+        function previousPage() {
+            if(currentPage > 0) {
+                currentPage--;
+                getMessages();
+            }
+        }
+
+        // Get all messages for the current page
+        function getMessages() {
+            // Remove existing entries from table
+            $('#messages_table').empty();
+            $.ajax({
+                'url': "/api/messages/" + window.location.pathname.split('/')[1] + "/" + folder + "?page=" + currentPage + "&size=" + pageSize,
+                'method': "GET",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response){
+                    // Create table row for each message item
+                    if(Object.keys(response.content).length > 0) {
+                        $.each(response.content, function (i, item){
+                            // Create html for table row
+                            var htmlRow =
+                                `<td class="messagebox-small-element">
+                                <div class="icheck-jcnetwork" style="padding-top: 5px;">
+                                    <input name="messageSelect" type="checkbox" value="" id="` + item.id + `">
+                                    <label for=` + item.id + `></label>
+                                </div>
+                            </td>
+                            <td class="mailbox-name messagebox-sender">`
+                            // Check if profile image exists
+                            if (item.senderImage){
+                                htmlRow += '<img src="' + item.senderImage + '" class="mailbox-profile-picture">'
+                            } else {
+                                htmlRow += '<b>' + item.senderShortName + '</b>'
+                            }
+                            htmlRow +=
+                                `</td>
+                            <td class="mailbox-subject messagebox-subject">
+                                <b>` + item.subject + ` - </b>
+                                 <span>` + item.body + `</span>
+                            </td>
+                            <td class="mailbox-attachment messagebox-small-element"></td>
+                            <td class="mailbox-date">` + item.timespanSinceSent + `</td>`
+                            // Add row to table
+                            $('<tr>').append(htmlRow).appendTo('#messages_table');
+                        })
+                    } else if(currentPage != 0){
+                        previousPage();
+                    } else {
+                        var htmlRow = `<td class="mailbox-no-messages"><span>Du hast keine Nachrichten in diesem Ordner.</span></td>`
+                        $('<tr>').append(htmlRow).appendTo('#messages_table');
+                    }
+
+                    totalPages = response.totalPages;
+
+                    $('.message-entries-count').each(function(){
+                        var firstMessagePos = (response.number * pageSize) + 1
+                        var lastMessagePos = (firstMessagePos + pageSize - 1)
+                        if (lastMessagePos > response.totalElements) { lastMessagePos = response.totalElements }
+                        $(this).text(firstMessagePos + '-' + lastMessagePos + '/' + response.totalElements);
+                    })
+                }
+            })
+        }
+
+        function moveSelectedToFolder(folderName){
+
+            if(folder === "papierkorb" && folderName === "papierkorb"){
+                deleteSelected();
+            } else {
+                $("input[name='messageSelect']:checked").each(function (){
+                    var messageId = $(this).attr("id");
+                    $.ajax({
+                        'url': '/api/messages/move/' + messageId,
+                        'async': false,
+                        'method': 'PUT',
+                        'contentType': 'application/json',
+                        'dataType': 'json',
+                        'data': folderName
+                    });
+                })
+            }
+            getMessages();
+        }
+
+        function deleteSelected(){
+            $("input[name='messageSelect']:checked").each(function (){
+                var messageId = $(this).attr("id");
+                $.ajax({
+                    'url': '/api/messages/delete/' + messageId,
+                    'async': false,
+                    'method': 'DELETE',
+                    'contentType': 'application/json',
+                });
+            })
+            getMessages();
+        }
+
+    </script>
+
+    <script>
+        $(function () {
+            //Enable check and uncheck all functionality
+            $('.checkbox-toggle').click(function () {
+                var clicks = $(this).data('clicks')
+                if (clicks) {
+                    //Uncheck all checkboxes
+                    $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+                    $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
+                } else {
+                    //Check all checkboxes
+                    $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
+                    $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
+                }
+                $(this).data('clicks', !clicks)
+            })
+
+            //Handle starring for font awesome
+            $('.mailbox-star').click(function (e) {
+                e.preventDefault()
+                //detect type
+                var $this = $(this).find('a > i')
+                var fa    = $this.hasClass('fa')
+
+                //Switch states
+                if (fa) {
+                    $this.toggleClass('fa-star')
+                    $this.toggleClass('fa-star-o')
+                }
+            })
+        })
+    </script>
+
+</th:block>
