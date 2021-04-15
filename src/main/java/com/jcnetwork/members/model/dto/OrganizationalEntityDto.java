@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class OrganizationalEntityDto {
 
-    private String id;
     private String name;
     private List<OrganizationalEntityDto> children;
 }

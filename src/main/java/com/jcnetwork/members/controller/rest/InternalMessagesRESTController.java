@@ -74,7 +74,7 @@ public class InternalMessagesRESTController {
         return ResponseEntity.ok(mapper.toDto(messageService.changeFolder(id, newFolder)));
     }
 
-    @PutMapping(path = "markAsRead/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "mark-as-read/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<InternalMessageDto> markAsRead(@PathVariable("id") String id) {
         return ResponseEntity.ok(mapper.toDto(messageService.markAsRead(id)));
     }

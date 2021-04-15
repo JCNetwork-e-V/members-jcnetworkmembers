@@ -3,6 +3,7 @@ package com.jcnetwork.members.controller.rest;
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.mapper.OrganizationalEntityMapper;
 import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.data.OrganizationalEntity;
 import com.jcnetwork.members.service.ConsultancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,12 +31,14 @@ public class OrganizationalStructureRESTController {
 
     @PutMapping(path = "/{consultancy}/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOrganizationalStructure(
-            @PathVariable("consultancy") String consultancyName) {
+            @PathVariable("consultancy") String consultancyName,
+            @RequestBody OrganizationalEntity entity) {
 
         Consultancy consultancy = consultancyService.getByName(consultancyName)
                 .orElseThrow(() -> new ItemNotFoundException("Consultancy not found"));
 
-        //consultancy.set
-        return ResponseEntity.ok(consultancy.getRootEntity());
+        consultancy.setRootEntity(entity);
+        consultancyService.save(consultancy);
+        return ResponseEntity.ok(entity);
     }
 }

@@ -265,7 +265,7 @@
             $("input[name='messageSelect']:checked").each(function (){
                 var messageId = $(this).attr("id");
                 $.ajax({
-                    'url': '/api/messages/markAsRead/' + messageId,
+                    'url': '/api/messages/mark-as-read/' + messageId,
                     'async': false,
                     'method': 'PUT',
                     'contentType': 'application/json',

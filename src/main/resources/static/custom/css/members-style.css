@@ -124,6 +124,11 @@
     padding: .5rem 1rem;
 }
 
-.btn-half {
-    width: 49%;
+.item-main {
+    width: 79%;
 }
+
+.item-secondary {
+    width: 79%;
+}
+
