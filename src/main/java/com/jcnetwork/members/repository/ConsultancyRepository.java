@@ -14,7 +14,4 @@ public interface ConsultancyRepository  extends MongoRepository<Consultancy, Str
     Optional<Consultancy> findByConsultancyDetailsNameIgnoreCase(String name);
 
     Optional<Consultancy> findByConsultancyDetailsDomain(String domain);
-
-    @Query(value = "{}", fields = "{ name : 1, _id : 0 }")
-    List findAllNames();
 }

@@ -19,7 +19,7 @@ public class User extends MongoDocument {
     private Account account;
     @DBRef
     private Set<AccountRole> roles = new HashSet<>();
-
+    @DBRef
     private UserDetails userDetails;
     @DBRef
     private Set<Consultancy> consultancies = new HashSet<>();

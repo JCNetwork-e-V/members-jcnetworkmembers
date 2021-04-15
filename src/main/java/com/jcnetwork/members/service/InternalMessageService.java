@@ -29,7 +29,7 @@ public class InternalMessageService {
 
     public Optional<InternalMessage> getById(String id) { return internalMessageRepository.findById(id); }
 
-    public Page<InternalMessage> getByRecipient(MongoDocument recipient, String folder, Pageable pageable) {
+    public Page<InternalMessage> getByRecipientAndFolder(MongoDocument recipient, String folder, Pageable pageable) {
         return internalMessageRepository.findAllByRecipientAndFolder(recipient, folder, pageable);
     }
 
@@ -42,5 +42,24 @@ public class InternalMessageService {
         } else {
             throw new MongoException("Internal Message not found");
         }
+    }
+
+    public InternalMessage markAsRead(String id) {
+        Optional<InternalMessage> optionalMessage = internalMessageRepository.findById(id);
+        if(optionalMessage.isPresent()){
+            InternalMessage message = optionalMessage.get();
+            message.setRead(true);
+            return internalMessageRepository.save(message);
+        } else {
+            throw new MongoException("Internal Message not found");
+        }
+    }
+
+    public Long countAllRecipientsMessagesByFolder(MongoDocument recipient, String folder) {
+        return internalMessageRepository.countByRecipientAndFolder(recipient, folder);
+    }
+
+    public Long countUnreadRecipientsMessagesByFolder(MongoDocument recipient, String folder) {
+        return internalMessageRepository.countByRecipientAndFolderAndRead(recipient, folder, false);
     }
 }

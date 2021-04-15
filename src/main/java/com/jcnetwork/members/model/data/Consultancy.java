@@ -13,7 +13,7 @@ public class Consultancy extends MongoDocument{
 
     private ConsultancyDetails consultancyDetails;
 
-    private List<Department> departments = new ArrayList<>();
+    private OrganizationalEntity rootEntity;
     private List<Member> members = new ArrayList<>();
 
     private Boolean enabled;

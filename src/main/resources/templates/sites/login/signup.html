@@ -15,11 +15,6 @@
 
   <form th:action="@{/signup}" th:object="${registration}" method="post">
     <div class="input-group mb-3">
-      <select class="form-control custom-select" th:field="${registration.selectedConsultancy}">
-        <option th:each="consultancy : ${consultancies}" th:value="${consultancy}" th:text="${consultancy}"></option>
-      </select>
-    </div>
-    <div class="input-group mb-3">
       <input type="email" class="form-control" th:field="*{account.username}" placeholder="E-Mail">
       <div class="input-group-append">
         <div class="input-group-text">

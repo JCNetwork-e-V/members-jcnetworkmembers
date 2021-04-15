@@ -1,6 +1,5 @@
 package com.jcnetwork.members.service;
 
-import com.jcnetwork.members.security.model.Account;
 import com.sendgrid.*;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;

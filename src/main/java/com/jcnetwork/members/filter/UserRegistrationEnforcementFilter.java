@@ -1,14 +1,13 @@
 package com.jcnetwork.members.filter;
 
 import com.jcnetwork.members.security.model.User;
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
+import com.jcnetwork.members.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,14 +16,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
 
 @Component
 public class UserRegistrationEnforcementFilter extends GenericFilterBean {
 
     @Autowired
-    private MembersUserDetailsService userDetailsService;
+    private UserService userDetailsService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

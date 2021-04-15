@@ -1983,7 +1983,7 @@
     highlightName: true,
     highlightPath: false,
     highlightClass: 'text-light',
-    notFoundText: 'No element found!'
+    notFoundText: 'Kein Element gefunden!'
   };
   var SearchItems = [];
   /**

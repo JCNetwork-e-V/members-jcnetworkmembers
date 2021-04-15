@@ -1,11 +1,11 @@
 package com.jcnetwork.members.controller.rest;
 
+import com.jcnetwork.members.mapper.InternalMessageMapper;
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.InternalMessage;
 import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.MongoDocument;
-import com.jcnetwork.members.model.dto.rest.InternalMessageRESTDto;
-import com.jcnetwork.members.security.model.User;
+import com.jcnetwork.members.model.dto.FolderMessagesCountDto;
+import com.jcnetwork.members.model.dto.InternalMessageDto;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.service.InternalMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,18 @@ public class InternalMessagesRESTController {
     @Autowired
     private InternalMessageService messageService;
 
+    @Autowired
+    private InternalMessageMapper mapper;
+
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getMessage(@PathVariable("id") String id) {
+
+        InternalMessage message = messageService.getById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Message not found"));
+
+        return ResponseEntity.ok(mapper.toDto(message));
+    }
+
     @GetMapping(path = "/{consultancy}/{folder}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getConsultancyMessages(
             @PathVariable("consultancy") String consultancyName,
@@ -36,18 +48,16 @@ public class InternalMessagesRESTController {
             Pageable pageable) {
 
         Consultancy consultancy = consultancyService.getByName(consultancyName)
-                .orElseThrow(() -> new ItemNotFoundException("Invalid Item ID"));
+                .orElseThrow(() -> new ItemNotFoundException("Consultancy not found"));
 
-        Page<InternalMessage> messages = messageService.getByRecipient(consultancy, folder, pageable);
-        List<InternalMessageRESTDto> messagesREST = new ArrayList<>();
+        Page<InternalMessage> messages = messageService.getByRecipientAndFolder(consultancy, folder, pageable);
 
-        for(InternalMessage message : messages){
-            messagesREST.add(convertInternalMessageToDto(message));
-        }
-
-        PageImpl<InternalMessageRESTDto> response = new PageImpl<InternalMessageRESTDto>(
-                messagesREST, pageable, messages.getTotalElements()
+        PageImpl<InternalMessageDto> response = new PageImpl<>(
+                mapper.toDto(messages.getContent()),
+                pageable,
+                messages.getTotalElements()
         );
+
         return ResponseEntity.ok(response);
     }
 
@@ -58,35 +68,32 @@ public class InternalMessagesRESTController {
     }
 
     @PutMapping(path = "/move/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<InternalMessageRESTDto> moveMessage(
+    public ResponseEntity<InternalMessageDto> moveMessage(
             @PathVariable("id") String id,
             @RequestBody String newFolder) {
-        return ResponseEntity.ok(convertInternalMessageToDto(messageService.changeFolder(id, newFolder)));
+        return ResponseEntity.ok(mapper.toDto(messageService.changeFolder(id, newFolder)));
     }
 
-    private InternalMessageRESTDto convertInternalMessageToDto(InternalMessage message) {
+    @PutMapping(path = "markAsRead/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<InternalMessageDto> markAsRead(@PathVariable("id") String id) {
+        return ResponseEntity.ok(mapper.toDto(messageService.markAsRead(id)));
+    }
 
-        String profileIcon;
-        String senderName;
-        String senderShortName;
+    @GetMapping(path="/count/{consultancy}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<FolderMessagesCountDto>> folderMessagesCount(@PathVariable("consultancy") String consultancyName){
 
-        MongoDocument sender = message.getSender();
-        if(sender instanceof Consultancy) {
-            profileIcon = ((Consultancy) sender).getConsultancyDetails().getIconBase64();
-            senderName = ((Consultancy) sender).getConsultancyDetails().getName();
-            senderShortName = ((Consultancy) sender).getConsultancyDetails().getName().substring(0,3).toUpperCase();
-        } else if(sender instanceof User) {
-            profileIcon = ((User) sender).getUserDetails().getProfilePictureBase64();
-            senderName = ((User) sender).getUserDetails().getFirstName()
-                    + " " + ((User) sender).getUserDetails().getLastName();
-            senderShortName = ((User) sender).getUserDetails().getFirstName().substring(0,1).toUpperCase()
-                    + " " + ((User) sender).getUserDetails().getLastName().substring(0,1).toUpperCase();
-        } else {
-            profileIcon = null;
-            senderName = null;
-            senderShortName = null;
+        Consultancy consultancy = consultancyService.getByName(consultancyName)
+                .orElseThrow(() -> new ItemNotFoundException("Consultancy not found"));
+
+        List<FolderMessagesCountDto> folderMessageCount = new ArrayList<>();
+
+        String[] folders = {"Inbox", "Gesendet", "Entwürfe", "Papierkorb"};
+
+        for(String folder : folders){
+            Long count = messageService.countAllRecipientsMessagesByFolder(consultancy, folder);
+            Long unreadCount = messageService.countUnreadRecipientsMessagesByFolder(consultancy, folder);
+            folderMessageCount.add(new FolderMessagesCountDto(folder, count, unreadCount));
         }
-
-        return new InternalMessageRESTDto(message, senderName, senderShortName, profileIcon);
+        return ResponseEntity.ok(folderMessageCount);
     }
 }

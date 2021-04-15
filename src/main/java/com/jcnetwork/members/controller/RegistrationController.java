@@ -1,14 +1,17 @@
 package com.jcnetwork.members.controller;
 
+import com.jcnetwork.members.mapper.ConsultancyMapper;
 import com.jcnetwork.members.model.dto.RegistrationDto;
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.event.OnUserDetailsRegistrationEvent;
 import com.jcnetwork.members.model.event.OnUserRegistrationCompleteEvent;
 import com.jcnetwork.members.security.model.Account;
 import com.jcnetwork.members.security.model.VerificationToken;
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
+import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.service.ConsultancyService;
+import com.jcnetwork.members.service.MembersUserDetailsService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,10 +39,13 @@ public class RegistrationController {
     private ControllerUtils utils;
 
     @Autowired
-    private MembersUserDetailsService userDetailsService;
+    private UserService userService;
 
     @Autowired
     private ConsultancyService consultancyService;
+
+    @Autowired
+    private ConsultancyMapper mapper;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -47,13 +53,10 @@ public class RegistrationController {
     @GetMapping("/signup")
     public ModelAndView signup() {
         // TODO redirect if already filled out
-        ModelAndView modelAndView = new ModelAndView();
-
         RegistrationDto registration = new RegistrationDto();
-        List<String> consultancies = consultancyService.getAllConsultancyNames();
 
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("registration", registration);
-        modelAndView.addObject("consultancies", consultancies);
         modelAndView.setViewName("sites/login/signup");
         return modelAndView;
     }
@@ -65,12 +68,12 @@ public class RegistrationController {
         Optional<Consultancy> consultancy = consultancyService.getByName(registration.getSelectedConsultancy());
         Account account = registration.getAccount();
 
-        Optional<User> existingUser = userDetailsService.findUserByUsername(account.getUsername());
+        Optional<User> existingUser = userService.findUserByUsername(account.getUsername());
         if (existingUser.isPresent()) {
             // TODO error InternalMessage
             modelAndView.setView(new RedirectView("/signup"));
         } else {
-            User registered = userDetailsService.createNewUser(account, consultancy.get(), "USER");
+            User registered = userService.createNewUser(account, consultancy.get(), "USER");
             eventPublisher.publishEvent(new OnUserRegistrationCompleteEvent(registered));
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("account", new Account());
@@ -81,7 +84,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/userRegistration")
-    public ModelAndView getUserRegistrationForm() {
+    public ModelAndView getUserDetailsRegistrationForm() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userDetails", new UserDetails());
         modelAndView.setViewName("sites/users/userRegistration");
@@ -89,24 +92,10 @@ public class RegistrationController {
     }
 
     @PostMapping("/userRegistration")
-    public RedirectView createNewAccount(@Valid UserDetails userDetails) {
+    public RedirectView userDetailsRegistration(@Valid UserDetails userDetails) {
 
-        String username = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = new User();
-
-        if (principal instanceof DefaultOidcUser) {
-            DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
-            username = oidcUser.getClaim("preferred_username");
-            user.setAzureAccounts(new HashSet<>(Arrays.asList(username)));
-        } else {
-            username = SecurityContextHolder.getContext().getAuthentication().getName();
-            Optional<User> usr = userDetailsService.findUserByUsername(username);
-            user = usr.get();
-        }
-
-        user.setUserDetails(userDetails);
-        userDetailsService.saveUser(user);
+        eventPublisher.publishEvent(new OnUserDetailsRegistrationEvent(principal, userDetails));
 
         return new RedirectView("/home");
     }
@@ -114,7 +103,7 @@ public class RegistrationController {
     @GetMapping("/registrationConfirmation")
     public RedirectView confirmUserRegistration(@RequestParam("token") String token) {
 
-        Optional<VerificationToken> verificationToken = userDetailsService.getVerificationToken(token);
+        Optional<VerificationToken> verificationToken = userService.getVerificationToken(token);
 
         if (verificationToken.isEmpty()) {
             // TODO send user to error page
@@ -126,7 +115,7 @@ public class RegistrationController {
         }
         User user = verificationToken.get().getUser();
         user.getAccount().setIsAccountEnabled(true);
-        userDetailsService.saveUser(user);
+        userService.saveUser(user);
 
         return new RedirectView("/login");
     }

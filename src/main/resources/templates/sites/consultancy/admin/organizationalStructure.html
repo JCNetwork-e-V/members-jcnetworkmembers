@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainLayout.html}">
+
+<head>
+    <title>Organigramm | JCNetwork Members</title>
+
+    <!-- Org Chart -->
+    <link rel="stylesheet" href="/plugins/org-chart/css/jquery.orgchart.css">
+</head>
+
+<body>
+<div layout:fragment="mainContent">
+
+
+            <div th:replace="fragments/organizationalChart :: organizational-chart"></div>
+
+
+</div>
+
+<!-- Page scripts -->
+<th:block layout:fragment="script">
+
+    <th:block th:replace="fragments/organizationalChart :: organizational-chart-scripts"></th:block>
+
+</th:block>
+
+</body>
+</html>

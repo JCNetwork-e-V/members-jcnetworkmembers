@@ -28,7 +28,7 @@ public class ConsultancyAdministrationMessageController {
     public ModelAndView getMessages(@PathVariable("consultancy") String consultancyName) {
 
         UserDetails userDetails = utils.getUserDetailsFromContext();
-        Sidebar sidebar = utils.consultancySidebar("/admin/messages", consultancyName);
+        Sidebar sidebar = utils.consultancySidebar("/messages", consultancyName);
         Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
 
         ModelAndView modelAndView = new ModelAndView();
@@ -55,6 +55,4 @@ public class ConsultancyAdministrationMessageController {
         modelAndView.setViewName("sites/consultancy/admin/messages");
         return modelAndView;
     }
-
-
 }

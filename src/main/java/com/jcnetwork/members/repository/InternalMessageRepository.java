@@ -15,4 +15,8 @@ public interface InternalMessageRepository extends MongoRepository<InternalMessa
             @Param("recipient") MongoDocument recipient,
             String folder,
             Pageable pageable);
+
+    Long countByRecipientAndFolder(MongoDocument recipient, String folder);
+
+    Long countByRecipientAndFolderAndRead(MongoDocument recipient, String folder, Boolean read);
 }

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="organizational-chart" class="row">
+
+    <div class="col-md-9">
+        <!-- main card -->
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">Organigramm</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+                <!-- organizational chart -->
+                <div id="chart-container" style="text-align: center"></div>
+
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer p-0">
+
+            </div>
+        </div>
+        <!-- /.chart card -->
+    </div>
+
+    <div class="col-md-3">
+        <!-- edit box -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Struktur Bearbeiten</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0" style="display: block;">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <div class="edit-item">
+                            <span>Gewähltes Element</span>
+                            <input type="text" id="selected-node" class="form-control form-control-border" disabled>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="edit-item">
+                            <span>Neues Element</span>
+                            <input type="text" id="new-node" class="form-control form-control-border">
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="edit-item">
+                            <button class="btn btn-jcnetwork btn-half" id="btn-add-nodes">Hinzufügen</button>
+                            <button class="btn btn-danger btn-half" id="btn-delete-nodes">Löschen</button>
+                        </div>
+                        <div class="edit-item">
+                            <button class="btn btn-jcnetwork" id="btn-save" style="width: 74%">Speichern</button>
+                            <button class="btn btn-jcnetwork" id="btn-reset" style="width: 24%">
+                                <i class="fas fa-redo-alt"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="organizational-chart-scripts">
+    <script type="text/javascript" src="/plugins/org-chart/js/jquery.orgchart.js"></script>
+    <script>
+        $(function() {
+
+            var datasource = "";
+
+            var getId = function() {
+                return (new Date().getTime()) * 1000 + Math.floor(Math.random() * 1001);
+            };
+
+            // Get organizational chart
+            $.ajax({
+                'url': "/api/organizationalStructure/" + window.location.pathname.split('/')[1],
+                'async': false,
+                'method': "GET",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response) {
+                    datasource = response;
+                }
+            });
+
+            var oc = $('#chart-container').orgchart({
+                'data': datasource,
+                'nodeContent': 'title',
+                'pan': true,
+                'zoom': true
+            });
+
+            oc.$chartContainer.on('touchmove', function (event) {
+                event.preventDefault();
+            });
+
+
+            oc.$chartContainer.on('click', '.node', function() {
+                var $this = $(this);
+                $('#selected-node').val($this.find('.title').text()).data('node', $this);
+            });
+
+            oc.$chartContainer.on('click', '.orgchart', function(event) {
+                if (!$(event.target).closest('.node').length) {
+                    $('#selected-node').val('');
+                }
+            });
+
+            $('input[name="chart-state"]').on('click', function() {
+                $('.orgchart').toggleClass('edit-state', this.value !== 'view');
+                $('#edit-panel').toggleClass('edit-state', this.value === 'view');
+                if ($(this).val() === 'edit') {
+                    $('.orgchart').find('.hidden').removeClass('hidden')
+                        .end().find('.hierarchy').removeClass('isCollapsedDescendant isChildrenCollapsed isSiblingsCollapsed isCollapsedSibling')
+                        .find('.node').removeClass('slide-up slide-down slide-right slide-left');
+                } else {
+                    $('#btn-reset').trigger('click');
+                }
+            });
+
+            $('#btn-add-input').on('click', function() {
+                $('#new-nodelist').append('<li><input type="text" class="form-control form-control-border"></li>');
+            });
+
+            $('#btn-remove-input').on('click', function() {
+                var inputs = $('#new-nodelist').children('li');
+                if (inputs.length > 1) {
+                    inputs.last().remove();
+                }
+            });
+
+            $('#btn-add-nodes').on('click', function() {
+                var $chartContainer = $('#chart-container');
+                var nodeVals = [];
+                var validVal = $('#new-node').val().trim();
+                if (validVal.length) {
+                    nodeVals.push(validVal);
+                }
+                var $node = $('#selected-node').data('node');
+                if (!nodeVals.length) {
+                    alert('Please input value for new node');
+                    return;
+                }
+                if (!$node) {
+                    alert('Please select one node in orgchart');
+                    return;
+                }
+                if (!$node.siblings('.nodes').length) {
+                    var rel = nodeVals.length > 1 ? '110' : '100';
+                    oc.addChildren($node, nodeVals.map(function (item) {
+                        return { 'name': item, 'relationship': rel, 'id': getId() };
+                    }));
+                } else {
+                    oc.addSiblings($node.siblings('.nodes').find('.node:first'), nodeVals.map(function (item) {
+                        return { 'name': item, 'relationship': '110', 'id': getId() };
+                    }));
+                }
+            });
+
+            $('#btn-delete-nodes').on('click', function() {
+                var $node = $('#selected-node').data('node');
+                if (!$node) {
+                    alert('Please select one node in orgchart');
+                    return;
+                } else if ($node[0] === $('.orgchart').find('.node:first')[0]) {
+                    alert('Der Vorstand kann nicht gelöscht werden.')
+                    return;
+                }
+                oc.removeNodes($node);
+                $('#selected-node').val('').data('node', null);
+            });
+
+            $('#chart-container').on('click', function(e) {
+                if (e.target.className !== 'title' && e.target.className !== 'content') {
+                    $('.orgchart').find('.focused').removeClass('focused');
+                    $('#selected-node').val('');
+                    $('#new-nodelist').find('input:first').val('').parent().siblings().remove();
+                    $('#node-type-panel').find('input').prop('checked', false);
+                }
+            });
+
+            $('#btn-save').on('click', function() {
+                if (!$('pre').length) {
+                    var hierarchy = oc.getHierarchy();
+                    alert(JSON.stringify(hierarchy));
+                }
+            });
+        });
+    </script>
+    </script>
+</th:block>

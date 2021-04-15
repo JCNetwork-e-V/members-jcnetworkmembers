@@ -2,7 +2,7 @@ package com.jcnetwork.members.utils;
 
 import com.jcnetwork.members.model.data.UserDetails;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
+import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ControllerUtils {
 
     @Autowired
-    private MembersUserDetailsService userDetailsService;
+    private UserService userDetailsService;
 
     public UserDetails getUserDetailsFromContext() {
 
@@ -41,12 +41,11 @@ public class ControllerUtils {
         sidebar
                 .addNavGroup()
                 .addNavItem("Dashboard", "/" + consultancyName + "/admin/dashboard", "fa-tachometer-alt").topLevel()
-                .addNavItem("Meldungen", "/" + consultancyName + "/admin/messages", "fa-envelope").closeNavGroup()
+                .addNavItem("Nachrichten", "/" + consultancyName + "/admin/messages", "fa-envelope").closeNavGroup()
                 .addNavGroup("Mitgliederverwaltung")
                 .addNavItem("Mitgliederliste", "/" + consultancyName + "/admin/memberList", "fa-list").closeNavGroup()
-                .addNavGroup("Ressortverwaltung")
-                .addNavItem("Ressortliste", "/" + consultancyName + "/admin/departmentList", "fa-list").topLevel()
-                .addNavItem("Ressorts verwalten", "/" + consultancyName + "/admin/departmentAdministration", "fa-sitemap").closeNavGroup()
+                .addNavGroup("Vereinsorganisation")
+                .addNavItem("Organisationsstruktur", "/" + consultancyName + "/admin/consultancyStructure", "fa-sitemap").closeNavGroup()
                 .addNavGroup("Einstellungen")
                 .addNavItem("Rollenverwaltung", "#", "fa-user-tag")
                 .addSubItem("Rollenverzeichnis", "/" + consultancyName + "/admin/roleList", "fa-tags").and()
@@ -55,7 +54,7 @@ public class ControllerUtils {
                 .addNavItem("Accountverwaltung", "/" + consultancyName + "/admin/accountSettings", "fa-wrench").closeNavGroup();
 
 
-        if(!activePath.isEmpty()) sidebar.setActiveLinks("/" + consultancyName + activePath);
+        if(!activePath.isEmpty()) sidebar.setActiveLinks("/" + consultancyName + "/admin" + activePath);
         return sidebar;
     }
 }

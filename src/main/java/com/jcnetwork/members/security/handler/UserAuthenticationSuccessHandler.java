@@ -1,7 +1,7 @@
 package com.jcnetwork.members.security.handler;
 
 import com.jcnetwork.members.security.model.User;
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
+import com.jcnetwork.members.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class UserAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Autowired
-    private MembersUserDetailsService userDetailsService;
+    private UserService userDetailsService;
 
     @Override
     public void onAuthenticationSuccess(

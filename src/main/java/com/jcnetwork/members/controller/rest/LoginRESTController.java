@@ -3,7 +3,7 @@ package com.jcnetwork.members.controller.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jcnetwork.members.security.AccountDetails;
 import com.jcnetwork.members.security.model.User;
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
+import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.service.ApiTokenService;
 import com.jcnetwork.members.security.model.JwtRequest;
 import com.jcnetwork.members.security.model.JwtResponse;
@@ -24,7 +24,7 @@ public class LoginRESTController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private MembersUserDetailsService userDetailsService;
+    private UserService userDetailsService;
 
     @Autowired
     private ApiTokenService apiTokenService;

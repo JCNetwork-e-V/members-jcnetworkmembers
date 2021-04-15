@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/{consultancy}/admin")
-public class ConsultancyAdministrationDashboardController {
+public class ConsultancyAdministrationOrganizationalChartController {
 
     @Autowired
     private ControllerUtils utils;
@@ -24,19 +24,19 @@ public class ConsultancyAdministrationDashboardController {
     @Autowired
     private ConsultancyService consultancyService;
 
-    @GetMapping("/dashboard")
-    public ModelAndView consultancyDashboard(@PathVariable("consultancy") String consultancyName) {
+    @GetMapping("/consultancyStructure")
+    public ModelAndView getOrganizationalStructure(@PathVariable("consultancy") String consultancyName) {
 
         UserDetails userDetails = utils.getUserDetailsFromContext();
-        Sidebar sidebar = utils.consultancySidebar("/dashboard", consultancyName);
+        Sidebar sidebar = utils.consultancySidebar("/messages", consultancyName);
         Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userDetails", userDetails);
-        modelAndView.addObject("contentHeader", "Admin Dashboard");
+        modelAndView.addObject("contentHeader", "Nachrichten");
         modelAndView.addObject("sidebar", sidebar);
         modelAndView.addObject("consultancyName", consultancy.get().getConsultancyDetails().getName());
-        modelAndView.setViewName("sites/consultancy/admin/dashboard");
+        modelAndView.setViewName("sites/consultancy/admin/organizationalStructure");
         return modelAndView;
     }
 }

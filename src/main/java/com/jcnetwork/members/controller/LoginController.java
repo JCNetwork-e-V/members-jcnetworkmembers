@@ -1,7 +1,7 @@
 package com.jcnetwork.members.controller;
 
 import com.jcnetwork.members.model.dto.PasswordResetDto;
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
+import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
@@ -25,7 +25,7 @@ public class LoginController {
     private ConsultancyService consultancyService;
 
     @Autowired
-    private MembersUserDetailsService userDetailsService;
+    private UserService userDetailsService;
 
     @Autowired
     private ControllerUtils utils;

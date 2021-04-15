@@ -1,12 +1,15 @@
 package com.jcnetwork.members.controller.admin;
 
+import com.jcnetwork.members.mapper.ConsultancyMapper;
 import com.jcnetwork.members.model.dto.ConsultancyCreationDto;
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.event.OnConsultancyCreationEvent;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +27,13 @@ public class AdminController {
     private ConsultancyService consultancyService;
 
     @Autowired
+    private ConsultancyMapper mapper;
+
+    @Autowired
     private ControllerUtils utils;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
@@ -62,7 +71,7 @@ public class AdminController {
         if (consultancyExists.isPresent()) {
             // TODO send back to site with InternalMessage
         } else {
-            Consultancy registered = consultancyService.registerNewConsultancy(consultancyCreationDto);
+            eventPublisher.publishEvent(new OnConsultancyCreationEvent(consultancyCreationDto));
         }
         return getConsultancyList();
     }
@@ -78,7 +87,7 @@ public class AdminController {
         modelAndView.addObject("userDetails", userDetails);
         modelAndView.addObject("contentHeader", "Vereinsliste");
         modelAndView.addObject("sidebar", sidebar);
-        modelAndView.addObject("consultancies", consultancyService.getAll());
+        modelAndView.addObject("consultancies", mapper.toDto(consultancyService.getAll()));
         modelAndView.setViewName("sites/admin/consultancyList");
         return modelAndView;
     }

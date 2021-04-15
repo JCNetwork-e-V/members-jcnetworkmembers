@@ -6,7 +6,7 @@
 <div th:fragment="mailbox">
     <div class="row">
         <div class="col-md-3">
-            <a href="compose.html" class="btn btn-jcnetwork btn-block mb-3">Neue Nachricht</a>
+            <a href="" class="btn btn-jcnetwork btn-block mb-3">Neue Nachricht</a>
 
             <div class="card">
                 <div class="card-header">
@@ -21,24 +21,27 @@
                 <div class="card-body p-0">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a id="inbox" name="folderLink" class="nav-link" onclick="changeFolder('Inbox')">
+                            <a id="Inbox" name="folderLink" class="nav-link" onclick="changeFolder('Inbox')" style="cursor: pointer">
                                 <i class="fas fa-inbox"></i> Inbox
-                                <span class="badge bg-primary float-right">12</span>
+                                <span id="Inbox-message-count" class="badge float-right"></span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a id="gesendet" name="folderLink" class="nav-link" onclick="changeFolder('Gesendet')">
+                            <a id="Gesendet" name="folderLink" class="nav-link" onclick="changeFolder('Gesendet')" style="cursor: pointer">
                                 <i class="far fa-envelope"></i> Gesendet
+                                <span id="Gesendet-message-count" class="badge float-right"></span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a id="entwürfe" name="folderLink" class="nav-link" onclick="changeFolder('Entwürfe')">
+                            <a id="Entwürfe" name="folderLink" class="nav-link" onclick="changeFolder('Entwürfe')" style="cursor: pointer">
                                 <i class="far fa-file-alt"></i> Entwürfe
+                                <span id="Entwürfe-message-count" class="badge float-right"></span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a id="papierkorb" name="folderLink" class="nav-link" onclick="changeFolder('Papierkorb')">
+                            <a id="Papierkorb" name="folderLink" class="nav-link" onclick="changeFolder('Papierkorb')" style="cursor: pointer">
                                 <i class="far fa-trash-alt"></i> Papierkorb
+                                <span id="Papierkorb-message-count" class="badge float-right"></span>
                             </a>
                         </li>
                     </ul>
@@ -49,6 +52,7 @@
         </div>
         <!-- /.col -->
         <div class="col-md-9">
+            <!-- messages list card -->
             <div class="card card-primary card-outline">
                 <div class="card-header">
                     <h3 class="card-title"></h3>
@@ -87,7 +91,7 @@
 
                 </div>
             </div>
-            <!-- /.card -->
+            <!-- /.messages list card -->
         </div>
         <!-- /.col -->
     </div>
@@ -101,11 +105,8 @@
         <button type="button" class="btn btn-default btn-sm" onclick="moveSelectedToFolder('Papierkorb')">
             <i class="fas fa-trash"></i>
         </button>
-        <button type="button" class="btn btn-default btn-sm">
-            <i class="fas fa-reply"></i>
-        </button>
-        <button type="button" class="btn btn-default btn-sm">
-            <i class="fas fa-share"></i>
+        <button type="button" class="btn btn-default btn-sm" onclick="markSelectedAsRead()">
+            <i class="fas fa-envelope-open-text"></i>
         </button>
     </div>
     <!-- /.btn-group -->
@@ -139,6 +140,7 @@
         $(document).ready(
             setFolderLinkActive("Inbox"),
             $('.card-title').text("Inbox"),
+            getFoldersMessageCount(),
             getMessages()
         );
 
@@ -180,7 +182,7 @@
             // Remove existing entries from table
             $('#messages_table').empty();
             $.ajax({
-                'url': "/api/messages/" + window.location.pathname.split('/')[1] + "/" + folder + "?page=" + currentPage + "&size=" + pageSize,
+                'url': "/api/messages/" + window.location.pathname.split('/')[1] + "/" + folder + "?page=" + currentPage + "&size=" + pageSize + "&sort=creationDate,desc",
                 'method': "GET",
                 'contentType': 'application/json',
                 'dataType': "json",
@@ -190,7 +192,8 @@
                         $.each(response.content, function (i, item){
                             // Create html for table row
                             var htmlRow =
-                                `<td class="messagebox-small-element">
+                                `<td><a href="/" </td>
+                                <td class="messagebox-small-element">
                                 <div class="icheck-jcnetwork" style="padding-top: 5px;">
                                     <input name="messageSelect" type="checkbox" value="" id="` + item.id + `">
                                     <label for=` + item.id + `></label>
@@ -212,7 +215,11 @@
                             <td class="mailbox-attachment messagebox-small-element"></td>
                             <td class="mailbox-date">` + item.timespanSinceSent + `</td>`
                             // Add row to table
-                            $('<tr>').append(htmlRow).appendTo('#messages_table');
+                            if(item.read === true){
+                                $('<tr>').addClass('message-read').append(htmlRow).appendTo('#messages_table');
+                            } else {
+                                $('<tr>').append(htmlRow).appendTo('#messages_table');
+                            }
                         })
                     } else if(currentPage != 0){
                         previousPage();
@@ -235,7 +242,7 @@
 
         function moveSelectedToFolder(folderName){
 
-            if(folder === "papierkorb" && folderName === "papierkorb"){
+            if(folder === "Papierkorb" && folderName === "Papierkorb"){
                 deleteSelected();
             } else {
                 $("input[name='messageSelect']:checked").each(function (){
@@ -251,6 +258,21 @@
                 })
             }
             getMessages();
+            getFoldersMessageCount();
+        }
+
+        function markSelectedAsRead() {
+            $("input[name='messageSelect']:checked").each(function (){
+                var messageId = $(this).attr("id");
+                $.ajax({
+                    'url': '/api/messages/markAsRead/' + messageId,
+                    'async': false,
+                    'method': 'PUT',
+                    'contentType': 'application/json',
+                });
+            })
+            getMessages();
+            getFoldersMessageCount();
         }
 
         function deleteSelected(){
@@ -263,12 +285,33 @@
                     'contentType': 'application/json',
                 });
             })
-            getMessages();
         }
 
-    </script>
+        function getFoldersMessageCount(){
+            $.ajax({
+                'url': '/api/messages/count/' + window.location.pathname.split('/')[1],
+                'method': 'GET',
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response) {
+                    $.each(response, function (i, item) {
+                        $('#' + item.folderName + '-message-count').text(item.messagesCount)
+                        if(item.unreadMessagesCount !== 0) {
+                            $('#' + item.folderName + '-message-count').addClass('bg-warning');
+                        } else {
+                            $('#' + item.folderName + '-message-count').removeClass('bg-warning');
+                        }
+                    });
+                },
+            });
+        }
 
-    <script>
+        // Refresh mail count
+        setInterval(function () {
+            getFoldersMessageCount();
+        }, 10000);
+
+        // Check all button
         $(function () {
             //Enable check and uncheck all functionality
             $('.checkbox-toggle').click(function () {
@@ -283,20 +326,6 @@
                     $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
                 }
                 $(this).data('clicks', !clicks)
-            })
-
-            //Handle starring for font awesome
-            $('.mailbox-star').click(function (e) {
-                e.preventDefault()
-                //detect type
-                var $this = $(this).find('a > i')
-                var fa    = $this.hasClass('fa')
-
-                //Switch states
-                if (fa) {
-                    $this.toggleClass('fa-star')
-                    $this.toggleClass('fa-star-o')
-                }
             })
         })
     </script>

@@ -3,7 +3,7 @@ package com.jcnetwork.members.config;
 import com.jcnetwork.members.filter.JwtAuthenticationFilter;
 import com.jcnetwork.members.security.handler.UserAuthenticationSuccessHandler;
 import com.jcnetwork.members.security.handler.UserLogoutSuccessHandler;
-import com.jcnetwork.members.security.service.MembersUserDetailsService;
+import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.service.ApiTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
@@ -51,7 +50,7 @@ public class WebSecurityConfiguration {
         private BCryptPasswordEncoder passwordEncoder;
 
         @Autowired
-        private MembersUserDetailsService apiMongoUserDetails;
+        private UserService apiMongoUserDetails;
 
         @Bean
         @Override
@@ -92,7 +91,7 @@ public class WebSecurityConfiguration {
         private String[] whitelistedUrls;
 
         @Autowired
-        private MembersUserDetailsService mongoUserDetails;
+        private UserService mongoUserDetails;
 
         @Autowired
         private BCryptPasswordEncoder passwordEncoder;

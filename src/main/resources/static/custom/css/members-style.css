@@ -102,11 +102,28 @@
 }
 
 #messages_table tr:hover td {
-    background: rgba(0, 0, 0, 0.075);
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
 }
 
 .mailbox-no-messages {
     width: 100%;
     text-align: center;
     line-height: 42px;
+}
+
+.message-read img {
+    opacity: 0.5;
+}
+
+.message-read td {
+    color: gray;
+}
+
+.edit-item {
+    padding: .5rem 1rem;
+}
+
+.btn-half {
+    width: 49%;
 }
