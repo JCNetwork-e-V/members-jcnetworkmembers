@@ -14,10 +14,10 @@
                     <div class="card-tools">
                         <div class="input-group input-group-sm">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default">
+                                <button type="button" class="btn btn-default" id="btn-export-png">
                                     <i class="fas fa-file-image"></i>
                                 </button>
-                                <button type="button" class="btn btn-default">
+                                <button type="button" class="btn btn-default" id="btn-export-pdf">
                                     <i class="fas fa-file-pdf"></i>
                                 </button>
                             </div>
@@ -97,7 +97,10 @@
 </div>
 
 <th:block th:fragment="organizational-chart-scripts">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
     <script type="text/javascript" src="/plugins/org-chart/js/jquery.orgchart.js"></script>
+    <script type="text/javascript" src="/plugins/html2canvas/html2canvas.min.js"></script>
+    <script type="text/javascript" src="/plugins/jsPDF/jspdf.umd.min.js"></script>
     <script>
         $(function() {
 
@@ -112,8 +115,9 @@
 
             // Get organizational chart
             function getChart() {
+                var consultancyName = window.location.pathname.split('/')[1]
                 $.ajax({
-                    'url': "/api/organizationalStructure/" + window.location.pathname.split('/')[1],
+                    'url': "/api/organizationalStructure/" + consultancyName,
                     'async': false,
                     'method': "GET",
                     'contentType': 'application/json',
@@ -125,7 +129,7 @@
                             'nodeId': 'name',
                             'nodeContent': 'title',
                             'pan': true,
-                            'zoom': true
+                            'zoom': true,
                         });
                     }
                 });
@@ -228,6 +232,16 @@
                 $('#chart-container').empty();
                 getChart();
             })
+
+            $('#btn-export-png').on('click', function() {
+                $('.orgchart').css('transform','');
+                oc.export(window.location.pathname.split('/')[1] + '_organigramm', 'png');
+            });
+
+            $('#btn-export-pdf').on('click', function() {
+                $('.orgchart').css('transform','');
+                oc.export(window.location.pathname.split('/')[1] + '_organigramm', 'pdf');
+            });
 
         });
     </script>
