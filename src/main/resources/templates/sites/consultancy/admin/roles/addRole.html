@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainLayout.html}">
+
+<head>
+    <title>Rolle hinzufügen | JCNetwork Members</title>
+</head>
+
+<body>
+<div layout:fragment="mainContent">
+
+    <form id="addRole" th:action="@{/addRole}" th:object="${role}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Rollenbeschreibung</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="inputName">Rollenname</label>
+                            <input type="text" id="inputName" class="form-control" th:field="*{name}">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDescription">Rollenbeschreibung</label>
+                            <textarea id="inputDescription" class="form-control" rows="4" th:field="*{description}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputStatus">Zugeordnete Organisationseinheit</label>
+                            <select id="inputStatus" class="form-control custom-select">
+                                <option selected disabled>Keine</option>
+                                <option>On Hold</option>
+                                <option>Canceled</option>
+                                <option>Success</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-md-6">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">Rechte</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="dashboardSwitch" th:field="*{dashboardAccess}">
+                                <label class="custom-control-label" for="dashboardSwitch">Vereinsdashboard einsehen</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="messagesSwitch" th:field="*{messagesAccess}">
+                                <label class="custom-control-label" for="messagesSwitch">Vereinsnachrichten lesen und senden</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="memberListSwitch" th:field="*{membersListAccess}">
+                                <label class="custom-control-label" for="memberListSwitch">Mitgliederliste einsehen</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="organizationalStructureSwitch" th:field="*{organizationalStructureAccess}">
+                                <label class="custom-control-label" for="organizationalStructureSwitch">Vereinssstruktur bearbeiten</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="rolesSwitch" th:field="*{roleManagementAccess}">
+                                <label class="custom-control-label" for="rolesSwitch">Rollen verwalten</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="settingsSwitch" th:field="*{accountSettingsAccess}">
+                                <label class="custom-control-label" for="settingsSwitch">Vereinseinstellungen bearbeiten</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <input type="submit" value="Rolle erstellen" class="btn btn-success float-right">
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Page scripts -->
+<th:block layout:fragment="script">
+<script>
+    var $form = $( '#addRole' );
+
+    $form.submit( function( event ) {
+
+        // respects th:action="@{/mycontroller/}" and appends id
+        $form.attr( 'action', window.location.pathname);
+
+        // submits the form in the normal way !
+        return;
+    });
+</script>
+</th:block>
+</body>
+</html>

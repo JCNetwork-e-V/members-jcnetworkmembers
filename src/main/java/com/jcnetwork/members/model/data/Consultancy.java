@@ -4,7 +4,9 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,6 +17,7 @@ public class Consultancy extends MongoDocument{
 
     private OrganizationalEntity rootEntity;
     private List<Member> members = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     private Boolean enabled;
 

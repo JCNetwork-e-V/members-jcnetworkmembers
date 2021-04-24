@@ -120,15 +120,28 @@
     color: gray;
 }
 
-.edit-item {
-    padding: .5rem 1rem;
+#chart-container {
+    text-align: center;
+    height: calc(100vh - 270px);
+    transition: margin-right 0.5s;
 }
 
-.item-main {
-    width: 79%;
+#btn-edit-chart {
+    position: absolute;
+    top: 73px;
+    right: 20px;
+    z-index: 4;
+    transition: right 0.5s;
 }
 
-.item-secondary {
-    width: 79%;
+#chart-edit {
+    position: fixed;
+    top: 186px;
+    right: 23px;
+    background: rgba(0,0,0,0.1);
+    height: calc(100vh - 270px);
+    transition: width 0.5s;
+    overflow-x: hidden;
+    width: 0;
+    white-space: nowrap;
 }
-

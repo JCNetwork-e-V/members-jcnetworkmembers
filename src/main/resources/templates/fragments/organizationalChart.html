@@ -6,7 +6,7 @@
 <div th:fragment="organizational-chart" class="container-fluid">
     <div class="row">
 
-        <div class="col-md-9">
+        <div class="col-md-12">
             <!-- main card -->
             <div class="card card-primary card-outline">
                 <div class="card-header">
@@ -27,7 +27,51 @@
                 <!-- /.card-header -->
                 <div class="card-body p-0">
                     <!-- organizational chart -->
-                    <div id="chart-container" style="text-align: center; min-height: 300px"></div>
+                    <div id="chart-container">
+                        <button id="btn-edit-chart" class="btn btn-jcnetwork">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                    </div>
+
+                    <!-- edit options -->
+                    <div id="chart-edit">
+                        <div class="card-body">
+                            <p>Gewähltes Element</p>
+                            <div class="input-group mb-3">
+                                <!-- /btn-group -->
+                                <input type="text" id="selected-node" class="form-control" disabled style="background-color: white">
+                                <div class="input-group-append">
+                                    <button type="button" id="btn-delete-nodes" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /input-group -->
+
+                            <p>Element hinzufügen</p>
+                            <div class="input-group mb-3">
+                                <!-- /btn-group -->
+                                <input type="text" id="new-node" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" id="btn-add-nodes" class="btn btn-jcnetwork">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /input-group -->
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <button class="btn btn-jcnetwork" id="btn-save" style="width: 100%">Speichern</button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-jcnetwork" id="btn-reset" style="width: 100%">
+                                        <i class="fas fa-redo-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /.card-body -->
@@ -36,62 +80,6 @@
                 </div>
             </div>
             <!-- /.chart card -->
-        </div>
-
-        <div class="col-md-3">
-
-            <!-- Input addon -->
-            <div class="card">
-
-                <div class="card-header">
-                    <h3 class="card-title">Struktur Bearbeiten</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card-body">
-
-                    <p>Gewähltes Element</p>
-                    <div class="input-group mb-3">
-                        <!-- /btn-group -->
-                        <input type="text" id="selected-node" class="form-control" disabled style="background-color: white">
-                        <div class="input-group-append">
-                            <button type="button" id="btn-delete-nodes" class="btn btn-danger">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- /input-group -->
-
-                    <p>Element hinzufügen</p>
-                    <div class="input-group mb-3">
-                        <!-- /btn-group -->
-                        <input type="text" id="new-node" class="form-control">
-                        <div class="input-group-append">
-                            <button type="button" id="btn-add-nodes" class="btn btn-jcnetwork">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- /input-group -->
-
-                    <div class="row">
-                        <div class="col-8">
-                            <button class="btn btn-jcnetwork" id="btn-save" style="width: 100%">Speichern</button>
-                        </div>
-                        <div class="col-4">
-                            <button class="btn btn-jcnetwork" id="btn-reset" style="width: 100%">
-                                <i class="fas fa-redo-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
         </div>
     </div>
 </div>
@@ -106,6 +94,7 @@
 
             var datasource = "";
             var oc;
+            var editBoxExpanded = false;
 
             var getId = function() {
                 return (new Date().getTime()) * 1000 + Math.floor(Math.random() * 1001);
@@ -207,7 +196,7 @@
             });
 
             $('#chart-container').on('click', function(e) {
-                if (e.target.className !== 'title' && e.target.className !== 'content') {
+                if (e.target.className !== 'title' && e.target.className !== 'content' && e.target.id !== 'btn-edit-chart') {
                     $('.orgchart').find('.focused').removeClass('focused');
                     $('#selected-node').val('');
                     $('#new-nodelist').find('input:first').val('').parent().siblings().remove();
@@ -241,6 +230,20 @@
             $('#btn-export-pdf').on('click', function() {
                 $('.orgchart').css('transform','');
                 oc.export(window.location.pathname.split('/')[1] + '_organigramm', 'pdf');
+            });
+
+            $('#btn-edit-chart').on('click', function() {
+                if(!editBoxExpanded){
+                    $('#chart-container').css('margin-right', '300px');
+                    $('#btn-edit-chart').css('right', '320px');
+                    $('#chart-edit').css('width', '300px');
+                    editBoxExpanded = true;
+                } else {
+                    $('#chart-container').css('margin-right', '0px');
+                    $('#btn-edit-chart').css('right', '20px');
+                    $('#chart-edit').css('width', '0px');
+                    editBoxExpanded = false;
+                }
             });
 
         });

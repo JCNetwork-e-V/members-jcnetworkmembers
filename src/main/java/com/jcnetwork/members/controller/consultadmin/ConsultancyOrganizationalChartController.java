@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/{consultancy}/admin")
-public class ConsultancyAdministrationOrganizationalChartController {
+public class ConsultancyOrganizationalChartController {
 
     @Autowired
     private ControllerUtils utils;

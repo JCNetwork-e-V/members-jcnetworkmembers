@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/{consultancy}/admin")
-public class ConsultancyAdministrationMessageController {
+public class ConsultancyMessageController {
 
     @Autowired
     private ConsultancyService consultancyService;

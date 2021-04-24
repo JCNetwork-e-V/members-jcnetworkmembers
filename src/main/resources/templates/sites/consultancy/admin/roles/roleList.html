@@ -6,7 +6,7 @@
       layout:decorate="~{layouts/mainLayout.html}">
 
 <head>
-    <title>Mitgliederliste | JCNetwork Members</title>
+    <title>Rollenliste | JCNetwork Members</title>
 
     <!-- DataTables -->
     <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -21,7 +21,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Vereinsmitglieder</h3>
+                    <h3 class="card-title">Vereinsrollen</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -29,32 +29,15 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Rollen</th>
-                            <th:block th:each="customField : ${members.get(0).getSchemalessData}">
-                                <th th:text="*{customField.key}"></th>
-                            </th:block>
                         </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="member : ${members}">
-                                <td th:text="${member.firstName} + ' ' + ${member.lastName}"></td>
-                                <td>
-                                    <th:block th:each="role : ${member.roles}">
-                                        <span th:text="${role.name}"></span><br>
-                                    </th:block>
-                                </td>
-                                <th:block th:each="customField : ${member.schemalessData}">
-                                    <td th:text="${customField.value}"></td>
-                                </th:block>
+                            <tr th:each="role : ${roles}">
+                                <td th:text="${role.name}"></td>
                             </tr>
                         </tbody>
                         <tfoot>
-                        <th>Name</th>
-                        <th>Ressort</th>
-                        <th>Rollen</th>
-                        <th:block th:each="customField : ${members.get(0).getSchemalessData}">
-                            <th th:text="*{customField.key}"></th>
-                        </th:block>
+                            <th>Name</th>
                         </tfoot>
                     </table>
                 </div>

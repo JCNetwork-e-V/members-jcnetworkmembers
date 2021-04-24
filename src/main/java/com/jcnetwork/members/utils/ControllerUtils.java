@@ -51,7 +51,7 @@ public class ControllerUtils {
                 .addSubItem("Rollenverzeichnis", "/" + consultancyName + "/admin/roleList", "fa-tags").and()
                 .addSubItem("Rolle hinzufügen", "/" + consultancyName + "/admin/addRole", "fa-plus").and()
                 .addSubItem("Rollen zuweisen", "/" + consultancyName + "/admin/roleAllocation", "fa-user-plus").topLevel()
-                .addNavItem("Accountverwaltung", "/" + consultancyName + "/admin/accountSettings", "fa-wrench").closeNavGroup();
+                .addNavItem("Vereinseinstellungen", "/" + consultancyName + "/admin/accountSettings", "fa-wrench").closeNavGroup();
 
 
         if(!activePath.isEmpty()) sidebar.setActiveLinks("/" + consultancyName + "/admin" + activePath);
