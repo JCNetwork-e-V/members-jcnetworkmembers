@@ -24,4 +24,24 @@ public class Consultancy extends MongoDocument{
     public Consultancy() {
         this.enabled = false;
     }
+
+    public List<OrganizationalEntity> getOrganizationalEntities(){
+
+        List<OrganizationalEntity> entities = new ArrayList<>();
+        entities.add(this.rootEntity);
+        entities.addAll(getChildren(this.rootEntity));
+        return entities;
+    }
+
+    private List<OrganizationalEntity> getChildren(OrganizationalEntity entity){
+
+        List<OrganizationalEntity> children = new ArrayList<>();
+        if(entity.getChildren() != null){
+            for(OrganizationalEntity childEntity : entity.getChildren()){
+                children.addAll(getChildren(childEntity));
+                children.add(childEntity);
+            }
+        }
+        return children;
+    }
 }

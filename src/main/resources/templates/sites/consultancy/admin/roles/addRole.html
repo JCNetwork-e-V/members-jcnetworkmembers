@@ -36,11 +36,11 @@
                         </div>
                         <div class="form-group">
                             <label for="inputStatus">Zugeordnete Organisationseinheit</label>
-                            <select id="inputStatus" class="form-control custom-select">
-                                <option selected disabled>Keine</option>
-                                <option>On Hold</option>
-                                <option>Canceled</option>
-                                <option>Success</option>
+                            <select id="inputStatus" class="form-control custom-select" th:field="*{associatedOrganizationalEntity}">
+                                <option selected value="Keine">Keine</option>
+                                <th:block th:each="entity : ${organizationalEntities}">
+                                    <option th:value="${entity.name}" th:text="${entity.name}"></option>
+                                </th:block>
                             </select>
                         </div>
                     </div>
@@ -117,10 +117,8 @@
 
     $form.submit( function( event ) {
 
-        // respects th:action="@{/mycontroller/}" and appends id
+        //Handle path variable in action attribute
         $form.attr( 'action', window.location.pathname);
-
-        // submits the form in the normal way !
         return;
     });
 </script>

@@ -4,16 +4,11 @@ import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.Role;
 import com.jcnetwork.members.model.data.UserDetails;
-import com.jcnetwork.members.model.dto.RegistrationDto;
-import com.jcnetwork.members.model.event.OnUserRegistrationCompleteEvent;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
-import com.jcnetwork.members.security.model.Account;
-import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +56,7 @@ public class ConsultancyRoleController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("role", new Role());
-        modelAndView.addObject("organizationalEntities", ""); //TODO write method to get all organizational entities
+        modelAndView.addObject("organizationalEntities", consultancy.get().getOrganizationalEntities());
         modelAndView.addObject("userDetails", userDetails);
         modelAndView.addObject("contentHeader", "Rolle Hinzufügen");
         modelAndView.addObject("sidebar", sidebar);
@@ -77,7 +72,7 @@ public class ConsultancyRoleController {
 
         ModelAndView modelAndView = new ModelAndView();
         Consultancy consultancy = consultancyService.getByName(consultancyName)
-                .orElseThrow( () -> new ItemNotFoundException("Verein existiert nicht"));
+                .orElseThrow( () -> new ItemNotFoundException("Verein existiert nicht")); //TODO real error page
 
         Set<Role> roles = consultancy.getRoles();
         for(Role existingRole : roles) {

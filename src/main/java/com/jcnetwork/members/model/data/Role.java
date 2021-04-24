@@ -15,7 +15,7 @@ public class Role {
 
     private String name;
     private String description;
-    private OrganizationalEntity associatedOrganizationalEntity;
+    private String associatedOrganizationalEntity;
     private Boolean dashboardAccess;
     private Boolean messagesAccess;
     private Boolean membersListAccess;

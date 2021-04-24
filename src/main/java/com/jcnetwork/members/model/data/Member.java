@@ -3,10 +3,7 @@ package com.jcnetwork.members.model.data;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
@@ -14,7 +11,7 @@ public class Member extends MongoDocument{
 
     @DBRef
     private UserDetails userDetails;
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     // a container for all unexpected fields
     private Map<String, Object> schemalessData;

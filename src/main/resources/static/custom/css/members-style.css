@@ -145,3 +145,7 @@
     width: 0;
     white-space: nowrap;
 }
+
+.table-icon {
+    text-align: center;
+}

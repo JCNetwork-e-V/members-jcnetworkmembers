@@ -29,15 +29,48 @@
                         <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Organisationseinheit</th>
+                            <th class="table-icon"><i class="fas fa-tachometer-alt"></i></th>
+                            <th class="table-icon"><i class="fas fa-envelope"></i></th>
+                            <th class="table-icon"><i class="fas fa-list"></i></th>
+                            <th class="table-icon"><i class="fas fa-sitemap"></i></th>
+                            <th class="table-icon"><i class="fas fa-user-tag"></i></th>
+                            <th class="table-icon"><i class="fas fa-wrench"></i></th>
                         </tr>
                         </thead>
                         <tbody>
                             <tr th:each="role : ${roles}">
                                 <td th:text="${role.name}"></td>
+                                <td th:text="${role.associatedOrganizationalEntity}"></td>
+                                <td class="table-icon">
+                                    <i class="fas fa-check" th:if="${role.dashboardAccess}"></i>
+                                </td>
+                                <td class="table-icon">
+                                    <i class="fas fa-check" th:if="${role.messagesAccess}"></i>
+                                </td>
+                                <td class="table-icon">
+                                    <i class="fas fa-check" th:if="${role.membersListAccess}"></i>
+                                </td>
+                                <td class="table-icon">
+                                    <i class="fas fa-check"  th:if="${role.organizationalStructureAccess}"></i>
+                                </td>
+                                <td class="table-icon">
+                                    <i class="fas fa-check" th:if="${role.roleManagementAccess}"></i>
+                                </td>
+                                <td class="table-icon">
+                                    <i class="fas fa-check" th:if="${role.accountSettingsAccess}"></i>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <th>Name</th>
+                            <th>Organisationseinheit</th>
+                            <th class="table-icon"><i class="fas fa-tachometer-alt"></i></th>
+                            <th class="table-icon"><i class="fas fa-envelope"></i></th>
+                            <th class="table-icon"><i class="fas fa-list"></i></th>
+                            <th class="table-icon"><i class="fas fa-sitemap"></i></th>
+                            <th class="table-icon"><i class="fas fa-user-tag"></i></th>
+                            <th class="table-icon"><i class="fas fa-wrench"></i></th>
                         </tfoot>
                     </table>
                 </div>
@@ -71,9 +104,8 @@
         $("#dataTable").DataTable({
             "responsive": true,
             "lengthChange": false,
-            "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#dataTable_wrapper .col-md-6:eq(0)');
+            "autoWidth": false
+        });
     });
     </script>
 </th:block>
