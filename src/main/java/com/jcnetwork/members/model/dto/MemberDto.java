@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,5 +17,5 @@ public class MemberDto {
     private String firstName;
     private String lastName;
     private Set<Role> roles;
-    private Map<String, Object> schemalessData;
+    private Map<String, Object> customFields;
 }

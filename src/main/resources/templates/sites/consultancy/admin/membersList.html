@@ -30,7 +30,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Rollen</th>
-                            <th:block th:each="customField : ${members.get(0).getSchemalessData}">
+                            <th:block th:each="customField : ${members.get(0).customFields}">
                                 <th th:text="*{customField.key}"></th>
                             </th:block>
                         </tr>
@@ -43,16 +43,15 @@
                                         <span th:text="${role.name}"></span><br>
                                     </th:block>
                                 </td>
-                                <th:block th:each="customField : ${member.schemalessData}">
+                                <th:block th:each="customField : ${member.customFields}">
                                     <td th:text="${customField.value}"></td>
                                 </th:block>
                             </tr>
                         </tbody>
                         <tfoot>
                         <th>Name</th>
-                        <th>Ressort</th>
                         <th>Rollen</th>
-                        <th:block th:each="customField : ${members.get(0).getSchemalessData}">
+                        <th:block th:each="customField : ${members.get(0).customFields}">
                             <th th:text="*{customField.key}"></th>
                         </th:block>
                         </tfoot>
