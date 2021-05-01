@@ -38,13 +38,10 @@ public class AdminController {
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
 
-        UserDetails userDetails = utils.getUserDetailsFromContext();
-        Sidebar sidebar = adminSidebar("/admin/dashboard");
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("userDetails", userDetails);
-        modelAndView.addObject("contentHeader", "Admin Dashboard");
-        modelAndView.addObject("sidebar", sidebar);
+        ModelAndView modelAndView = utils.createMainLayoutAdmin(
+                "/dashboard",
+                "Dashboard"
+        );
         modelAndView.setViewName("sites/admin/dashboard");
         return modelAndView;
     }
@@ -52,14 +49,10 @@ public class AdminController {
     @GetMapping("/createConsultancy")
     public ModelAndView getConsultancyCreationForm() {
 
-        UserDetails userDetails = utils.getUserDetailsFromContext();
-        Sidebar sidebar = adminSidebar("/admin/createConsultancy");
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("userDetails", userDetails);
-        modelAndView.addObject("contentHeader", "Verein anlegen");
-        modelAndView.addObject("sidebar", sidebar);
-        modelAndView.addObject("consultancy", new ConsultancyCreationDto());
+        ModelAndView modelAndView = utils.createMainLayoutAdmin(
+                "/admin/createConsultancy",
+                "Neuen Verein anlegen"
+        );
         modelAndView.setViewName("sites/admin/createConsultancy");
         return modelAndView;
     }
@@ -79,35 +72,12 @@ public class AdminController {
     @GetMapping("/consultancyList")
     public ModelAndView getConsultancyList() {
 
-        UserDetails userDetails = utils.getUserDetailsFromContext();
-
-        Sidebar sidebar = adminSidebar("/admin/consultancyList");
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("userDetails", userDetails);
-        modelAndView.addObject("contentHeader", "Vereinsliste");
-        modelAndView.addObject("sidebar", sidebar);
+        ModelAndView modelAndView = utils.createMainLayoutAdmin(
+                "/admin/consultancyList",
+                "Vereinsliste"
+        );
         modelAndView.addObject("consultancies", mapper.toDto(consultancyService.getAll()));
         modelAndView.setViewName("sites/admin/consultancyList");
         return modelAndView;
-    }
-
-
-    private Sidebar adminSidebar(String activePath) {
-
-        Sidebar sidebar = new Sidebar();
-        sidebar
-            .addNavGroup()
-                .addNavItem("Dashboard", "/admin/dashboard", "fa-tachometer-alt").topLevel()
-                .addNavItem("Meldungen", "/admin/messages", "fa-envelope").closeNavGroup()
-            .addNavGroup("Vereinsverwaltung")
-                .addNavItem("Vereinsliste", "/admin/consultancyList", "fa-list").topLevel()
-                .addNavItem("Verein anlegen", "/admin/createConsultancy", "fa-plus").topLevel()
-                .addNavItem("Verein löschen", "/admin/deleteConsultancy", "fa-eraser").closeNavGroup()
-            .addNavGroup("Nutzerverwaltung")
-                .addNavItem("Nutzerliste", "/admin/userList", "fa-users");
-
-        if(!activePath.isEmpty()) sidebar.setActiveLinks(activePath);
-        return sidebar;
     }
 }

@@ -1,13 +1,16 @@
 package com.jcnetwork.members.utils;
 
+import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.UserDetails;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
 import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.model.User;
+import com.jcnetwork.members.service.ConsultancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 
@@ -17,7 +20,36 @@ public class ControllerUtils {
     @Autowired
     private UserService userDetailsService;
 
-    public UserDetails getUserDetailsFromContext() {
+    @Autowired
+    private ConsultancyService consultancyService;
+
+    public ModelAndView createMainLayoutAdmin(String activePath, String contentHeader) {
+
+        UserDetails userDetails = getUserDetailsFromContext();
+        Sidebar sidebar = adminSidebar(activePath);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("userDetails", userDetails);
+        modelAndView.addObject("contentHeader", contentHeader);
+        modelAndView.addObject("sidebar", sidebar);
+        modelAndView.addObject("consultancyName", "Admin");
+        return modelAndView;
+    }
+
+    public ModelAndView createMainLayoutConsultancy(String activePath, String consultancyName, String contentHeader) {
+
+        UserDetails userDetails = getUserDetailsFromContext();
+        Sidebar sidebar = consultancySidebar(activePath, consultancyName);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("userDetails", userDetails);
+        modelAndView.addObject("contentHeader", contentHeader);
+        modelAndView.addObject("sidebar", sidebar);
+        modelAndView.addObject("consultancyName", consultancyName);
+        return modelAndView;
+    }
+
+    private UserDetails getUserDetailsFromContext() {
 
         String username = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -33,6 +65,24 @@ public class ControllerUtils {
 
         if(user.isPresent()) return user.get().getUserDetails();
         else return null;
+    }
+
+    private Sidebar adminSidebar(String activePath) {
+
+        Sidebar sidebar = new Sidebar();
+        sidebar
+                .addNavGroup()
+                .addNavItem("Dashboard", "/admin/dashboard", "fa-tachometer-alt").topLevel()
+                .addNavItem("Meldungen", "/admin/messages", "fa-envelope").closeNavGroup()
+                .addNavGroup("Vereinsverwaltung")
+                .addNavItem("Vereinsliste", "/admin/consultancyList", "fa-list").topLevel()
+                .addNavItem("Verein anlegen", "/admin/createConsultancy", "fa-plus").topLevel()
+                .addNavItem("Verein löschen", "/admin/deleteConsultancy", "fa-eraser").closeNavGroup()
+                .addNavGroup("Nutzerverwaltung")
+                .addNavItem("Nutzerliste", "/admin/userList", "fa-users");
+
+        if(!activePath.isEmpty()) sidebar.setActiveLinks(activePath);
+        return sidebar;
     }
 
     public Sidebar consultancySidebar(String activePath, String consultancyName) {

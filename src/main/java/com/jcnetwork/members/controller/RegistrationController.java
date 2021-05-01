@@ -124,12 +124,12 @@ public class RegistrationController {
     public ModelAndView getConsultancyRegistrationForm() {
         // TODO redirect if already filled out
 
-        String consultancyName = utils.getUserDetailsFromContext().getFirstName();
+        //String consultancyName = utils.getUserDetailsFromContext().getFirstName();
 
-        Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
+        //Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("consultancyDetails", consultancy.get().getConsultancyDetails());
+        //modelAndView.addObject("consultancyDetails", consultancy.get().getConsultancyDetails());
         modelAndView.setViewName("sites/consultancy/admin/consultancyRegistration");
         return modelAndView;
     }
