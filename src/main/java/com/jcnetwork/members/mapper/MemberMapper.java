@@ -2,6 +2,7 @@ package com.jcnetwork.members.mapper;
 
 import com.jcnetwork.members.model.data.Member;
 import com.jcnetwork.members.model.dto.MemberDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import java.util.List;
 
 @Component
 public class MemberMapper {
+
+    @Autowired
+    private UserDetailsMapper userDetailsMapper;
 
     public MemberDto toDto(Member member) {
 
@@ -21,8 +25,8 @@ public class MemberMapper {
         }
 
         return new MemberDto(
-                firstName,
-                lastname,
+                member.getUuid().toString(),
+                userDetailsMapper.toDto(member.getUserDetails()),
                 member.getRoles(),
                 member.getCustomFields()
         );

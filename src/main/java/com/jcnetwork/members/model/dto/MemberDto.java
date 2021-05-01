@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,8 +13,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class MemberDto {
 
-    private String firstName;
-    private String lastName;
-    private Set<Role> roles;
+    private String uuid;
+    private UserDetailsDto userDetails;
+    private Set<String> roles;
     private Map<String, Object> customFields;
 }

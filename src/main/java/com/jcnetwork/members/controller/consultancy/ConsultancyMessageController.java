@@ -1,4 +1,4 @@
-package com.jcnetwork.members.controller.consultadmin;
+package com.jcnetwork.members.controller.consultancy;
 
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.UserDetails;

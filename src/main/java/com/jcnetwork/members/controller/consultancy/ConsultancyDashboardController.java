@@ -1,6 +1,5 @@
-package com.jcnetwork.members.controller.consultadmin;
+package com.jcnetwork.members.controller.consultancy;
 
-import com.jcnetwork.members.mapper.MemberMapper;
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.UserDetails;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
@@ -17,30 +16,27 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/{consultancy}/admin")
-public class ConsultancyMembersController {
+public class ConsultancyDashboardController {
 
     @Autowired
     private ControllerUtils utils;
 
     @Autowired
-    private MemberMapper mapper;
-
-    @Autowired
     private ConsultancyService consultancyService;
 
-    @GetMapping("/memberList")
-    public ModelAndView getMembersList(@PathVariable("consultancy") String consultancyName) {
+    @GetMapping("/dashboard")
+    public ModelAndView consultancyDashboard(@PathVariable("consultancy") String consultancyName) {
 
         UserDetails userDetails = utils.getUserDetailsFromContext();
-        Sidebar sidebar = utils.consultancySidebar("/memberList", consultancyName);
+        Sidebar sidebar = utils.consultancySidebar("/dashboard", consultancyName);
         Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userDetails", userDetails);
-        modelAndView.addObject("contentHeader", "Mitgliederliste");
+        modelAndView.addObject("contentHeader", "Admin Dashboard");
         modelAndView.addObject("sidebar", sidebar);
-        modelAndView.addObject("members", mapper.toDto(consultancy.get().getMembers()));
-        modelAndView.setViewName("sites/consultancy/admin/membersList");
+        modelAndView.addObject("consultancyName", consultancy.get().getConsultancyDetails().getName());
+        modelAndView.setViewName("sites/consultancy/admin/dashboard");
         return modelAndView;
     }
 }

@@ -35,6 +35,8 @@ public class InternalMessagesRESTController {
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getMessage(@PathVariable("id") String id) {
 
+        //TODO make sure principal matches with message
+
         InternalMessage message = messageService.getById(id)
                 .orElseThrow(() -> new ItemNotFoundException("Message not found"));
 

@@ -149,3 +149,13 @@
 .table-icon {
     text-align: center;
 }
+
+.duallistbox-select {
+    border: 0;
+    height: 24px !important;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1.5;
+    box-shadow: inherit;
+}

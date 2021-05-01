@@ -9,9 +9,11 @@ import java.util.*;
 @Setter
 public class Member extends MongoDocument{
 
+    @Setter(AccessLevel.NONE)
+    private UUID uuid;
     @DBRef
     private UserDetails userDetails;
-    private Set<Role> roles = new HashSet<>();
+    private Set<String> roles = new HashSet<>();
 
     // a container for all unexpected fields
     private Map<String, Object> schemalessData;
@@ -23,9 +25,23 @@ public class Member extends MongoDocument{
         schemalessData.put(key, value);
     }
 
+    public Member() {
+        this.uuid = UUID.randomUUID();
+    }
+
     public Map<String, Object> getCustomFields() {
         return schemalessData;
     }
 
     public Object getCustomField(String fieldName) { return schemalessData.get(fieldName); }
+
+    public void addRole(String roleName) {
+        this.roles.add(roleName);
+    }
+
+    public void removeRole(String roleName) {
+        if(this.roles.contains(roleName)){
+            this.roles.remove(roleName);
+        }
+    }
 }

@@ -44,4 +44,13 @@ public class Consultancy extends MongoDocument{
         }
         return children;
     }
+
+    public Role getRole(String roleName) throws Exception {
+        for(Role role : this.getRoles()){
+            if(role.getName().equals(roleName)){
+                return role;
+            }
+        }
+        throw new Exception("Role not found");
+    }
 }
