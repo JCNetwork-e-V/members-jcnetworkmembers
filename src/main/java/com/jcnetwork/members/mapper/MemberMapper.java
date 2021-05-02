@@ -1,6 +1,7 @@
 package com.jcnetwork.members.mapper;
 
 import com.jcnetwork.members.model.data.Member;
+import com.jcnetwork.members.model.data.UserDetails;
 import com.jcnetwork.members.model.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,17 +17,14 @@ public class MemberMapper {
 
     public MemberDto toDto(Member member) {
 
-        String firstName = null;
-        String lastname = null;
-        String departmentName = null;
+        UserDetails userDetails = new UserDetails();
         if (member.getUserDetails() != null){
-            firstName = member.getUserDetails().getFirstName();
-            lastname = member.getUserDetails().getLastName();
+            userDetails = member.getUserDetails();
         }
 
         return new MemberDto(
-                member.getUuid().toString(),
-                userDetailsMapper.toDto(member.getUserDetails()),
+                member.getEmail(),
+                userDetailsMapper.toDto(userDetails),
                 member.getRoles(),
                 member.getCustomFields()
         );

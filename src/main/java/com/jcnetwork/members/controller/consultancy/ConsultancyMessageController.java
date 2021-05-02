@@ -1,6 +1,5 @@
 package com.jcnetwork.members.controller.consultancy;
 
-import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,10 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class ConsultancyMessageController {
 
     @Autowired
-    private ConsultancyService consultancyService;
-
-    @Autowired
     private ControllerUtils utils;
+
+    private final String PRIVILEG_NAME = "MESSAGES";
 
     @GetMapping("/messages")
     public ModelAndView getMessages(@PathVariable("consultancy") String consultancyName) {
@@ -25,9 +23,11 @@ public class ConsultancyMessageController {
         ModelAndView modelAndView = utils.createMainLayoutConsultancy(
                 "/messages",
                 consultancyName,
-                "Nachrichten"
+                "Nachrichten",
+                PRIVILEG_NAME,
+                "sites/consultancy/admin/messages",
+                null
         );
-        modelAndView.setViewName("sites/consultancy/admin/messages");
         return modelAndView;
     }
 
@@ -37,8 +37,12 @@ public class ConsultancyMessageController {
         ModelAndView modelAndView = utils.createMainLayoutConsultancy(
                 "/messages",
                 consultancyName,
-                "Neue Nachricht formulieren");
-        modelAndView.setViewName("sites/consultancy/admin/messages"); //TODO create site
+                "Neue Nachricht formulieren",
+                PRIVILEG_NAME,
+                "sites/consultancy/admin/messages",
+                null
+        );
+        //TODO create site
         return modelAndView;
     }
 }

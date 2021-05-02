@@ -57,6 +57,7 @@ public class UserDetailsRegistrationListener implements ApplicationListener<OnUs
         userService.saveUser(user);
 
         Member member = new Member();
+        member.setEmail(username);
         member.setUserDetails(userDetails);
 
         String domain = username.substring(username.indexOf("@") + 1);

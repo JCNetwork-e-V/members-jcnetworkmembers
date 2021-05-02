@@ -53,6 +53,7 @@ public class AdminController {
                 "/admin/createConsultancy",
                 "Neuen Verein anlegen"
         );
+        modelAndView.addObject("consultancy", new ConsultancyCreationDto());
         modelAndView.setViewName("sites/admin/createConsultancy");
         return modelAndView;
     }

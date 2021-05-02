@@ -19,15 +19,19 @@ public class ConsultancyOrganizationalChartController {
     @Autowired
     private ConsultancyService consultancyService;
 
+    private final String PRIVILEG_NAME = "ORGANIZATIONAL_STRUCTURE";
+
     @GetMapping("/consultancyStructure")
     public ModelAndView getOrganizationalStructure(@PathVariable("consultancy") String consultancyName) {
 
         ModelAndView modelAndView = utils.createMainLayoutConsultancy(
                 "/consultancyStructure",
                 consultancyName,
-                "Vereinsstruktur"
+                "Vereinsstruktur",
+                PRIVILEG_NAME,
+                "sites/consultancy/admin/organizationalStructure",
+                null
         );
-        modelAndView.setViewName("sites/consultancy/admin/organizationalStructure");
         return modelAndView;
     }
 }

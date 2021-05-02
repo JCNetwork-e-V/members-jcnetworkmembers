@@ -16,8 +16,7 @@ public class ConsultancyDashboardController {
     @Autowired
     private ControllerUtils utils;
 
-    @Autowired
-    private ConsultancyService consultancyService;
+    private final String PRIVILEG_NAME = "DASHBOARD";
 
     @GetMapping("/dashboard")
     public ModelAndView consultancyDashboard(@PathVariable("consultancy") String consultancyName) {
@@ -25,9 +24,11 @@ public class ConsultancyDashboardController {
         ModelAndView modelAndView = utils.createMainLayoutConsultancy(
                 "/dashboard",
                 consultancyName,
-                "Dashboard"
+                "Dashboard",
+                PRIVILEG_NAME,
+                "sites/consultancy/admin/dashboard",
+                null
         );
-        modelAndView.setViewName("sites/consultancy/admin/dashboard");
         return modelAndView;
     }
 }

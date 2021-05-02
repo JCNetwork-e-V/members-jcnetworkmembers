@@ -9,8 +9,7 @@ import java.util.*;
 @Setter
 public class Member extends MongoDocument{
 
-    @Setter(AccessLevel.NONE)
-    private UUID uuid;
+    private String email;
     @DBRef
     private UserDetails userDetails;
     private Set<String> roles = new HashSet<>();
@@ -23,10 +22,6 @@ public class Member extends MongoDocument{
             schemalessData = new HashMap<>();
         }
         schemalessData.put(key, value);
-    }
-
-    public Member() {
-        this.uuid = UUID.randomUUID();
     }
 
     public Map<String, Object> getCustomFields() {

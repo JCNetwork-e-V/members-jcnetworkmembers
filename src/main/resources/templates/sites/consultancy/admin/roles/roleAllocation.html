@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
-                        <select id="allMembersList" class="duallistbox" multiple="multiple" th:field="*{uuids}"></select>
+                        <select id="allMembersList" class="duallistbox" multiple="multiple"></select>
                     </div>
                     <!-- /.form-group -->
                     <button id="btn-save" class="btn btn-success float-right">Speichern</button>
@@ -122,9 +122,9 @@
                     roleBearersList.children().remove();
                     $.each(response, function (i, item) {
                         if(item.roles.indexOf(selectedRole) !== -1) {
-                            roleBearersList.append('<option value=\"' + item.uuid + '\" selected>' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
+                            roleBearersList.append('<option value=\"' + item.email + '\" selected>' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
                         } else {
-                            roleBearersList.append('<option value=\"' + item.uuid + '\">' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
+                            roleBearersList.append('<option value=\"' + item.email + '\">' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
                         }
                     })
                     roleBearersList.bootstrapDualListbox('refresh');

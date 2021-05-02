@@ -46,11 +46,16 @@ public class Consultancy extends MongoDocument{
     }
 
     public Role getRole(String roleName) throws Exception {
-        for(Role role : this.getRoles()){
-            if(role.getName().equals(roleName)){
-                return role;
-            }
+        for(Role role : this.roles){
+            if(role.getName().equals(roleName)) return role;
         }
         throw new Exception("Role not found");
+    }
+
+    public Member getMemberByEmail(String email) {
+        for(Member member : this.members){
+            if(member.getEmail().toLowerCase().equals(email.toLowerCase())) return member;
+        }
+        return null;
     }
 }

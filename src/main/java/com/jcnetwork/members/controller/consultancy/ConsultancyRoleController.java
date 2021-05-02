@@ -3,7 +3,6 @@ package com.jcnetwork.members.controller.consultancy;
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.Role;
-import com.jcnetwork.members.model.dto.UuidListDto;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,17 +30,24 @@ public class ConsultancyRoleController {
     @Autowired
     private ConsultancyService consultancyService;
 
+    private final String PRIVILEG_NAME = "ROLE_MANAGEMENT";
+
     @GetMapping("/roleList")
     public ModelAndView roleList(@PathVariable("consultancy") String consultancyName) {
 
         Consultancy consultancy = consultancyService.getByName(consultancyName).get();
 
+        Map<String, Object> addedObjects = new HashMap<>();
+        addedObjects.put("roles", consultancy.getRoles());
+
         ModelAndView modelAndView = utils.createMainLayoutConsultancy(
                 "/roleList",
                 consultancyName,
-                "Rollenübersicht");
-        modelAndView.addObject("roles", consultancy.getRoles());
-        modelAndView.setViewName("sites/consultancy/admin/roles/roleList");
+                "Rollenübersicht",
+                PRIVILEG_NAME,
+                "sites/consultancy/admin/roles/roleList",
+                addedObjects
+        );
         return modelAndView;
     }
 
@@ -48,13 +56,18 @@ public class ConsultancyRoleController {
 
         Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
 
+        Map<String, Object> addedObjects = new HashMap<>();
+        addedObjects.put("role", new Role());
+        addedObjects.put("organizationalEntities", consultancy.get().getOrganizationalEntities());
+
         ModelAndView modelAndView = utils.createMainLayoutConsultancy(
                 "/addRole",
                 consultancyName,
-                "Rolle hinzufügen");
-        modelAndView.addObject("role", new Role());
-        modelAndView.addObject("organizationalEntities", consultancy.get().getOrganizationalEntities());
-        modelAndView.setViewName("sites/consultancy/admin/roles/addRole");
+                "Rolle hinzufügen",
+                PRIVILEG_NAME,
+                "sites/consultancy/admin/roles/addRole",
+                addedObjects
+        );
         return modelAndView;
     }
 
@@ -86,9 +99,11 @@ public class ConsultancyRoleController {
         ModelAndView modelAndView = utils.createMainLayoutConsultancy(
                 "/roleAllocation",
                 consultancyName,
-                "Rollen zuweisen");
-        modelAndView.addObject("uuids", new UuidListDto());
-        modelAndView.setViewName("sites/consultancy/admin/roles/roleAllocation");
+                "Rollen zuweisen",
+                PRIVILEG_NAME,
+                "sites/consultancy/admin/roles/roleAllocation",
+                null
+        );
         return modelAndView;
     }
 }

@@ -20,9 +20,6 @@ public class RoleRESTController {
     private RoleMapper mapper;
 
     @Autowired
-    private UserDetailsMapper userDetailsMapper;
-
-    @Autowired
     private ConsultancyService consultancyService;
 
     @GetMapping(path = "/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,7 +52,7 @@ public class RoleRESTController {
     public ResponseEntity updateRoles(
             @PathVariable("consultancy") String consultancyName,
             @PathVariable("role") String roleName,
-            @RequestBody List<String> membersUuids) throws Exception {
+            @RequestBody List<String> memberEmails) throws Exception {
 
         Consultancy consultancy = consultancyService.getByName(consultancyName)
                 .orElseThrow(() -> new Exception("Consultancy not found"));
@@ -63,7 +60,7 @@ public class RoleRESTController {
         List<Member> updatedMembers = new ArrayList<>();
 
         for(Member member : consultancy.getMembers()) {
-            if(membersUuids.contains(member.getUuid().toString())){
+            if(memberEmails.contains(member.getEmail())){
                 if(!member.getRoles().contains(roleName)) {
                     member.addRole(roleName);
                 }
