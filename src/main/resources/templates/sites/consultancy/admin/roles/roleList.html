@@ -43,22 +43,22 @@
                                 <td th:text="${role.name}"></td>
                                 <td th:text="${role.associatedOrganizationalEntity}"></td>
                                 <td class="table-icon">
-                                    <i class="fas fa-check" th:if="${role.dashboardAccess}"></i>
+                                    <i class="fas fa-check" th:if='${role.privileges.contains("DASHBOARD")}'></i>
                                 </td>
                                 <td class="table-icon">
-                                    <i class="fas fa-check" th:if="${role.messagesAccess}"></i>
+                                    <i class="fas fa-check" th:if='${role.privileges.contains("MESSAGES")}'></i>
                                 </td>
                                 <td class="table-icon">
-                                    <i class="fas fa-check" th:if="${role.membersListAccess}"></i>
+                                    <i class="fas fa-check" th:if='${role.privileges.contains("MEMBER_LIST")}'></i>
                                 </td>
                                 <td class="table-icon">
-                                    <i class="fas fa-check"  th:if="${role.organizationalStructureAccess}"></i>
+                                    <i class="fas fa-check"  th:if='${role.privileges.contains("ORGANIZATIONAL_STRUCTURE")}'></i>
                                 </td>
                                 <td class="table-icon">
-                                    <i class="fas fa-check" th:if="${role.roleManagementAccess}"></i>
+                                    <i class="fas fa-check" th:if='${role.privileges.contains("ROLE_MANAGEMENT")}'></i>
                                 </td>
                                 <td class="table-icon">
-                                    <i class="fas fa-check" th:if="${role.accountSettingsAccess}"></i>
+                                    <i class="fas fa-check" th:if='${role.privileges.contains("ACCOUNT_SETTINGS")}'></i>
                                 </td>
                             </tr>
                         </tbody>

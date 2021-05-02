@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,10 +14,5 @@ public class RoleDto {
     private String name;
     private String description;
     private String associatedOrganizationalEntity;
-    private Boolean dashboardAccess;
-    private Boolean messagesAccess;
-    private Boolean membersListAccess;
-    private Boolean organizationalStructureAccess;
-    private Boolean roleManagementAccess;
-    private Boolean accountSettingsAccess;
+    private Set<String> privileges;
 }

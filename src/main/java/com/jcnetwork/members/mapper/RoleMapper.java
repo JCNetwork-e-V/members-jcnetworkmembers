@@ -12,12 +12,7 @@ public class RoleMapper {
                 role.getName(),
                 role.getDescription(),
                 role.getAssociatedOrganizationalEntity(),
-                role.getDashboardAccess(),
-                role.getMessagesAccess(),
-                role.getMembersListAccess(),
-                role.getOrganizationalStructureAccess(),
-                role.getRoleManagementAccess(),
-                role.getAccountSettingsAccess()
+                role.getPrivileges()
         );
     }
 }

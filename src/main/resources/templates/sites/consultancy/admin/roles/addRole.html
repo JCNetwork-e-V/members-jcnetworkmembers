@@ -62,37 +62,37 @@
                     <div class="card-body">
                         <div class="form-group">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="dashboardSwitch" th:field="*{dashboardAccess}">
+                                <input type="checkbox" class="custom-control-input" id="dashboardSwitch" value="DASHBOARD" th:field="*{privileges}">
                                 <label class="custom-control-label" for="dashboardSwitch">Vereinsdashboard einsehen</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="messagesSwitch" th:field="*{messagesAccess}">
+                                <input type="checkbox" class="custom-control-input" id="messagesSwitch" value="MESSAGES" th:field="*{privileges}">
                                 <label class="custom-control-label" for="messagesSwitch">Vereinsnachrichten lesen und senden</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="memberListSwitch" th:field="*{membersListAccess}">
+                                <input type="checkbox" class="custom-control-input" id="memberListSwitch" value="MEMBER_LIST" th:field="*{privileges}">
                                 <label class="custom-control-label" for="memberListSwitch">Mitgliederliste einsehen</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="organizationalStructureSwitch" th:field="*{organizationalStructureAccess}">
+                                <input type="checkbox" class="custom-control-input" id="organizationalStructureSwitch" value="ORGANIZATIONAL_STRUCTURE" th:field="*{privileges}">
                                 <label class="custom-control-label" for="organizationalStructureSwitch">Vereinssstruktur bearbeiten</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="rolesSwitch" th:field="*{roleManagementAccess}">
+                                <input type="checkbox" class="custom-control-input" id="rolesSwitch" value="ROLE_MANAGEMENT" th:field="*{privileges}">
                                 <label class="custom-control-label" for="rolesSwitch">Rollen verwalten</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="settingsSwitch" th:field="*{accountSettingsAccess}">
+                                <input type="checkbox" class="custom-control-input" id="settingsSwitch" value="ACCOUNT_SETTINGS" th:field="*{privileges}">
                                 <label class="custom-control-label" for="settingsSwitch">Vereinseinstellungen bearbeiten</label>
                             </div>
                         </div>

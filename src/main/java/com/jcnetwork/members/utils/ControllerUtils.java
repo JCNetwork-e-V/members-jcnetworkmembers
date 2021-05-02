@@ -2,8 +2,8 @@ package com.jcnetwork.members.utils;
 
 import com.jcnetwork.members.model.data.Consultancy;
 import com.jcnetwork.members.model.data.Member;
-import com.jcnetwork.members.model.data.Role;
 import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.ui.sidemenu.NavGroup;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
 import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.model.User;
@@ -54,12 +54,13 @@ public class ControllerUtils {
 
         User user =  getUserFromContext();
         UserDetails userDetails = user.getUserDetails();
-        Sidebar sidebar = consultancySidebar(activePath, consultancyName);
         Consultancy consultancy = consultancyService.getByName(consultancyName).get();
+        Set<String> privileges = getUserPrivileges(user, consultancy);
+        Sidebar sidebar = consultancySidebar(activePath, consultancyName, privileges);
 
         ModelAndView modelAndView = new ModelAndView();
 
-        if(isUserAllowed(user, consultancy, accessedPrivilege)) {
+        if(privileges.contains(accessedPrivilege)) {
 
             modelAndView.addObject("userDetails", userDetails);
             modelAndView.addObject("contentHeader", contentHeader);
@@ -98,60 +99,26 @@ public class ControllerUtils {
         else return null;
     }
 
-    private Boolean isUserAllowed(User user, Consultancy consultancy, String accessedPrivilege) {
+    private Set<String> getUserPrivileges(User user, Consultancy consultancy) {
 
+        Set<String> privileges = new HashSet<>();
         Set<String> userMails = user.getAzureAccounts();
         if(user.getAccount() != null) userMails.add(user.getAccount().getUsername());
 
-        for(String mail : userMails){
-            if(mail.substring(mail.indexOf("@") + 1).equals(consultancy.getConsultancyDetails().getDomain())){
+        for(String mail : userMails) {
+            if (mail.substring(mail.indexOf("@") + 1).equals(consultancy.getConsultancyDetails().getDomain())) {
                 Member member = consultancy.getMemberByEmail(mail);
 
-                try{
-
-                    Set<Role> roles = new HashSet<>();
-                    for(String roleName : member.getRoles()) {
-                        roles.add(consultancy.getRole(roleName));
-                    }
-
-                    switch(accessedPrivilege) {
-                        case "DASHBOARD":
-                            for (Role role : roles) {
-                                if (role.getDashboardAccess()) return true;
-                            }
-                            break;
-                        case "MESSAGES":
-                            for (Role role : roles) {
-                                if (role.getMessagesAccess()) return true;
-                            }
-                            break;
-                        case "MEMBERSLIST":
-                            for (Role role : roles) {
-                                if (role.getMembersListAccess()) return true;
-                            }
-                            break;
-                        case "ORGANIZATIONAL_STRUCTURE":
-                            for (Role role : roles) {
-                                if (role.getOrganizationalStructureAccess()) return true;
-                            }
-                            break;
-                        case "ROLE_MANAGEMENT":
-                            for (Role role : roles) {
-                                if (role.getRoleManagementAccess()) return true;
-                            }
-                            break;
-                        case "ACCOUNT_SETTINGS":
-                            for (Role role : roles) {
-                                if (role.getAccountSettingsAccess()) return true;
-                            }
-                            break;
+                try {
+                    for (String roleName : member.getRoles()) {
+                        privileges.addAll(consultancy.getRole(roleName).getPrivileges());
                     }
                 } catch (Exception e) {
-                    return false;
+
                 }
             }
         }
-        return false;
+        return privileges;
     }
 
     private Sidebar adminSidebar(String activePath) {
@@ -172,24 +139,35 @@ public class ControllerUtils {
         return sidebar;
     }
 
-    public Sidebar consultancySidebar(String activePath, String consultancyName) {
+    public Sidebar consultancySidebar(String activePath, String consultancyName, Set<String> privileges) {
 
         Sidebar sidebar = new Sidebar();
-        sidebar
-                .addNavGroup()
-                .addNavItem("Dashboard", "/" + consultancyName + "/admin/dashboard", "fa-tachometer-alt").topLevel()
-                .addNavItem("Nachrichten", "/" + consultancyName + "/admin/messages", "fa-envelope").closeNavGroup()
-                .addNavGroup("Mitgliederverwaltung")
-                .addNavItem("Mitgliederliste", "/" + consultancyName + "/admin/memberList", "fa-list").closeNavGroup()
-                .addNavGroup("Vereinsorganisation")
-                .addNavItem("Organisationsstruktur", "/" + consultancyName + "/admin/consultancyStructure", "fa-sitemap").closeNavGroup()
-                .addNavGroup("Einstellungen")
-                .addNavItem("Rollenverwaltung", "#", "fa-user-tag")
-                .addSubItem("Rollenverzeichnis", "/" + consultancyName + "/admin/roleList", "fa-tags").and()
-                .addSubItem("Rolle hinzufügen", "/" + consultancyName + "/admin/addRole", "fa-plus").and()
-                .addSubItem("Rollen zuweisen", "/" + consultancyName + "/admin/roleAllocation", "fa-user-plus").topLevel()
-                .addNavItem("Vereinseinstellungen", "/" + consultancyName + "/admin/accountSettings", "fa-wrench").closeNavGroup();
 
+        if(privileges.contains("DASHBOARD") || privileges.contains("MESSAGES")){
+            NavGroup ng = sidebar.addNavGroup();
+            if(privileges.contains("DASHBOARD"))
+                ng.addNavItem("Dashboard", "/" + consultancyName + "/admin/dashboard", "fa-tachometer-alt");
+            if(privileges.contains("MESSAGES"))
+                ng.addNavItem("Nachrichten", "/" + consultancyName + "/admin/messages", "fa-envelope");
+        }
+        if(privileges.contains("MEMBER_LIST"))
+            sidebar
+                .addNavGroup("Mitgliederverwaltung")
+                    .addNavItem("Mitgliederliste", "/" + consultancyName + "/admin/memberList", "fa-list");
+        if(privileges.contains("ORGANIZATIONAL_STRUCTURE"))
+            sidebar
+                .addNavGroup("Vereinsorganisation")
+                    .addNavItem("Organisationsstruktur", "/" + consultancyName + "/admin/consultancyStructure", "fa-sitemap");
+        if(privileges.contains("ROLE_MANAGEMENT") || privileges.contains("ACCOUNT_SETTINGS")){
+            NavGroup ng = sidebar.addNavGroup("Einstellungen");
+            if(privileges.contains("ROLE_MANAGEMENT"))
+                ng.addNavItem("Rollenverwaltung", "#", "fa-user-tag")
+                    .addSubItem("Rollenverzeichnis", "/" + consultancyName + "/admin/roleList", "fa-tags").and()
+                    .addSubItem("Rolle hinzufügen", "/" + consultancyName + "/admin/addRole", "fa-plus").and()
+                    .addSubItem("Rollen zuweisen", "/" + consultancyName + "/admin/roleAllocation", "fa-user-plus");
+            if(privileges.contains("ACCOUNT_SETTINGS"))
+                ng.addNavItem("Vereinseinstellungen", "/" + consultancyName + "/admin/accountSettings", "fa-wrench");
+        }
 
         if(!activePath.isEmpty()) sidebar.setActiveLinks("/" + consultancyName + "/admin" + activePath);
         return sidebar;

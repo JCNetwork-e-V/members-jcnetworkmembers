@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,10 +17,5 @@ public class Role {
     private String name;
     private String description;
     private String associatedOrganizationalEntity;
-    private Boolean dashboardAccess;
-    private Boolean messagesAccess;
-    private Boolean membersListAccess;
-    private Boolean organizationalStructureAccess;
-    private Boolean roleManagementAccess;
-    private Boolean accountSettingsAccess;
+    private Set<String> privileges;
 }
