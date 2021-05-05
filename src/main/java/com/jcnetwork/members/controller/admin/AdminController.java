@@ -2,10 +2,8 @@ package com.jcnetwork.members.controller.admin;
 
 import com.jcnetwork.members.mapper.ConsultancyMapper;
 import com.jcnetwork.members.model.dto.ConsultancyCreationDto;
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.event.OnConsultancyCreationEvent;
-import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;

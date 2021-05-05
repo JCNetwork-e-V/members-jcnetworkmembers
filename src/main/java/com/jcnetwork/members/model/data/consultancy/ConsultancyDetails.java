@@ -1,4 +1,4 @@
-package com.jcnetwork.members.model.data;
+package com.jcnetwork.members.model.data.consultancy;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

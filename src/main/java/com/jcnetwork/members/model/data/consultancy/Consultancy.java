@@ -1,5 +1,6 @@
-package com.jcnetwork.members.model.data;
+package com.jcnetwork.members.model.data.consultancy;
 
+import com.jcnetwork.members.model.data.*;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Document
-public class Consultancy extends MongoDocument{
+public class Consultancy extends MongoDocument {
 
     private ConsultancyDetails consultancyDetails;
 

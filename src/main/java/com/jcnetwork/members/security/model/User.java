@@ -1,8 +1,9 @@
 package com.jcnetwork.members.security.model;
 
-import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.MongoDocument;
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.user.UserDetails;
+import com.jcnetwork.members.model.data.user.resume.Resume;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -21,6 +22,7 @@ public class User extends MongoDocument {
     private Set<AccountRole> roles = new HashSet<>();
     @DBRef
     private UserDetails userDetails;
+    private Resume resume;
     @DBRef
     private Set<Consultancy> consultancies = new HashSet<>();
     private Set<String> azureAccounts = new HashSet<>();

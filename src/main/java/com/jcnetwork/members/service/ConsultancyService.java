@@ -1,19 +1,11 @@
 package com.jcnetwork.members.service;
 
-import com.jcnetwork.members.model.data.Member;
-import com.jcnetwork.members.model.dto.ConsultancyCreationDto;
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.ConsultancyDetails;
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.repository.ConsultancyRepository;
-import com.jcnetwork.members.security.model.Account;
-import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

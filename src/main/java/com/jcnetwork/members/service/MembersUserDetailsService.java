@@ -1,6 +1,6 @@
 package com.jcnetwork.members.service;
 
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

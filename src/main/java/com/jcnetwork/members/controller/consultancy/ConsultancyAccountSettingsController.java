@@ -11,24 +11,24 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/{consultancy}/admin")
-public class ConsultancyMembersController {
+public class ConsultancyAccountSettingsController {
 
     @Autowired
     private ControllerUtils utils;
 
-    private final String PRIVILEG_NAME = "MEMBER_LIST";
+    private final String PRIVILEGE_NAME = "ACCOUNT_SETTINGS";
 
-    @GetMapping("/memberList")
-    public ModelAndView getMembersList(@PathVariable("consultancy") String consultancyName) {
+    @GetMapping("/accountSettings")
+    public ModelAndView getAccountSettings(@PathVariable("consultancy") String consultancyName) {
 
         try {
             ModelAndView modelAndView = utils.createMainLayoutConsultancy(
-                    "/memberList",
+                    "accountSettings",
                     consultancyName,
-                    "Mitgliederliste",
-                    PRIVILEG_NAME
+                    "Vereinseinstellungen",
+                    PRIVILEGE_NAME
             );
-            modelAndView.setViewName("sites/consultancy/admin/membersList");
+            modelAndView.setViewName("sites/consultancy/admin/accountSettings");
             return modelAndView;
         } catch (Exception e) {
             return new ModelAndView(new RedirectView("/accessForbidden"));

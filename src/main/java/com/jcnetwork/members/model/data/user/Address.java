@@ -1,4 +1,4 @@
-package com.jcnetwork.members.model.data;
+package com.jcnetwork.members.model.data.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,10 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class Address {
 
-    private String country;
     private String city;
     private String zipCode;
     private String streetName;

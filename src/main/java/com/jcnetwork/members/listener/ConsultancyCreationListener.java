@@ -1,9 +1,9 @@
 package com.jcnetwork.members.listener;
 
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.ConsultancyDetails;
-import com.jcnetwork.members.model.data.OrganizationalEntity;
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.ConsultancyDetails;
+import com.jcnetwork.members.model.data.consultancy.OrganizationalEntity;
+import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.model.dto.ConsultancyCreationDto;
 import com.jcnetwork.members.model.event.OnConsultancyCreationEvent;
 import com.jcnetwork.members.security.model.Account;

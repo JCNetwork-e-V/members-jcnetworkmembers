@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/{consultancy}/admin")
@@ -20,29 +21,34 @@ public class ConsultancyMessageController {
     @GetMapping("/messages")
     public ModelAndView getMessages(@PathVariable("consultancy") String consultancyName) {
 
-        ModelAndView modelAndView = utils.createMainLayoutConsultancy(
-                "/messages",
-                consultancyName,
-                "Nachrichten",
-                PRIVILEG_NAME,
-                "sites/consultancy/admin/messages",
-                null
-        );
-        return modelAndView;
+        try {
+            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+                    "/messages",
+                    consultancyName,
+                    "Nachrichten",
+                    PRIVILEG_NAME
+            );
+            modelAndView.setViewName("sites/consultancy/admin/messages");
+            return modelAndView;
+        } catch (Exception e){
+            return new ModelAndView(new RedirectView("/accessForbidden"));
+        }
     }
 
     @GetMapping("/newMessage")
     public ModelAndView newMessage(@PathVariable("consultancy") String consultancyName) {
 
-        ModelAndView modelAndView = utils.createMainLayoutConsultancy(
-                "/messages",
-                consultancyName,
-                "Neue Nachricht formulieren",
-                PRIVILEG_NAME,
-                "sites/consultancy/admin/messages",
-                null
-        );
-        //TODO create site
-        return modelAndView;
+        try {
+            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+                    "/messages",
+                    consultancyName,
+                    "Neue Nachricht formulieren",
+                    PRIVILEG_NAME
+            );
+            modelAndView.setViewName("sites/consultancy/admin/messages");//TODO create site
+            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView(new RedirectView("/accessForbidden"));
+        }
     }
 }

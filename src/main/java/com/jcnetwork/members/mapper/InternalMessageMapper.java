@@ -1,13 +1,10 @@
 package com.jcnetwork.members.mapper;
 
 import com.jcnetwork.members.model.InternalMessage;
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.Member;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.MongoDocument;
 import com.jcnetwork.members.model.dto.InternalMessageDto;
-import com.jcnetwork.members.model.dto.MemberDto;
 import com.jcnetwork.members.security.model.User;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

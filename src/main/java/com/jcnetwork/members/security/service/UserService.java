@@ -1,6 +1,7 @@
 package com.jcnetwork.members.security.service;
 
-import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.data.user.resume.Resume;
 import com.jcnetwork.members.repository.AccountRoleRepository;
 import com.jcnetwork.members.repository.UserRepository;
 import com.jcnetwork.members.repository.VerificationTokenRepository;

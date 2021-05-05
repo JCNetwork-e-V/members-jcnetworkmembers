@@ -1,0 +1,67 @@
+package com.jcnetwork.members.controller.user;
+
+import com.jcnetwork.members.model.data.user.UserDetails;
+import com.jcnetwork.members.model.data.user.resume.Resume;
+import com.jcnetwork.members.security.model.User;
+import com.jcnetwork.members.security.service.UserService;
+import com.jcnetwork.members.service.MembersUserDetailsService;
+import com.jcnetwork.members.utils.ControllerUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping("/user")
+public class profile {
+
+    @Autowired
+    private ControllerUtils utils;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private MembersUserDetailsService userDetailsService;
+
+    @GetMapping("/profile")
+    public ModelAndView getProfile() {
+
+        User user = utils.getUserFromContext();
+
+        Resume resume = new Resume();
+        if(user.getResume() != null){
+            resume = user.getResume();
+        }
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("userDetails", user.getUserDetails());
+        modelAndView.addObject("resume", resume);
+        modelAndView.setViewName("sites/user/profilePage");
+        return modelAndView;
+    }
+
+    @PostMapping("/saveUserDetails")
+    public RedirectView saveUserDetails(@Valid UserDetails userDetails) {
+
+        User user = utils.getUserFromContext();
+        userDetails.setId(user.getUserDetails().getId());
+        userDetailsService.save(userDetails);
+        return new RedirectView("/user/profile");
+    }
+
+    @PostMapping("/saveResume")
+    public RedirectView saveResume(@Valid Resume resume) {
+
+        User user = utils.getUserFromContext();
+        user.setResume(resume);
+        userService.saveUser(user);
+
+        return new RedirectView("/user/profile");
+    }
+}

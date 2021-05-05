@@ -1,8 +1,8 @@
 package com.jcnetwork.members.listener;
 
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.Member;
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Member;
+import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.model.event.OnUserDetailsRegistrationEvent;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;

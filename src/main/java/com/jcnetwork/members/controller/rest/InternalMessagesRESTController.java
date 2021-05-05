@@ -3,7 +3,7 @@ package com.jcnetwork.members.controller.rest;
 import com.jcnetwork.members.mapper.InternalMessageMapper;
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.InternalMessage;
-import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.dto.FolderMessagesCountDto;
 import com.jcnetwork.members.model.dto.InternalMessageDto;
 import com.jcnetwork.members.service.ConsultancyService;

@@ -1,8 +1,8 @@
 package com.jcnetwork.members.utils;
 
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.Member;
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Member;
+import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.model.ui.sidemenu.NavGroup;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
 import com.jcnetwork.members.security.service.UserService;
@@ -13,10 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,10 +45,8 @@ public class ControllerUtils {
             String activePath,
             String consultancyName,
             String contentHeader,
-            String accessedPrivilege,
-            String viewName,
-            Map<String, Object> addedObjects
-    ) {
+            String accessedPrivilege
+    ) throws Exception {
 
         User user =  getUserFromContext();
         UserDetails userDetails = user.getUserDetails();
@@ -60,28 +56,18 @@ public class ControllerUtils {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        if(privileges.contains(accessedPrivilege)) {
-
-            modelAndView.addObject("userDetails", userDetails);
-            modelAndView.addObject("contentHeader", contentHeader);
-            modelAndView.addObject("sidebar", sidebar);
-            modelAndView.addObject("consultancyName", consultancyName);
-
-            if(addedObjects != null){
-                for(Map.Entry<String, Object> object : addedObjects.entrySet()){
-                    modelAndView.addObject(object.getKey(), object.getValue());
-                }
-            }
-
-            modelAndView.setViewName(viewName);
-
-        } else {
-            modelAndView.setView(new RedirectView("/accessForbidden"));
+        if(!privileges.contains(accessedPrivilege)) {
+            throw new Exception("FORBIDDEN");
         }
+
+        modelAndView.addObject("userDetails", userDetails);
+        modelAndView.addObject("contentHeader", contentHeader);
+        modelAndView.addObject("sidebar", sidebar);
+        modelAndView.addObject("consultancyName", consultancyName);
         return modelAndView;
     }
 
-    private User getUserFromContext() {
+    public User getUserFromContext() {
 
         String username = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -126,14 +112,14 @@ public class ControllerUtils {
         Sidebar sidebar = new Sidebar();
         sidebar
                 .addNavGroup()
-                .addNavItem("Dashboard", "/admin/dashboard", "fa-tachometer-alt").topLevel()
-                .addNavItem("Meldungen", "/admin/messages", "fa-envelope").closeNavGroup()
+                    .addNavItem("Dashboard", "/admin/dashboard", "fa-tachometer-alt").topLevel()
+                    .addNavItem("Meldungen", "/admin/messages", "fa-envelope").closeNavGroup()
                 .addNavGroup("Vereinsverwaltung")
-                .addNavItem("Vereinsliste", "/admin/consultancyList", "fa-list").topLevel()
-                .addNavItem("Verein anlegen", "/admin/createConsultancy", "fa-plus").topLevel()
-                .addNavItem("Verein löschen", "/admin/deleteConsultancy", "fa-eraser").closeNavGroup()
+                    .addNavItem("Vereinsliste", "/admin/consultancyList", "fa-list").topLevel()
+                    .addNavItem("Verein anlegen", "/admin/createConsultancy", "fa-plus").topLevel()
+                    .addNavItem("Verein löschen", "/admin/deleteConsultancy", "fa-eraser").closeNavGroup()
                 .addNavGroup("Nutzerverwaltung")
-                .addNavItem("Nutzerliste", "/admin/userList", "fa-users");
+                    .addNavItem("Nutzerliste", "/admin/userList", "fa-users");
 
         if(!activePath.isEmpty()) sidebar.setActiveLinks(activePath);
         return sidebar;

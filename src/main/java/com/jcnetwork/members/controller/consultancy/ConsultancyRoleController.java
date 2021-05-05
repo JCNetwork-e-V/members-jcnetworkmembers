@@ -1,8 +1,8 @@
 package com.jcnetwork.members.controller.consultancy;
 
 import com.jcnetwork.members.exception.ItemNotFoundException;
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.Role;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Role;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,40 +33,42 @@ public class ConsultancyRoleController {
     @GetMapping("/roleList")
     public ModelAndView roleList(@PathVariable("consultancy") String consultancyName) {
 
-        Consultancy consultancy = consultancyService.getByName(consultancyName).get();
+        try {
+            Consultancy consultancy = consultancyService.getByName(consultancyName).get();
 
-        Map<String, Object> addedObjects = new HashMap<>();
-        addedObjects.put("roles", consultancy.getRoles());
-
-        ModelAndView modelAndView = utils.createMainLayoutConsultancy(
-                "/roleList",
-                consultancyName,
-                "Rollenübersicht",
-                PRIVILEG_NAME,
-                "sites/consultancy/admin/roles/roleList",
-                addedObjects
-        );
-        return modelAndView;
+            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+                    "/roleList",
+                    consultancyName,
+                    "Rollenübersicht",
+                    PRIVILEG_NAME
+            );
+            modelAndView.addObject("roles", consultancy.getRoles());
+            modelAndView.setViewName("sites/consultancy/admin/roles/roleList");
+            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView(new RedirectView("/accessForbidden"));
+        }
     }
 
     @GetMapping("/addRole")
     public ModelAndView getAddRole(@PathVariable("consultancy") String consultancyName) {
 
-        Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
+        try {
+            Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
 
-        Map<String, Object> addedObjects = new HashMap<>();
-        addedObjects.put("role", new Role());
-        addedObjects.put("organizationalEntities", consultancy.get().getOrganizationalEntities());
-
-        ModelAndView modelAndView = utils.createMainLayoutConsultancy(
-                "/addRole",
-                consultancyName,
-                "Rolle hinzufügen",
-                PRIVILEG_NAME,
-                "sites/consultancy/admin/roles/addRole",
-                addedObjects
-        );
-        return modelAndView;
+            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+                    "/addRole",
+                    consultancyName,
+                    "Rolle hinzufügen",
+                    PRIVILEG_NAME
+            );
+            modelAndView.addObject("role", new Role());
+            modelAndView.addObject("organizationalEntities", consultancy.get().getOrganizationalEntities());
+            modelAndView.setViewName("sites/consultancy/admin/roles/addRole");
+            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView(new RedirectView("/accessForbidden"));
+        }
     }
 
     @PostMapping("/addRole")
@@ -96,14 +96,17 @@ public class ConsultancyRoleController {
     @GetMapping("/roleAllocation")
     public ModelAndView getRoleAllocation(@PathVariable("consultancy") String consultancyName) {
 
-        ModelAndView modelAndView = utils.createMainLayoutConsultancy(
-                "/roleAllocation",
-                consultancyName,
-                "Rollen zuweisen",
-                PRIVILEG_NAME,
-                "sites/consultancy/admin/roles/roleAllocation",
-                null
-        );
-        return modelAndView;
+        try {
+            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+                    "/roleAllocation",
+                    consultancyName,
+                    "Rollen zuweisen",
+                    PRIVILEG_NAME
+            );
+            modelAndView.setViewName("sites/consultancy/admin/roles/roleAllocation");
+            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView(new RedirectView("/accessForbidden"));
+        }
     }
 }

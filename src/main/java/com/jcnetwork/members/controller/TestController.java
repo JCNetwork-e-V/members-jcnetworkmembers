@@ -1,7 +1,7 @@
 package com.jcnetwork.members.controller;
 
 import com.jcnetwork.members.model.InternalMessage;
-import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.service.InternalMessageService;
 import org.springframework.beans.factory.annotation.Autowired;

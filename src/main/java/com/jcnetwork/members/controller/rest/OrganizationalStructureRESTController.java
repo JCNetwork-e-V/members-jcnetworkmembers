@@ -2,8 +2,8 @@ package com.jcnetwork.members.controller.rest;
 
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.mapper.OrganizationalEntityMapper;
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.OrganizationalEntity;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.OrganizationalEntity;
 import com.jcnetwork.members.service.ConsultancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

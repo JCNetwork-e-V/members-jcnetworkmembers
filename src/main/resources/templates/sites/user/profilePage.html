@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/minimalLayout.html}">
+<head>
+    <title>Profil | JCNetwork Members</title>
+
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+</head>
+<body>
+<div layout:fragment="mainContent" class="card-body">
+
+<div class="row">
+    <div class="col-md-3">
+
+        <!-- Profile Image -->
+        <div class="card card-primary card-outline">
+            <div class="card-body box-profile">
+                <div class="text-center">
+                    <img class="profile-user-img img-fluid img-circle"
+                         th:src="${userDetails.getProfilePictureBase64()}"
+                         alt="User profile picture">
+                    <a class="btn btn-primary picture-edit-btn">
+                        <i class="fas fa-pen-alt"></i>
+                    </a>
+                </div>
+
+                <h3 class="profile-username text-center" th:text="${userDetails.firstName} + ' ' + ${userDetails.lastName}"></h3>
+
+                <p class="text-muted text-center">Rolle</p>
+
+                <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                        <b>Followers</b> <a class="float-right">1,322</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Following</b> <a class="float-right">543</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Friends</b> <a class="float-right">13,287</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+        <!-- About Me Box -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Über mich</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <strong><i class="fas fa-book mr-1"></i> Studiengang</strong>
+
+                <p class="text-muted">
+                    Studiengangsname
+                </p>
+
+                <hr>
+
+                <strong><i class="fas fa-map-marker-alt mr-1"></i> Wohnort</strong>
+
+                <p class="text-muted">Malibu, California</p>
+
+                <hr>
+
+                <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+
+                <p class="text-muted">
+                    <span class="tag tag-danger">UI Design</span>
+                    <span class="tag tag-success">Coding</span>
+                    <span class="tag tag-info">Javascript</span>
+                    <span class="tag tag-warning">PHP</span>
+                    <span class="tag tag-primary">Node.js</span>
+                </p>
+
+                <hr>
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link" href="#cv" data-toggle="tab">Lebenslauf</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#userDetails" data-toggle="tab">Nutzerdetails</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Einstellungen</a></li>
+                </ul>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <div class="tab-content">
+
+                    <div class="tab-pane" id="cv">
+                        <div id="accordion">
+                            <form id="modifyCv" method="post" th:action="@{/user/saveResume}" th:object="${resume}">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100" data-toggle="collapse" href="#cvPersonalData">
+                                                Persönliche Daten
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="cvPersonalData" class="collapse show" data-parent="#accordion">
+                                        <div class="card-body">
+                                           <div class="row">
+                                               <div class="col-md-3">
+
+                                               </div>
+                                               <div class="row col-md-9">
+                                                   <div class="form-group col-md-6">
+                                                       <label for="cvFirstName">Vorname</label>
+                                                       <input type="text" class="form-control" id="cvFirstName" placeholder="Vorname" th:field="*{firstName}" th:value="*{firstName}">
+                                                   </div>
+                                                   <div class="form-group col-md-6">
+                                                       <label for="cvLastName">Nachname</label>
+                                                       <input type="text" class="form-control" id="cvLastName" placeholder="Nachname" th:field="*{lastName}" th:value="*{lastName}">
+                                                   </div>
+                                                   <div class="form-group col-md-8">
+                                                       <label for="cvStreet">Straße</label>
+                                                       <input type="text" class="form-control" id="cvStreet" placeholder="Straße" th:field="*{address.streetName}" th:value="*{address.streetName}">
+                                                   </div>
+                                                   <div class="form-group col-md-4">
+                                                       <label for="cvStreetNumber">Hausnummer</label>
+                                                       <input type="text" class="form-control" id="cvStreetNumber" placeholder="Hausnummer" th:field="*{address.streetNumber}" th:value="*{address.streetNumber}">
+                                                   </div>
+                                                   <div class="form-group col-md-4">
+                                                       <label for="cvZipCode">Postleitzahl</label>
+                                                       <input type="text" class="form-control" id="cvZipCode" placeholder="PLZ" data-minlenght="5" data-maxlength="5" th:field="*{address.zipCode}" th:value="*{address.zipCode}">
+                                                   </div>
+                                                   <div class="form-group col-md-8">
+                                                       <label for="cvCity">Stadt</label>
+                                                       <input type="text" class="form-control" id="cvCity" placeholder="Stadt" th:field="*{address.city}" th:value="*{address.city}">
+                                                   </div>
+                                                   <div class="form-group col-md-4">
+                                                       <label for="cvBirthDate">Geburtsdatum</label>
+                                                       <input type="text" class="form-control datetimepicker-input" id="cvBirthDate" placeholder="Geburtsdatum" data-toggle="datetimepicker" th:field="*{birthDate}" th:value="*{birthDate}">
+                                                   </div>
+                                                   <div class="form-group col-md-8">
+                                                       <label for="cvBirthplace">Geburtsort</label>
+                                                       <input type="text" class="form-control" id="cvBirthplace" placeholder="Geburtsort" th:field="*{birthPlace}" th:value="*{birthPlace}">
+                                                   </div>
+                                                   <div class="form-group col-md-12">
+                                                       <label for="cvMail">E-Mail</label>
+                                                       <input type="email" class="form-control" id="cvMail" placeholder="E-Mail" th:field="*{email}" th:value="*{email}">
+                                                   </div>
+                                                   <div class="form-group col-md-12">
+                                                       <label for="cvPhoneNumber">Telefonnummer</label>
+                                                       <input type="email" class="form-control" id="cvPhoneNumber" placeholder="Telefonnummer" th:field="*{phoneNumber}" th:value="*{phoneNumber}">
+                                                   </div>
+                                                   <div class="form-group col-md-12">
+                                                       <label for="cvNationality">Staatsangehörigkeit</label>
+                                                       <input type="text" class="form-control" id="cvNationality" placeholder="Staatsangehörigkeit" th:field="*{nationality}" th:value="*{nationality}">
+                                                   </div>
+                                               </div>
+                                           </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100" data-toggle="collapse" href="#cvEducation">
+                                                Ausbildung
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="cvEducation" class="collapse" data-parent="#accordion">
+                                        <div class="card-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                                            3
+                                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                                            laborum
+                                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                                            nulla
+                                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
+                                            beer
+                                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                            labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100" data-toggle="collapse" href="#cvExperience">
+                                                Erfahrungen
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="cvExperience" class="collapse" data-parent="#accordion">
+                                        <div class="card-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                                            3
+                                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                                            laborum
+                                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                                            nulla
+                                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
+                                            beer
+                                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                            labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100" data-toggle="collapse" href="#cvActivities">
+                                                Außeruniversitäres Engagement
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="cvActivities" class="collapse" data-parent="#accordion">
+                                        <div class="card-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                                            3
+                                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                                            laborum
+                                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                                            nulla
+                                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
+                                            beer
+                                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                            labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100" data-toggle="collapse" href="#cvSkills">
+                                                Fähigkeiten und Sprachen
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="cvSkills" class="collapse" data-parent="#accordion">
+                                        <div class="card-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                                            3
+                                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                                            laborum
+                                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                                            nulla
+                                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
+                                            beer
+                                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                            labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100" data-toggle="collapse" href="#cvIndividual">
+                                                Personalisierung
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="cvIndividual" class="collapse" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <span>Hier hast du die Möglichkeit, deinen Lebenslauf zu individualisieren. Ergänze dein persönliches Motto, deine Lebens- und Arbeitsphilosophie oder teile noch etwas über deine Persönlichkeit mit.</span>
+                                                    <br>
+                                                    <br>
+                                                    <div class="form-group">
+                                                        <label for="cvIndividualText">Das macht mich besonders</label>
+                                                        <textarea class="form-control" id="cvIndividualText" rows="3" placeholder="Freitext" th:field="*{individualText}" th:value="*{individualText}"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="col-sm-12">
+                                    <div class="icheck-jcnetwork">
+                                        <input type="checkbox" name="acceptGeneralPrivacy" id="acceptGeneralPrivacy">
+                                        <label for="acceptGeneralPrivacy">
+                                            Hiermit erkläre ich mich der Datenschutzerklärung des JCNetwork e.V. einverstanden und willige in die Verarbeitung meiner personenbezogenen Daten ein. Eine automatisierte Löschung erfolgt 2 Jahre nach der letzten Änderung.
+                                        </label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="col-sm-12">
+                                    <div class="icheck-jcnetwork">
+                                        <input type="checkbox" name="acceptPartnerPrivacy" id="acceptPartnerPrivacy">
+                                        <label for="acceptPartnerPrivacy">
+                                            Hiermit erkläre ich mich mit der Datenschutzerklärung des JCNetwork e. V. einverstanden und willige in die Verarbeitung meiner personenbezogenen Daten durch Kooperationspartner des JCNetwork e. V. ein. Eine automatisierte Löschung erfolgt 2 Jahre nach der letzten Änderung.
+                                        </label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <input type="submit" class="btn btn-success" value="Speichern">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="active tab-pane" id="userDetails">
+                        <form method="post" class="form-horizontal" th:action="@{/user/saveUserDetails}" th:object="${userDetails}">
+                            <input type="hidden" th:field="*{id}" id="id">
+                            <input type="hidden" th:field="*{profilePictureBase64}" id="profilePictureBase64">
+                            <div class="form-group row">
+                                <label for="inputFirstName" class="col-sm-2 col-form-label">Vorname</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="inputFirstName" placeholder="Vorname" th:field="*{firstName}" th:value="*{firstName}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputLastName" class="col-sm-2 col-form-label">Nachname</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="inputLastName" placeholder="Nachname" th:field="*{lastName}" th:value="*{lastName}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail" class="col-sm-2 col-form-label">Private E-Mail</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" id="inputEmail" placeholder="E-Mail" th:field="*{privateMail}" th:value="*{privateMail}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPhoneNumber" class="col-sm-2 col-form-label">Telefonnummer</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="inputPhoneNumber" placeholder="Telefonnummer" th:field="*{phoneNumber}" th:value="*{phoneNumber}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="offset-sm-2 col-sm-10">
+                                    <button type="submit" class="btn btn-success">Speichern</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane" id="settings">
+
+                    </div>
+                    <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+            </div><!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+</div>
+
+<!-- Page scripts -->
+<th:block layout:fragment="script">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="../../plugins/moment/moment.min.js"></script>
+    <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script type="text/javascript">
+        $('#cvBirthDate').datetimepicker({
+            viewMode: 'years',
+            format: 'DD/MM/YYYY',
+            maxDate: moment().millisecond(999).second(59).minute(59).hour(23).add(-16, 'years')
+        })
+    </script>
+</th:block>
+</body>
+</html>

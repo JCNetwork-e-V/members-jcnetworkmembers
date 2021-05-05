@@ -2,8 +2,8 @@ package com.jcnetwork.members.controller;
 
 import com.jcnetwork.members.mapper.ConsultancyMapper;
 import com.jcnetwork.members.model.dto.RegistrationDto;
-import com.jcnetwork.members.model.data.Consultancy;
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.model.event.OnUserDetailsRegistrationEvent;
 import com.jcnetwork.members.model.event.OnUserRegistrationCompleteEvent;
 import com.jcnetwork.members.security.model.Account;
@@ -11,12 +11,10 @@ import com.jcnetwork.members.security.model.VerificationToken;
 import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.service.ConsultancyService;
-import com.jcnetwork.members.service.MembersUserDetailsService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +25,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 @Controller

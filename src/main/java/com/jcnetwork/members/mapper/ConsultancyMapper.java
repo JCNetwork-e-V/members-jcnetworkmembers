@@ -1,6 +1,6 @@
 package com.jcnetwork.members.mapper;
 
-import com.jcnetwork.members.model.data.Consultancy;
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.dto.ConsultancyDto;
 import org.springframework.stereotype.Component;
 

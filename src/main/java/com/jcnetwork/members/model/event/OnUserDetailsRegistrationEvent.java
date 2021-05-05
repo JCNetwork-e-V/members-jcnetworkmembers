@@ -1,6 +1,6 @@
 package com.jcnetwork.members.model.event;
 
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.user.UserDetails;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;

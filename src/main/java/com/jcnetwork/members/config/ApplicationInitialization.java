@@ -1,6 +1,6 @@
 package com.jcnetwork.members.config;
 
-import com.jcnetwork.members.model.data.UserDetails;
+import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.repository.AccountRoleRepository;
 import com.jcnetwork.members.security.model.Account;
 import com.jcnetwork.members.security.model.AccountRole;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.Optional;
 
 @Component

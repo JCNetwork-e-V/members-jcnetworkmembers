@@ -159,3 +159,13 @@
     line-height: 1.5;
     box-shadow: inherit;
 }
+
+.picture-edit-btn {
+    position: relative;
+    left: -26px;
+    top: 33px;
+    height: 36px;
+    width: 36px;
+    border-radius: 18px;
+    font-size: 0.82rem;
+}

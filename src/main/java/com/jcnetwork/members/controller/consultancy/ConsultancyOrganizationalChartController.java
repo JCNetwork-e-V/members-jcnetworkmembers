@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/{consultancy}/admin")
@@ -24,14 +25,17 @@ public class ConsultancyOrganizationalChartController {
     @GetMapping("/consultancyStructure")
     public ModelAndView getOrganizationalStructure(@PathVariable("consultancy") String consultancyName) {
 
-        ModelAndView modelAndView = utils.createMainLayoutConsultancy(
-                "/consultancyStructure",
-                consultancyName,
-                "Vereinsstruktur",
-                PRIVILEG_NAME,
-                "sites/consultancy/admin/organizationalStructure",
-                null
-        );
-        return modelAndView;
+        try {
+            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+                    "/consultancyStructure",
+                    consultancyName,
+                    "Vereinsstruktur",
+                    PRIVILEG_NAME
+            );
+            modelAndView.setViewName("sites/consultancy/admin/organizationalStructure");
+            return modelAndView;
+        } catch (Exception e){
+            return new ModelAndView(new RedirectView("/accessForbidden"));
+        }
     }
 }
