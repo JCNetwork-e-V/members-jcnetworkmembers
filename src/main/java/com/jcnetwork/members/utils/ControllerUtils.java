@@ -3,6 +3,7 @@ package com.jcnetwork.members.utils;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.consultancy.Member;
 import com.jcnetwork.members.model.data.user.UserDetails;
+import com.jcnetwork.members.model.ui.NavBarItem;
 import com.jcnetwork.members.model.ui.sidemenu.NavGroup;
 import com.jcnetwork.members.model.ui.sidemenu.Sidebar;
 import com.jcnetwork.members.security.service.UserService;
@@ -70,18 +71,18 @@ public class ControllerUtils {
         return modelAndView;
     }
 
-    public Map<String, String> navbarLinks(User user){
+    public List<NavBarItem> navbarLinks(User user){
 
         Set<String> userMails = user.getAzureAccounts();
         if(user.getAccount() != null) userMails.add(user.getAccount().getUsername());
 
-        Map<String, String> links = new HashMap<>();
-        links.put("FAQ", "/faq");
+        List<NavBarItem> links = new ArrayList<>();
+        links.add(new NavBarItem("Home", "/home"));
         for(String mail : userMails) {
             String consultancyName = consultancyService.getByDomain(mail.substring(mail.indexOf("@") + 1)).get().getConsultancyDetails().getName();
-            links.put(consultancyName, "/" + consultancyName + "/admin/dashboard"); //TODO create consultancy home page
+            links.add(new NavBarItem(consultancyName, "/" + consultancyName + "/admin/dashboard")); //TODO create consultancy home page
         }
-        links.put("Home", "/home");
+        links.add(new NavBarItem("FAQ", "/faq"));
         return links;
     }
 

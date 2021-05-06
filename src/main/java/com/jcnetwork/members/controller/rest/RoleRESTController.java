@@ -72,6 +72,6 @@ public class RoleRESTController {
         }
         consultancy.setMembers(updatedMembers);
         consultancyService.save(consultancy);
-        return ResponseEntity.ok("Roles saved");
+        return ResponseEntity.ok(consultancy);
     }
 }

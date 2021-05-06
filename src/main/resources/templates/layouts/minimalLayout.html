@@ -12,6 +12,7 @@
     <div th:replace="fragments/base :: stylesheets"></div>
 </head>
 <body class="hold-transition layout-navbar-fixed" th:classappend="${userSettings.darkMode} ? 'dark-mode'">
+
 <!-- Site wrapper -->
 <div class="wrapper">
     <!-- Navbar -->
@@ -19,7 +20,7 @@
         <!-- Left navbar links -->
         <ul class="navbar-nav" th:each="link : ${navbarLinks}">
             <li class="nav-item d-none d-sm-inline-block">
-                <a th:href="${link.value}" th:text="${link.key}" class="nav-link"></a>
+                <a th:href="${link.link}" th:text="${link.label}" class="nav-link"></a>
             </li>
         </ul>
 
@@ -143,5 +144,7 @@
 <div th:replace="fragments/base :: scripts"></div>
 <!-- Page specific scripts -->
 <th:block layout:fragment="script"></th:block>
+<!-- Toast -->
+<div th:replace="fragments/base :: toast"></div>
 </body>
 </html>

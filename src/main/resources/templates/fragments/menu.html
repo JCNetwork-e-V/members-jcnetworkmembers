@@ -22,8 +22,34 @@
             <ul class="nav nav-treeview">
 
             <th:block th:each="subNavItem : ${navItem.subItems}">
-                <div th:replace="fragments/menu :: navItem(navItem = ${subNavItem})"></div>
+                <div th:replace="fragments/menu :: subNavItem(navItem = ${subNavItem})"></div>
             </th:block>
+
+            </ul>
+        </th:block>
+    </li>
+
+</div>
+
+<div th:fragment="subNavItem(navItem)" th:remove="tag">
+
+    <li class="nav-item" th:classappend="${not #lists.isEmpty(navItem.subItems) && navItem.active} ? 'menu-open'">
+
+        <a th:href="${navItem.getLink()}" class="nav-link" th:classappend="${navItem.active} ? 'active'">
+            <i class="nav-icon fas" th:classappend="${navItem.getIcon()}"></i>
+            <p th:inline="text">
+                [[${navItem.getLabel()}]]
+                <i th:if="${not #lists.isEmpty(navItem.subItems)}" class="fas fa-angle-left right"></i>
+            </p>
+        </a>
+
+        <!-- Generate SubNavItems -->
+        <th:block th:if="${not #lists.isEmpty(navItem.subItems)}">
+            <ul class="nav nav-treeview">
+
+                <th:block th:each="subNavItem : ${navItem.subItems}">
+                    <div th:replace="fragments/menu :: subNavItem(navItem = ${subNavItem})"></div>
+                </th:block>
 
             </ul>
         </th:block>

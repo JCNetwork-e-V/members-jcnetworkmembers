@@ -3,6 +3,8 @@ package com.jcnetwork.members.controller.user;
 import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.model.data.user.UserSettings;
 import com.jcnetwork.members.model.data.user.resume.Resume;
+import com.jcnetwork.members.model.data.user.resume.UniversityEducation;
+import com.jcnetwork.members.model.ui.Toast;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.service.MembersUserDetailsService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
@@ -43,6 +46,7 @@ public class ProfileController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userDetails", user.getUserDetails());
         modelAndView.addObject("resume", resume);
+        modelAndView.addObject("newUniversityEducation", new UniversityEducation());
         modelAndView.addObject("userSettings", user.getUserSettings());
         modelAndView.addObject("navbarLinks", utils.navbarLinks(user));
         modelAndView.setViewName("sites/user/profilePage");
@@ -50,30 +54,52 @@ public class ProfileController {
     }
 
     @PostMapping("/saveUserSettings")
-    public RedirectView saveUserSettings(@Valid UserSettings userSettings) {
+    public RedirectView saveUserSettings(@Valid UserSettings userSettings, RedirectAttributes redirectAttributes) {
 
         User user = utils.getUserFromContext();
         user.setUserSettings(userSettings);
         userService.saveUser(user);
 
+        Toast toast = new Toast(
+                "Speichern Erfolgreich",
+                "Deine Einstellungen wurden aktualisiert.",
+                "success"
+        );
+        redirectAttributes.addFlashAttribute("toast", toast);
+
         return new RedirectView("/user/profile");
     }
 
     @PostMapping("/saveUserDetails")
-    public RedirectView saveUserDetails(@Valid UserDetails userDetails) {
+    public RedirectView saveUserDetails(@Valid UserDetails userDetails,  RedirectAttributes redirectAttributes) {
 
         User user = utils.getUserFromContext();
         userDetails.setId(user.getUserDetails().getId());
         userDetailsService.save(userDetails);
+
+        Toast toast = new Toast(
+                "Speichern Erfolgreich",
+                "Deine Daten wurden aktualisiert.",
+                "success"
+        );
+        redirectAttributes.addFlashAttribute("toast", toast);
+
         return new RedirectView("/user/profile");
     }
 
     @PostMapping("/saveResume")
-    public RedirectView saveResume(@Valid Resume resume) {
+    public RedirectView saveResume(@Valid Resume resume,  RedirectAttributes redirectAttributes) {
 
         User user = utils.getUserFromContext();
         user.setResume(resume);
         userService.saveUser(user);
+
+        Toast toast = new Toast(
+                "Speichern Erfolgreich",
+                "Deine Lebenslauf wurde aktualisiert.",
+                "success"
+        );
+        redirectAttributes.addFlashAttribute("toast", toast);
 
         return new RedirectView("/user/profile");
     }

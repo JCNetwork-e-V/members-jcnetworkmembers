@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="/custom/css/adminlte.css">
     <!-- Custom style -->
     <link rel="stylesheet" href="/custom/css/members-style.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
 </div>
 
 <!-- SCRIPTS -->
@@ -23,5 +25,36 @@
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/custom/js/adminlte.js"></script>
+    <!-- Toastr -->
+    <script src="/plugins/toastr/toastr.min.js"></script>
+</div>
+
+<!-- TOAST -->
+<div th:fragment="toast" th:remove="tag">
+    <script th:if="${toast} != null" th:inline="javascript">
+        var title = [[${toast.title}]];
+        var body = [[${toast.body}]];
+        var type = [[${toast.type}]];
+
+        toastr[type](body, title)
+
+        toastr.options = {
+            "closeButton": false,
+            "debug": true,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+    </script>
 </div>
 </html>

@@ -3,6 +3,7 @@ package com.jcnetwork.members.controller.consultancy;
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.consultancy.Role;
+import com.jcnetwork.members.model.ui.Toast;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
@@ -74,7 +76,8 @@ public class ConsultancyRoleController {
     @PostMapping("/addRole")
     public RedirectView createNewRole(
             @Valid Role role,
-            @PathVariable("consultancy") String consultancyName) {
+            @PathVariable("consultancy") String consultancyName,
+            RedirectAttributes redirectAttributes) {
 
         ModelAndView modelAndView = new ModelAndView();
         Consultancy consultancy = consultancyService.getByName(consultancyName)
@@ -90,6 +93,14 @@ public class ConsultancyRoleController {
         roles.add(role);
         consultancy.setRoles(roles);
         consultancyService.save(consultancy);
+
+        Toast toast = new Toast(
+                "Speichern Erfolgreich",
+                "Die Rolle " + role.getName() + " wurde erfolgreich angelegt.",
+                "success"
+        );
+        redirectAttributes.addFlashAttribute("toast", toast);
+
         return new RedirectView("roleList");
     }
 
