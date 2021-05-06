@@ -52,7 +52,6 @@ public class UserService implements UserDetailsService {
 
         User user = new User();
         user.setAccount(account);
-        user.getConsultancies().add(consultancy);
 
         user.getRoles().add(roleRepository.findByRoleName(roleName));
 

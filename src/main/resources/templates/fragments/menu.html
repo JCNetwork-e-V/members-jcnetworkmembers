@@ -9,7 +9,7 @@
 
     <li class="nav-item" th:classappend="${not #lists.isEmpty(navItem.subItems) && navItem.active} ? 'menu-open'">
 
-        <a th:href="${navItem.getLink()}" class="nav-link" th:classappend="${navItem.active} ? 'active'">
+        <a th:href="${navItem.getLink()}" class="nav-link" th:classappend="${navItem.active} ? 'active'" th:attr="style=${navItem.active && primaryColor != null} ? 'background-color:' + ${primaryColor}">
             <i class="nav-icon fas" th:classappend="${navItem.getIcon()}"></i>
             <p th:inline="text">
                 [[${navItem.getLabel()}]]

@@ -14,6 +14,6 @@ public class ConsultancyDetails {
     private String domain;
     private String iconBase64;
 
-    private String primaryColour;
-    private String secondaryColour;
+    private String primaryColor;
+    private String secondaryColor;
 }

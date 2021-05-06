@@ -1,6 +1,5 @@
 package com.jcnetwork.members.controller.consultancy;
 
-import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,7 @@ public class ConsultancyDashboardController {
     public ModelAndView consultancyDashboard(@PathVariable("consultancy") String consultancyName) {
 
         try {
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/dashboard",
                     consultancyName,
                     "Dashboard",

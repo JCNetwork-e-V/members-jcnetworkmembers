@@ -3,6 +3,7 @@ package com.jcnetwork.members.listener;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.consultancy.Member;
 import com.jcnetwork.members.model.data.user.UserDetails;
+import com.jcnetwork.members.model.data.user.UserSettings;
 import com.jcnetwork.members.model.event.OnUserDetailsRegistrationEvent;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
@@ -54,6 +55,7 @@ public class UserDetailsRegistrationListener implements ApplicationListener<OnUs
 
         userDetails = userDetailsService.save(userDetails);
         user.setUserDetails(userDetails);
+        user.setUserSettings(new UserSettings());
         userService.saveUser(user);
 
         Member member = new Member();

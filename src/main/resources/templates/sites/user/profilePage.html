@@ -351,7 +351,15 @@
                     </div>
 
                     <div class="tab-pane" id="settings">
-
+                        <form method="post" th:action="@{/user/saveUserSettings}" th:object="${userSettings}">
+                            <div class="form-group">
+                                <input type="checkbox" name="darkMode" checked data-bootstrap-switch data-on-color="success" th:field="*{darkMode}">
+                                <label>Dark Mode</label>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">Speichern</button>
+                            </div>
+                        </form>
                     </div>
                     <!-- /.tab-pane -->
                 </div>
@@ -369,14 +377,20 @@
 <!-- Page scripts -->
 <th:block layout:fragment="script">
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="../../plugins/moment/moment.min.js"></script>
+    <script src="/plugins/moment/moment.min.js"></script>
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Bootstrap Switch -->
+    <script src="/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 
     <script type="text/javascript">
         $('#cvBirthDate').datetimepicker({
             viewMode: 'years',
             format: 'DD/MM/YYYY',
             maxDate: moment().millisecond(999).second(59).minute(59).hour(23).add(-16, 'years')
+        })
+
+        $("input[data-bootstrap-switch]").each(function(){
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
         })
     </script>
 </th:block>

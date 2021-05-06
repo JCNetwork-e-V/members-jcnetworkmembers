@@ -26,7 +26,7 @@ public class ConsultancyOrganizationalChartController {
     public ModelAndView getOrganizationalStructure(@PathVariable("consultancy") String consultancyName) {
 
         try {
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/consultancyStructure",
                     consultancyName,
                     "Vereinsstruktur",

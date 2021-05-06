@@ -14,9 +14,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class ControllerUtils {
@@ -27,7 +25,7 @@ public class ControllerUtils {
     @Autowired
     private ConsultancyService consultancyService;
 
-    public ModelAndView createMainLayoutAdmin(String activePath, String contentHeader) {
+    public ModelAndView createLayoutAdmin(String activePath, String contentHeader) {
 
         User user =  getUserFromContext();
         UserDetails userDetails = user.getUserDetails();
@@ -37,11 +35,12 @@ public class ControllerUtils {
         modelAndView.addObject("userDetails", userDetails);
         modelAndView.addObject("contentHeader", contentHeader);
         modelAndView.addObject("sidebar", sidebar);
+        modelAndView.addObject("userSettings", user.getUserSettings());
         modelAndView.addObject("consultancyName", "Admin");
         return modelAndView;
     }
 
-    public ModelAndView createMainLayoutConsultancy(
+    public ModelAndView createLayoutConsultancy(
             String activePath,
             String consultancyName,
             String contentHeader,
@@ -63,8 +62,27 @@ public class ControllerUtils {
         modelAndView.addObject("userDetails", userDetails);
         modelAndView.addObject("contentHeader", contentHeader);
         modelAndView.addObject("sidebar", sidebar);
+        modelAndView.addObject("navbarLinks", navbarLinks(user));
+        modelAndView.addObject("userSettings", user.getUserSettings());
         modelAndView.addObject("consultancyName", consultancyName);
+        modelAndView.addObject("primaryColor", consultancy.getConsultancyDetails().getPrimaryColor());
+        modelAndView.addObject("secondaryColor", consultancy.getConsultancyDetails().getSecondaryColor());
         return modelAndView;
+    }
+
+    public Map<String, String> navbarLinks(User user){
+
+        Set<String> userMails = user.getAzureAccounts();
+        if(user.getAccount() != null) userMails.add(user.getAccount().getUsername());
+
+        Map<String, String> links = new HashMap<>();
+        links.put("FAQ", "/faq");
+        for(String mail : userMails) {
+            String consultancyName = consultancyService.getByDomain(mail.substring(mail.indexOf("@") + 1)).get().getConsultancyDetails().getName();
+            links.put(consultancyName, "/" + consultancyName + "/admin/dashboard"); //TODO create consultancy home page
+        }
+        links.put("Home", "/home");
+        return links;
     }
 
     public User getUserFromContext() {

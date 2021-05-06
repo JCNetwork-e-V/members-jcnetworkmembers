@@ -22,7 +22,7 @@ public class ConsultancyMessageController {
     public ModelAndView getMessages(@PathVariable("consultancy") String consultancyName) {
 
         try {
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/messages",
                     consultancyName,
                     "Nachrichten",
@@ -39,7 +39,7 @@ public class ConsultancyMessageController {
     public ModelAndView newMessage(@PathVariable("consultancy") String consultancyName) {
 
         try {
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/messages",
                     consultancyName,
                     "Neue Nachricht formulieren",

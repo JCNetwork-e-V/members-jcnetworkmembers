@@ -1,6 +1,7 @@
 package com.jcnetwork.members.controller.user;
 
 import com.jcnetwork.members.model.data.user.UserDetails;
+import com.jcnetwork.members.model.data.user.UserSettings;
 import com.jcnetwork.members.model.data.user.resume.Resume;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
@@ -18,7 +19,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
-public class profile {
+public class ProfileController {
 
     @Autowired
     private ControllerUtils utils;
@@ -42,8 +43,20 @@ public class profile {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userDetails", user.getUserDetails());
         modelAndView.addObject("resume", resume);
+        modelAndView.addObject("userSettings", user.getUserSettings());
+        modelAndView.addObject("navbarLinks", utils.navbarLinks(user));
         modelAndView.setViewName("sites/user/profilePage");
         return modelAndView;
+    }
+
+    @PostMapping("/saveUserSettings")
+    public RedirectView saveUserSettings(@Valid UserSettings userSettings) {
+
+        User user = utils.getUserFromContext();
+        user.setUserSettings(userSettings);
+        userService.saveUser(user);
+
+        return new RedirectView("/user/profile");
     }
 
     @PostMapping("/saveUserDetails")

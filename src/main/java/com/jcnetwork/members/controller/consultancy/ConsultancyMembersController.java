@@ -1,5 +1,7 @@
 package com.jcnetwork.members.controller.consultancy;
 
+import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,18 +18,24 @@ public class ConsultancyMembersController {
     @Autowired
     private ControllerUtils utils;
 
+    @Autowired
+    private ConsultancyService consultancyService;
+
     private final String PRIVILEG_NAME = "MEMBER_LIST";
 
     @GetMapping("/memberList")
     public ModelAndView getMembersList(@PathVariable("consultancy") String consultancyName) {
 
+        Consultancy consultancy = consultancyService.getByName(consultancyName).get();
+
         try {
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/memberList",
                     consultancyName,
                     "Mitgliederliste",
                     PRIVILEG_NAME
             );
+            modelAndView.addObject("members", consultancy.getMembers());
             modelAndView.setViewName("sites/consultancy/admin/membersList");
             return modelAndView;
         } catch (Exception e) {

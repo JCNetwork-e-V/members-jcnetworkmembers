@@ -37,10 +37,10 @@
                         </thead>
                         <tbody>
                             <tr th:each="member : ${members}">
-                                <td th:text="${member.firstName} + ' ' + ${member.lastName}"></td>
+                                <td th:text="${member.userDetails.firstName} + ' ' + ${member.userDetails.lastName}"></td>
                                 <td>
                                     <th:block th:each="role : ${member.roles}">
-                                        <span th:text="${role.name}"></span><br>
+                                        <span th:text="${role}"></span><br>
                                     </th:block>
                                 </td>
                                 <th:block th:each="customField : ${member.customFields}">

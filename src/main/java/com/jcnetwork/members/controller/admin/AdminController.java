@@ -36,7 +36,7 @@ public class AdminController {
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
 
-        ModelAndView modelAndView = utils.createMainLayoutAdmin(
+        ModelAndView modelAndView = utils.createLayoutAdmin(
                 "/dashboard",
                 "Dashboard"
         );
@@ -47,7 +47,7 @@ public class AdminController {
     @GetMapping("/createConsultancy")
     public ModelAndView getConsultancyCreationForm() {
 
-        ModelAndView modelAndView = utils.createMainLayoutAdmin(
+        ModelAndView modelAndView = utils.createLayoutAdmin(
                 "/admin/createConsultancy",
                 "Neuen Verein anlegen"
         );
@@ -71,7 +71,7 @@ public class AdminController {
     @GetMapping("/consultancyList")
     public ModelAndView getConsultancyList() {
 
-        ModelAndView modelAndView = utils.createMainLayoutAdmin(
+        ModelAndView modelAndView = utils.createLayoutAdmin(
                 "/admin/consultancyList",
                 "Vereinsliste"
         );

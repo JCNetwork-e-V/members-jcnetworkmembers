@@ -11,18 +11,15 @@
     <!-- Base Stylesheets -->
     <div th:replace="fragments/base :: stylesheets"></div>
 </head>
-<body class="hold-transition layout-navbar-fixed">
+<body class="hold-transition layout-navbar-fixed" th:classappend="${userSettings.darkMode} ? 'dark-mode'">
 <!-- Site wrapper -->
 <div class="wrapper">
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="margin-left: 0;">
+    <nav class="main-header navbar navbar-expand" style="margin-left: 0;" th:classappend="${userSettings.darkMode} ? 'navbar-dark' : 'navbar-white navbar-light'">
         <!-- Left navbar links -->
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" th:each="link : ${navbarLinks}">
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="../../index3.html" class="nav-link">Home</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Contact</a>
+                <a th:href="${link.value}" th:text="${link.key}" class="nav-link"></a>
             </li>
         </ul>
 

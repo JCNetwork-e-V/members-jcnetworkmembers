@@ -3,6 +3,7 @@ package com.jcnetwork.members.security.model;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.MongoDocument;
 import com.jcnetwork.members.model.data.user.UserDetails;
+import com.jcnetwork.members.model.data.user.UserSettings;
 import com.jcnetwork.members.model.data.user.resume.Resume;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +21,9 @@ public class User extends MongoDocument {
     private Account account;
     @DBRef
     private Set<AccountRole> roles = new HashSet<>();
+    private UserSettings userSettings;
     @DBRef
     private UserDetails userDetails;
     private Resume resume;
-    @DBRef
-    private Set<Consultancy> consultancies = new HashSet<>();
     private Set<String> azureAccounts = new HashSet<>();
 }

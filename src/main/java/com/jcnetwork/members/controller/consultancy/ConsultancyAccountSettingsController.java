@@ -22,7 +22,7 @@ public class ConsultancyAccountSettingsController {
     public ModelAndView getAccountSettings(@PathVariable("consultancy") String consultancyName) {
 
         try {
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "accountSettings",
                     consultancyName,
                     "Vereinseinstellungen",

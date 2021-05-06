@@ -36,7 +36,7 @@ public class ConsultancyRoleController {
         try {
             Consultancy consultancy = consultancyService.getByName(consultancyName).get();
 
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/roleList",
                     consultancyName,
                     "Rollenübersicht",
@@ -56,7 +56,7 @@ public class ConsultancyRoleController {
         try {
             Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
 
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/addRole",
                     consultancyName,
                     "Rolle hinzufügen",
@@ -97,7 +97,7 @@ public class ConsultancyRoleController {
     public ModelAndView getRoleAllocation(@PathVariable("consultancy") String consultancyName) {
 
         try {
-            ModelAndView modelAndView = utils.createMainLayoutConsultancy(
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "/roleAllocation",
                     consultancyName,
                     "Rollen zuweisen",
