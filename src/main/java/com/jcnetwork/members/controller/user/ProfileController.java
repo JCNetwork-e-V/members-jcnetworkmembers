@@ -87,6 +87,25 @@ public class ProfileController {
         return new RedirectView("/user/profile");
     }
 
+    @PostMapping("/updateProfilePicture")
+    public RedirectView updateProfilePicture(
+            @Valid UserDetails userDetails,
+            RedirectAttributes redirectAttributes
+    ) {
+        UserDetails userDetailsLoaded = utils.getUserFromContext().getUserDetails();
+        userDetailsLoaded.setProfilePictureBase64(userDetails.getProfilePictureBase64());
+        userDetailsService.save(userDetailsLoaded);
+
+        Toast toast = new Toast(
+                "Speichern Erfolgreich",
+                "Deine Profilbild wurde aktualisiert.",
+                "success"
+        );
+        redirectAttributes.addFlashAttribute("toast", toast);
+
+        return new RedirectView("/user/profile");
+    }
+
     @PostMapping("/saveResume")
     public RedirectView saveResume(@Valid Resume resume,  RedirectAttributes redirectAttributes) {
 

@@ -40,9 +40,6 @@ public class RegistrationController {
     private ConsultancyService consultancyService;
 
     @Autowired
-    private ConsultancyMapper mapper;
-
-    @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @GetMapping("/signup")

@@ -36,17 +36,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="member : ${members}">
-                                <td th:text="${member.userDetails.firstName} + ' ' + ${member.userDetails.lastName}"></td>
-                                <td>
-                                    <th:block th:each="role : ${member.roles}">
-                                        <span th:text="${role}"></span><br>
-                                    </th:block>
-                                </td>
-                                <th:block th:each="customField : ${member.customFields}">
-                                    <td th:text="${customField.value}"></td>
+                        <tr th:each="member : ${members}">
+                            <td th:text="${member.userDetails.firstName} + ' ' + ${member.userDetails.lastName}"></td>
+                            <td>
+                                <th:block th:each="role : ${member.roles}">
+                                    <span th:text="${role}"></span><br>
                                 </th:block>
-                            </tr>
+                            </td>
+                            <th:block th:each="customField : ${member.customFields}">
+                                <td th:text="${customField.value}"></td>
+                            </th:block>
+                        </tr>
                         </tbody>
                         <tfoot>
                         <th>Name</th>
@@ -85,10 +85,50 @@
     <script>
     $(document).ready(function() {
         $("#dataTable").DataTable({
+            language: {
+                search: "Suche",
+                info: "Zeige Einträge _START_ bis _END_ aus _TOTAL_ Einträgen",
+                infoEmpty: "",
+                infoFiltered: "(Von _MAX_ Einträgen gesamt)",
+                infoPostFix: "",
+                zeroRecords: "Keine Einträge gefunden",
+                emptyTable: "Keine Einträge vorhanden",
+                paginate: {
+                    first: "Erste Seite",
+                    previous: "Vorherige Seite",
+                    next: "Nächste Seite",
+                    last: "Letzte Seite"
+                }
+            },
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            "buttons": [
+                {
+                    extend: "copy",
+                    text: "Kopieren"
+                },
+                {
+                    extend: "csv",
+                    text: "CSV"
+                },
+                {
+                    extend: "excel",
+                    text: "Excel"
+                },
+                {
+                    extend: "pdf",
+                    text: "PDF"
+                },
+                {
+                    extend:  "print",
+                    text: "Drucken"
+                },
+                {
+                    extend: "colvis",
+                    text: "Spalten filtern"
+                }
+            ]
         }).buttons().container().appendTo('#dataTable_wrapper .col-md-6:eq(0)');
     });
     </script>

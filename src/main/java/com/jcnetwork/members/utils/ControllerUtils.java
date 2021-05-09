@@ -78,6 +78,9 @@ public class ControllerUtils {
 
         List<NavBarItem> links = new ArrayList<>();
         links.add(new NavBarItem("Home", "/home"));
+        if(user.getRoles().contains("ADMIN")){
+            links.add(new NavBarItem("Admin", "/admin/dashboard"));
+        }
         for(String mail : userMails) {
             String consultancyName = consultancyService.getByDomain(mail.substring(mail.indexOf("@") + 1)).get().getConsultancyDetails().getName();
             links.add(new NavBarItem(consultancyName, "/" + consultancyName + "/admin/dashboard")); //TODO create consultancy home page

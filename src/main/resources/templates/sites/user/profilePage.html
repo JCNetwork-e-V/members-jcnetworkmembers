@@ -9,6 +9,8 @@
 
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Croppie -->
+    <link rel="stylesheet" href="/plugins/croppie/css/croppie.css">
 </head>
 <body>
 <div layout:fragment="mainContent" class="card-body">
@@ -20,12 +22,47 @@
         <div class="card card-primary card-outline">
             <div class="card-body box-profile">
                 <div class="text-center">
-                    <img class="profile-user-img img-fluid img-circle"
+                    <img id="profile-picture"
+                         class="profile-user-img img-fluid img-circle"
                          th:src="${userDetails.getProfilePictureBase64()}"
                          alt="User profile picture">
-                    <a class="btn btn-primary picture-edit-btn">
-                        <i class="fas fa-pen-alt"></i>
-                    </a>
+                    <button id="btn-edit-profile-picture" class="btn btn-primary picture-edit-btn" data-toggle="modal" data-target="#modal-profile-picture">
+                        <i class="fas fa-pen"></i>
+                    </button>
+
+                    <div class="modal fade" id="modal-profile-picture">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Profilbild ändern</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form method="post" th:action="@{/user/updateProfilePicture}" th:object="${userDetails}">
+                                    <div class="modal-body">
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input"  id="profilePictureFile" accept="image/*">
+                                                <label class="custom-file-label" for="profilePictureFile" id="profilePictureLabel">Wähle Datei</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-picture-crop-container" id="profilePictureCropContainer">
+                                            <div id="uploadProfilePicture"></div>
+                                            <input type="hidden" th:field="*{profilePictureBase64}" id="croppedProfilePictureField">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button id="btn-submit-profile-picture" type="submit" class="btn btn-success">Profilbild speichern</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
                 </div>
 
                 <h3 class="profile-username text-center" th:text="${userDetails.firstName} + ' ' + ${userDetails.lastName}"></h3>
@@ -371,6 +408,8 @@
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
     <!-- Bootstrap Switch -->
     <script src="/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <!-- Croppie -->
+    <script src="/plugins/croppie/js/croppie.min.js"></script>
 
     <script type="text/javascript">
         $('#cvBirthDate').datetimepicker({
@@ -382,6 +421,79 @@
         $("input[data-bootstrap-switch]").each(function(){
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
         })
+
+        $('#profile-picture').hover(function(){
+            showProfilePicEditBtn();
+        }, function(){
+            $('#btn-edit-profile-picture').css("opacity", 0);
+            $('#btn-edit-profile-picture').css("visibility", "hidden");
+        });
+
+        $('#btn-edit-profile-picture').hover(function(){
+            showProfilePicEditBtn();
+        }, function(){
+            $('#btn-edit-profile-picture').css("opacity", 0);
+            $('#btn-edit-profile-picture').css("visibility", "hidden");
+        });
+
+        function showProfilePicEditBtn() {
+            var button = $('#btn-edit-profile-picture');
+            button.css("opacity", 1);
+            button.css("visibility", "visible");
+            button.position({
+                my: "right bottom",
+                at: "right bottom",
+                of: $('#profile-picture')
+            });
+        }
+
+        // Profile picture upload path
+        document.getElementById('profilePictureFile').onchange = function () {
+            document.getElementById('profilePictureLabel').innerHTML = this.value.replace(/.*[\/\\]/, '');
+        };
+
+        // Croppie implementation
+        $(function() {
+            var $profilePictureCrop;
+
+            function readFile(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#profilePictureCropContainer').addClass('ready');
+                        $profilePictureCrop.croppie('bind', {
+                            url: e.target.result
+                        });
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+                else {
+                    swal("Dein Browser unterstützt leider nicht die FileReader API");
+                }
+            }
+
+            $profilePictureCrop = $('#uploadProfilePicture').croppie({
+                viewport: {
+                    width: 200,
+                    height: 200,
+                    type: 'circle'
+                },
+            });
+
+            $('#profilePictureFile').on('change', function () {
+                readFile(this);
+            });
+            $('#btn-submit-profile-picture').on('click', function (ev) {
+                $profilePictureCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'viewport'
+                }).then(function (resp) {
+                    $('#croppedProfilePictureField').val(resp);
+                });
+            });
+        });
     </script>
 </th:block>
 </body>

@@ -98,13 +98,28 @@
     <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $("#dataTable").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
+        $(document).ready(function() {
+            $("#dataTable").DataTable({
+                language: {
+                    search: "Suche",
+                    info: "Zeige Einträge _START_ bis _END_ aus _TOTAL_ Einträgen",
+                    infoEmpty: "",
+                    infoFiltered: "(Von _MAX_ Einträgen gesamt)",
+                    infoPostFix: "",
+                    zeroRecords: "Keine Einträge gefunden",
+                    emptyTable: "Keine Einträge vorhanden",
+                    paginate: {
+                        first: "Erste Seite",
+                        previous: "Vorherige Seite",
+                        next: "Nächste Seite",
+                        last: "Letzte Seite"
+                    }
+                },
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false
+            });
         });
-    });
     </script>
 </th:block>
 
