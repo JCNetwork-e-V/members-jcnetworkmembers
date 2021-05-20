@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainLayout.html}">
+<head>
+    <title>Profil | JCNetwork Members</title>
+
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Croppie -->
+    <link rel="stylesheet" href="/plugins/croppie/css/croppie.css">
+</head>
+<body>
+<div layout:fragment="mainContent" class="card-body">
+
+    <div class="row">
+        <div class="col-md-3">
+
+            <div th:replace="fragments/profile :: profile-card-main"></div>
+            <div th:replace="fragments/profile :: profile-card-about"></div>
+
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Chronik</h3>
+                </div><!-- /.card-header -->
+                <div class="card-body">
+
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+</div>
+
+<!-- Page scripts -->
+<th:block layout:fragment="script">
+
+</th:block>
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.jcnetwork.members.model.data.consultancy;
 
 import com.jcnetwork.members.model.data.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;

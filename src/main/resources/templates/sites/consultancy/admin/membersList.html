@@ -36,8 +36,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="member : ${members}">
-                            <td th:text="${member.userDetails.firstName} + ' ' + ${member.userDetails.lastName}"></td>
+                        <tr th:each="member : ${members}" th:id="${member.user.id}" style="cursor:pointer">
+                            <td th:text="${member.user.userDetails.firstName} + ' ' + ${member.user.userDetails.lastName}"></td>
                             <td>
                                 <th:block th:each="role : ${member.roles}">
                                     <span th:text="${role}"></span><br>
@@ -130,6 +130,10 @@
                 }
             ]
         }).buttons().container().appendTo('#dataTable_wrapper .col-md-6:eq(0)');
+    });
+
+    $('#dataTable tbody').on('click', 'tr', function(){
+        window.location = "member/" + this.id;
     });
     </script>
 </th:block>

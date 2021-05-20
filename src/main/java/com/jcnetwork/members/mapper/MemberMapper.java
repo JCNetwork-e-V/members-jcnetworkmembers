@@ -18,8 +18,8 @@ public class MemberMapper {
     public MemberDto toDto(Member member) {
 
         UserDetails userDetails = new UserDetails();
-        if (member.getUserDetails() != null){
-            userDetails = member.getUserDetails();
+        if (member.getUser().getUserDetails() != null){
+            userDetails = member.getUser().getUserDetails();
         }
 
         return new MemberDto(

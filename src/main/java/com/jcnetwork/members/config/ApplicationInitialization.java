@@ -6,7 +6,6 @@ import com.jcnetwork.members.security.model.Account;
 import com.jcnetwork.members.security.model.AccountRole;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
-import com.jcnetwork.members.service.MembersUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +22,6 @@ public class ApplicationInitialization {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MembersUserDetailsService userDetailsService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -64,7 +60,6 @@ public class ApplicationInitialization {
                 UserDetails systemUserDetails = new UserDetails();
                 systemUserDetails.setFirstName("JCNetwork");
                 systemUserDetails.setLastName("Members");
-                systemUserDetails = userDetailsService.save(systemUserDetails);
 
                 User user = new User();
                 user.setAccount(systemAccount);

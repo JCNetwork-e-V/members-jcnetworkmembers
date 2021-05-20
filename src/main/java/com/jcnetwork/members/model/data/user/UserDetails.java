@@ -1,17 +1,13 @@
 package com.jcnetwork.members.model.data.user;
 
-import com.jcnetwork.members.model.data.MongoDocument;
-import com.jcnetwork.members.model.data.user.resume.Resume;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(collection = "userDetails")
-public class UserDetails extends MongoDocument {
+public class UserDetails {
 
     private String firstName;
     private String lastName;

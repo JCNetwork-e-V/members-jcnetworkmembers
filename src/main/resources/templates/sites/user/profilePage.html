@@ -18,123 +18,28 @@
 <div class="row">
     <div class="col-md-3">
 
-        <!-- Profile Image -->
-        <div class="card card-primary card-outline">
-            <div class="card-body box-profile">
-                <div class="text-center">
-                    <img id="profile-picture"
-                         class="profile-user-img img-fluid img-circle"
-                         th:src="${userDetails.getProfilePictureBase64()}"
-                         alt="User profile picture">
-                    <button id="btn-edit-profile-picture" class="btn btn-primary picture-edit-btn" data-toggle="modal" data-target="#modal-profile-picture">
-                        <i class="fas fa-pen"></i>
-                    </button>
+        <div th:replace="fragments/profile :: profile-card-main"></div>
+        <div th:replace="fragments/profile :: profile-card-about"></div>
 
-                    <div class="modal fade" id="modal-profile-picture">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Profilbild ändern</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form method="post" th:action="@{/user/updateProfilePicture}" th:object="${userDetails}">
-                                    <div class="modal-body">
-                                        <div class="input-group">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input"  id="profilePictureFile" accept="image/*">
-                                                <label class="custom-file-label" for="profilePictureFile" id="profilePictureLabel">Wähle Datei</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="profile-picture-crop-container" id="profilePictureCropContainer">
-                                            <div id="uploadProfilePicture"></div>
-                                            <input type="hidden" th:field="*{profilePictureBase64}" id="croppedProfilePictureField">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer justify-content-between">
-                                        <button id="btn-submit-profile-picture" type="submit" class="btn btn-success">Profilbild speichern</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
-                    </div>
-                    <!-- /.modal -->
-                </div>
-
-                <h3 class="profile-username text-center" th:text="${userDetails.firstName} + ' ' + ${userDetails.lastName}"></h3>
-
-                <p class="text-muted text-center">Rolle</p>
-
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
-                        <b>Followers</b> <a class="float-right">1,322</a>
-                    </li>
-                    <li class="list-group-item">
-                        <b>Following</b> <a class="float-right">543</a>
-                    </li>
-                    <li class="list-group-item">
-                        <b>Friends</b> <a class="float-right">13,287</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-
-        <!-- About Me Box -->
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Über mich</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <strong><i class="fas fa-book mr-1"></i> Studiengang</strong>
-
-                <p class="text-muted">
-                    Studiengangsname
-                </p>
-
-                <hr>
-
-                <strong><i class="fas fa-map-marker-alt mr-1"></i> Wohnort</strong>
-
-                <p class="text-muted">Malibu, California</p>
-
-                <hr>
-
-                <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
-
-                <p class="text-muted">
-                    <span class="tag tag-danger">UI Design</span>
-                    <span class="tag tag-success">Coding</span>
-                    <span class="tag tag-info">Javascript</span>
-                    <span class="tag tag-warning">PHP</span>
-                    <span class="tag tag-primary">Node.js</span>
-                </p>
-
-                <hr>
-
-            </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
     </div>
     <!-- /.col -->
     <div class="col-md-9">
         <div class="card">
             <div class="card-header p-2">
                 <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#timeline" data-toggle="tab">Chronik</a></li>
                     <li class="nav-item"><a class="nav-link" href="#cv" data-toggle="tab">Lebenslauf</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#userDetails" data-toggle="tab">Nutzerdetails</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#userDetails" data-toggle="tab">Nutzerdetails</a></li>
                     <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Einstellungen</a></li>
                 </ul>
             </div><!-- /.card-header -->
             <div class="card-body">
                 <div class="tab-content">
+
+                    <div class="active tab-pane" id="timeline">
+
+                    </div>
+                    <!-- /.tab-pane -->
 
                     <div class="tab-pane" id="cv">
                         <div id="accordion">
@@ -341,9 +246,8 @@
                         </div>
                     </div>
 
-                    <div class="active tab-pane" id="userDetails">
+                    <div class="tab-pane" id="userDetails">
                         <form method="post" class="form-horizontal" th:action="@{/user/saveUserDetails}" th:object="${userDetails}">
-                            <input type="hidden" th:field="*{id}" id="id">
                             <input type="hidden" th:field="*{profilePictureBase64}" id="profilePictureBase64">
                             <div class="form-group row">
                                 <label for="inputFirstName" class="col-sm-2 col-form-label">Vorname</label>

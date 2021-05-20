@@ -8,7 +8,6 @@ import com.jcnetwork.members.model.event.OnUserDetailsRegistrationEvent;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.service.ConsultancyService;
-import com.jcnetwork.members.service.MembersUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,9 +23,6 @@ public class UserDetailsRegistrationListener implements ApplicationListener<OnUs
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MembersUserDetailsService userDetailsService;
 
     @Autowired
     private ConsultancyService consultancyService;
@@ -53,14 +49,13 @@ public class UserDetailsRegistrationListener implements ApplicationListener<OnUs
             user = userService.findUserByUsername(username).get();
         }
 
-        userDetails = userDetailsService.save(userDetails);
         user.setUserDetails(userDetails);
         user.setUserSettings(new UserSettings());
         userService.saveUser(user);
 
         Member member = new Member();
         member.setEmail(username);
-        member.setUserDetails(userDetails);
+        member.setUser(user);
 
         String domain = username.substring(username.indexOf("@") + 1);
         Optional<Consultancy> consultancy = consultancyService.getByDomain(domain);

@@ -7,7 +7,6 @@ import com.jcnetwork.members.model.data.user.resume.UniversityEducation;
 import com.jcnetwork.members.model.ui.Toast;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
-import com.jcnetwork.members.service.MembersUserDetailsService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,9 +28,6 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MembersUserDetailsService userDetailsService;
 
     @GetMapping("/profile")
     public ModelAndView getProfile() {
@@ -74,8 +70,8 @@ public class ProfileController {
     public RedirectView saveUserDetails(@Valid UserDetails userDetails,  RedirectAttributes redirectAttributes) {
 
         User user = utils.getUserFromContext();
-        userDetails.setId(user.getUserDetails().getId());
-        userDetailsService.save(userDetails);
+        user.setUserDetails(userDetails);
+        userService.saveUser(user);
 
         Toast toast = new Toast(
                 "Speichern Erfolgreich",
@@ -92,9 +88,9 @@ public class ProfileController {
             @Valid UserDetails userDetails,
             RedirectAttributes redirectAttributes
     ) {
-        UserDetails userDetailsLoaded = utils.getUserFromContext().getUserDetails();
-        userDetailsLoaded.setProfilePictureBase64(userDetails.getProfilePictureBase64());
-        userDetailsService.save(userDetailsLoaded);
+        User user = utils.getUserFromContext();
+        user.getUserDetails().setProfilePictureBase64(userDetails.getProfilePictureBase64());
+        userService.saveUser(user);
 
         Toast toast = new Toast(
                 "Speichern Erfolgreich",

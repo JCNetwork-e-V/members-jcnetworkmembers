@@ -22,7 +22,6 @@ public class User extends MongoDocument {
     @DBRef
     private Set<AccountRole> roles = new HashSet<>();
     private UserSettings userSettings;
-    @DBRef
     private UserDetails userDetails;
     private Resume resume;
     private Set<String> azureAccounts = new HashSet<>();

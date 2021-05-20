@@ -79,7 +79,7 @@ public class RegistrationController {
     public ModelAndView getUserDetailsRegistrationForm() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userDetails", new UserDetails());
-        modelAndView.setViewName("sites/users/userRegistration");
+        modelAndView.setViewName("sites/user/userRegistration");
         return modelAndView;
     }
 
