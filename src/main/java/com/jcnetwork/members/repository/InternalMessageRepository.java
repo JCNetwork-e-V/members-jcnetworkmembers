@@ -1,6 +1,6 @@
 package com.jcnetwork.members.repository;
 
-import com.jcnetwork.members.model.InternalMessage;
+import com.jcnetwork.members.model.data.InternalMessage;
 import com.jcnetwork.members.model.data.MongoDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -16,6 +16,7 @@ import java.util.Set;
 public class Consultancy extends MongoDocument {
 
     private ConsultancyDetails consultancyDetails;
+    private List<TimelineEntry> timeline;
 
     private OrganizationalEntity rootEntity;
     private List<Member> members = new ArrayList<>();

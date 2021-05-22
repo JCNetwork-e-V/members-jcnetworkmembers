@@ -66,7 +66,7 @@ public class ConsultancyMembersController {
             ModelAndView modelAndView = utils.createLayoutConsultancy(
                     "",
                     consultancyName,
-                    userDetails.getFirstName() + userDetails.getLastName() + "Profil",
+                    userDetails.getFirstName() + " " + userDetails.getLastName() + " Profil",
                     PRIVILEG_NAME
             );
             modelAndView.addObject("userDetails", userDetails);

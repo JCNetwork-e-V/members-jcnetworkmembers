@@ -1,6 +1,6 @@
 package com.jcnetwork.members.model.dto;
 
-import com.jcnetwork.members.model.InternalMessage;
+import com.jcnetwork.members.model.data.InternalMessage;
 import lombok.Getter;
 import lombok.Setter;
 

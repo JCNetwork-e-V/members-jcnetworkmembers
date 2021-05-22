@@ -30,7 +30,16 @@
                 </div><!-- /.card-header -->
                 <div class="card-body">
 
-
+                    <!-- The timeline -->
+                    <div id="timeline-container" class="timeline timeline-inverse">
+                        <!-- timeline time label -->
+                        <div class="time-label">
+                            <span class="bg-danger">
+                              10 Feb. 2014
+                            </span>
+                        </div>
+                        <!-- /.timeline-label -->
+                    </div>
 
                 </div>
                 <!-- /.card-body -->
@@ -45,6 +54,51 @@
 
 <!-- Page scripts -->
 <th:block layout:fragment="script">
+
+    <script>
+
+        var currentPage = 0;
+        var pageSize = 10;
+
+        $(document).ready(
+            getTimelineEntries()
+        );
+
+        function getTimelineEntries() {
+            $.ajax({
+                'url': "/api/timeline/user/" + window.location.pathname.split('/')[4] + "?page=" + currentPage + "&size=" + pageSize,
+                'method': "GET",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response){
+                    // Create table row for each message item
+                    if(Object.keys(response.content).length > 0) {
+                        $.each(response.content, function (i, item){
+                            // Create html for table row
+                            var htmlTimelineItem =
+                                `<div>
+                                    <i class="fas fa-envelope bg-primary"></i>
+
+                                    <div class="timeline-item">
+
+                                      <h3 class="timeline-header">` + item.title + `</h3>
+
+                                      <div class="timeline-body">` + item.description + `</div>
+                                    </div>
+                                  </div>`
+                            // Add entry to timeline
+                            $('#timeline-container').append(htmlTimelineItem);
+                        })
+                    } else {
+                        var htmlTimelineItem = `<span>Du hast keine Einträge in deiner Chronik.</span>`
+                        $('#timeline-container').append(htmlTimelineItem);
+                    }
+
+                    totalPages = response.totalPages;
+                }
+            })
+        }
+    </script>
 
 </th:block>
 </body>

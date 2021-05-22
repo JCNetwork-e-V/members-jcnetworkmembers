@@ -1,4 +1,4 @@
-package com.jcnetwork.members.model;
+package com.jcnetwork.members.model.data;
 
 import com.jcnetwork.members.model.data.MongoDocument;
 import lombok.Getter;

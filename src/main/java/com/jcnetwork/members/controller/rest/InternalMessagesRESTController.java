@@ -2,7 +2,7 @@ package com.jcnetwork.members.controller.rest;
 
 import com.jcnetwork.members.mapper.InternalMessageMapper;
 import com.jcnetwork.members.exception.ItemNotFoundException;
-import com.jcnetwork.members.model.InternalMessage;
+import com.jcnetwork.members.model.data.InternalMessage;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.dto.FolderMessagesCountDto;
 import com.jcnetwork.members.model.dto.InternalMessageDto;
@@ -64,25 +64,25 @@ public class InternalMessagesRESTController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<String> deleteMessage(@PathVariable("id") String id){
+    public ResponseEntity deleteMessage(@PathVariable("id") String id){
         messageService.deleteMessageById(id);
         return ResponseEntity.ok("Message" + id + "deleted");
     }
 
     @PutMapping(path = "/move/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<InternalMessageDto> moveMessage(
+    public ResponseEntity moveMessage(
             @PathVariable("id") String id,
             @RequestBody String newFolder) {
         return ResponseEntity.ok(mapper.toDto(messageService.changeFolder(id, newFolder)));
     }
 
     @PutMapping(path = "mark-as-read/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<InternalMessageDto> markAsRead(@PathVariable("id") String id) {
+    public ResponseEntity markAsRead(@PathVariable("id") String id) {
         return ResponseEntity.ok(mapper.toDto(messageService.markAsRead(id)));
     }
 
     @GetMapping(path="/count/{consultancy}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FolderMessagesCountDto>> folderMessagesCount(@PathVariable("consultancy") String consultancyName){
+    public ResponseEntity folderMessagesCount(@PathVariable("consultancy") String consultancyName){
 
         Consultancy consultancy = consultancyService.getByName(consultancyName)
                 .orElseThrow(() -> new ItemNotFoundException("Consultancy not found"));

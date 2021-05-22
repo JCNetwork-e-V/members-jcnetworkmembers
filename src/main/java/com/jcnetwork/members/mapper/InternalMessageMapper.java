@@ -1,6 +1,6 @@
 package com.jcnetwork.members.mapper;
 
-import com.jcnetwork.members.model.InternalMessage;
+import com.jcnetwork.members.model.data.InternalMessage;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.MongoDocument;
 import com.jcnetwork.members.model.dto.InternalMessageDto;

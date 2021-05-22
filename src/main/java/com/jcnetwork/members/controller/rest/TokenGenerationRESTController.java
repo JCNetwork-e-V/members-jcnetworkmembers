@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class LoginRESTController {
+public class TokenGenerationRESTController {
 
     @Autowired
     private AuthenticationManager authenticationManager;

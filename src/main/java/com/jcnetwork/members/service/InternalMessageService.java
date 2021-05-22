@@ -1,6 +1,6 @@
 package com.jcnetwork.members.service;
 
-import com.jcnetwork.members.model.InternalMessage;
+import com.jcnetwork.members.model.data.InternalMessage;
 import com.jcnetwork.members.model.data.MongoDocument;
 import com.jcnetwork.members.repository.InternalMessageRepository;
 import com.mongodb.MongoException;

@@ -38,6 +38,53 @@
 
                     <div class="active tab-pane" id="timeline">
 
+                        <button id="btn-add-timeline-entry" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-timeline-entry">
+                            Eintrag hinzufügen
+                        </button>
+
+                        <div class="modal fade" id="modal-add-timeline-entry">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Chronikeintrag hinzufügen</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="post" th:action="@{/user/addTimelineEntry}" th:object="${timelineEntry}">
+                                        <div class="modal-body">
+                                            <div class="input-group">
+                                                <div class="form-group col-md-8">
+                                                    <label for="cvBirthplace">Titel</label>
+                                                    <input type="text" class="form-control" id="timelineTitle" placeholder="Titel" th:field="*{title}">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="cvBirthDate">Datum</label>
+                                                    <input type="text" class="form-control datetimepicker-input" id="timelineDate" placeholder="Datum" data-toggle="datetimepicker" th:field="*{date}">
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="cvIndividualText">Beschreibung</label>
+                                                    <textarea class="form-control" id="timelineDescription" rows="3" placeholder="Beschreibung" th:field="*{description}"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button id="btn-submit-profile-picture" typse="submit" class="btn btn-success">Eintrag hinzufügen</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                        <br><br>
+
+                        <!-- The timeline -->
+                        <div id="timeline-container" class="timeline timeline-inverse">
+                            <div id="timeline-end"></div>
+                        </div>
+
                     </div>
                     <!-- /.tab-pane -->
 
@@ -309,17 +356,27 @@
 <th:block layout:fragment="script">
     <!-- Tempusdominus Bootstrap 4 -->
     <script src="/plugins/moment/moment.min.js"></script>
+    <script src="/plugins/moment/locale/de.js"></script>
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
     <!-- Bootstrap Switch -->
     <script src="/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
     <!-- Croppie -->
     <script src="/plugins/croppie/js/croppie.min.js"></script>
 
-    <script type="text/javascript">
+    <script th:inline="javascript" type="text/javascript">
+
+        var userId = [[${userId}]];
+
         $('#cvBirthDate').datetimepicker({
+            locale: 'de',
             viewMode: 'years',
-            format: 'DD/MM/YYYY',
+            format: 'L',
             maxDate: moment().millisecond(999).second(59).minute(59).hour(23).add(-16, 'years')
+        })
+
+        $('#timelineDate').datetimepicker({
+            locale: 'de',
+            format: 'L'
         })
 
         $("input[data-bootstrap-switch]").each(function(){
@@ -398,6 +455,75 @@
                 });
             });
         });
+
+        //timeline
+        var currentPage = 0;
+        var pageSize = 10;
+        var currentDate;
+
+        $(document).ready(
+            getTimelineEntries()
+        );
+
+        function getTimelineEntries() {
+            const months = ["Jan.", "Feb.", "Mär.","Apr.", "Mai", "Juni", "Juli", "Aug.", "Sep.", "Okt.", "Nov.", "Dez."];
+            $('#timeline-end').remove();
+            $.ajax({
+                'url': "/api/timeline/user/" + userId + "?page=" + currentPage + "&size=" + pageSize,
+                'method': "GET",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response){
+                    // Create table row for each message item
+                    if(Object.keys(response.content).length > 0) {
+                        $.each(response.content, function (i, item){
+                            // Create html for table row
+                            var htmlTimelineItem = "";
+                            var entryDate = new Date(item.date);
+                                if(entryDate.getUTCDate() !== currentDate) {
+                                    htmlTimelineItem +=
+                                        `<div class="time-label">
+                                            <span class="bg-danger">` +
+                                                entryDate.getDate() + ". " +
+                                                months[entryDate.getMonth()] + " " +
+                                                entryDate.getFullYear() +
+                                            `</span>
+                                        </div>`
+                                    currentDate = entryDate.getUTCDate();
+                                }
+                                htmlTimelineItem +=
+                                    `<div>
+                                        <i class="fas ` + item.icon + `"></i>
+
+                                        <div class="timeline-item">
+
+                                          <h3 class="timeline-header">` + item.title + `</h3>
+
+                                          <div class="timeline-body">` + item.description + `</div>
+                                        </div>
+                                      </div>`
+                            // Add entry to timeline
+                            $('#timeline-container').append(htmlTimelineItem);
+                        })
+                        if(response.last === true){
+                            $('#timeline-container').append("<div id=\"timeline-end\"><i class=\"far fa-clock bg-gray\"></i> </div>")
+                        } else {
+                            $('#timeline-container').append(`
+                                <div id=\"timeline-end\">
+                                        <i class=\"fas fa-history bg-gray\" style="top: 12px"></i>
+                                        <button class="btn btn-primary" style="margin-left: 60px; width: calc(100% - 60px);" onclick="loadNextTimelinePage()">Mehr laden</button>
+                                </div>`);
+                        }
+                    }
+                    totalPages = response.totalPages;
+                }
+            })
+        }
+
+        function loadNextTimelinePage(){
+            currentPage += 1;
+            getTimelineEntries();
+        }
     </script>
 </th:block>
 </body>

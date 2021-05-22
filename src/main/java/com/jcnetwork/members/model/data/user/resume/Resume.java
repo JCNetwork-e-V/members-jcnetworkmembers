@@ -4,6 +4,7 @@ import com.jcnetwork.members.model.data.user.Address;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,7 @@ public class Resume {
     private String lastName;
     private String profilePictureBase64;
     private Address address;
+    @DateTimeFormat(pattern="dd.MM.yyyy")
     private Date birthDate;
     private String birthPlace;
     private String email;

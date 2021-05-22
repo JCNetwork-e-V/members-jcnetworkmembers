@@ -1,5 +1,6 @@
 package com.jcnetwork.members.controller.user;
 
+import com.jcnetwork.members.model.data.TimelineEntry;
 import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.model.data.user.UserSettings;
 import com.jcnetwork.members.model.data.user.resume.Resume;
@@ -9,6 +10,8 @@ import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.sql.Time;
 
 @Controller
 @RequestMapping("/user")
@@ -40,7 +44,9 @@ public class ProfileController {
         }
 
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("userId", user.getId());
         modelAndView.addObject("userDetails", user.getUserDetails());
+        modelAndView.addObject("timelineEntry", new TimelineEntry());
         modelAndView.addObject("resume", resume);
         modelAndView.addObject("newUniversityEducation", new UniversityEducation());
         modelAndView.addObject("userSettings", user.getUserSettings());
@@ -94,7 +100,7 @@ public class ProfileController {
 
         Toast toast = new Toast(
                 "Speichern Erfolgreich",
-                "Deine Profilbild wurde aktualisiert.",
+                "Dein Profilbild wurde aktualisiert.",
                 "success"
         );
         redirectAttributes.addFlashAttribute("toast", toast);
@@ -111,7 +117,24 @@ public class ProfileController {
 
         Toast toast = new Toast(
                 "Speichern Erfolgreich",
-                "Deine Lebenslauf wurde aktualisiert.",
+                "Dein Lebenslauf wurde aktualisiert.",
+                "success"
+        );
+        redirectAttributes.addFlashAttribute("toast", toast);
+
+        return new RedirectView("/user/profile");
+    }
+
+    @PostMapping("/addTimelineEntry")
+    public RedirectView addTimelineEntry(@Valid TimelineEntry timelineEntry, RedirectAttributes redirectAttributes) {
+
+        User user = utils.getUserFromContext();
+        user.getTimeline().add(timelineEntry);
+        userService.saveUser(user);
+
+        Toast toast = new Toast(
+                "Speichern Erfolgreich",
+                "Deine Chronik wurde aktualisiert.",
                 "success"
         );
         redirectAttributes.addFlashAttribute("toast", toast);
