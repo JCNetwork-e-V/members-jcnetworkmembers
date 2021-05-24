@@ -82,9 +82,18 @@
     <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
-    <script>
+    <script th:inline="javascript">
+
+    var primaryColor = [[${primaryColor}]];
+
     $(document).ready(function() {
         $("#dataTable").DataTable({
+            "fnDrawCallback": function( oSettings ) {
+                if(primaryColor !== null){
+                    $('.page-item.active').find("a").css("background-color", primaryColor).css("border-color", primaryColor);
+                    $('.page-item:not(.active):not(.disabled)').find("a").css("color", primaryColor);
+                }
+            },
             language: {
                 search: "Suche",
                 info: "Zeige Einträge _START_ bis _END_ aus _TOTAL_ Einträgen",

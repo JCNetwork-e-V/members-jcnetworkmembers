@@ -1,7 +1,7 @@
 package com.jcnetwork.members.service;
 
 import com.jcnetwork.members.model.data.InternalMessage;
-import com.jcnetwork.members.model.data.MongoDocument;
+import com.jcnetwork.members.model.dto.NewInternalMessageDto;
 import com.jcnetwork.members.repository.InternalMessageRepository;
 import com.mongodb.MongoException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class InternalMessageService {
     @Autowired
     private InternalMessageRepository internalMessageRepository;
 
-    public void sendMessage(InternalMessage message) { internalMessageRepository.save(message); }
+    public void createMessage(InternalMessage message) { internalMessageRepository.save(message); }
 
     public void deleteMessage(InternalMessage message) { internalMessageRepository.delete(message); }
 
@@ -29,8 +29,8 @@ public class InternalMessageService {
 
     public Optional<InternalMessage> getById(String id) { return internalMessageRepository.findById(id); }
 
-    public Page<InternalMessage> getByRecipientAndFolder(MongoDocument recipient, String folder, Pageable pageable) {
-        return internalMessageRepository.findAllByRecipientAndFolder(recipient, folder, pageable);
+    public Page<InternalMessage> getByRecipientAndFolder(String recipientId, String folder, Pageable pageable) {
+        return internalMessageRepository.findAllByRecipientAndFolder(recipientId, folder, pageable);
     }
 
     public InternalMessage changeFolder(String id, String newFolder) {
@@ -55,11 +55,11 @@ public class InternalMessageService {
         }
     }
 
-    public Long countAllRecipientsMessagesByFolder(MongoDocument recipient, String folder) {
-        return internalMessageRepository.countByRecipientAndFolder(recipient, folder);
+    public Long countAllRecipientsMessagesByFolder(String recipientId, String folder) {
+        return internalMessageRepository.countByRecipientAndFolder(recipientId, folder);
     }
 
-    public Long countUnreadRecipientsMessagesByFolder(MongoDocument recipient, String folder) {
-        return internalMessageRepository.countByRecipientAndFolderAndRead(recipient, folder, false);
+    public Long countUnreadRecipientsMessagesByFolder(String recipientId, String folder) {
+        return internalMessageRepository.countByRecipientAndFolderAndRead(recipientId, folder, false);
     }
 }

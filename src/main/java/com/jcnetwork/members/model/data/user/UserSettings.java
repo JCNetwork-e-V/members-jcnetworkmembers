@@ -8,8 +8,11 @@ import lombok.Setter;
 public class UserSettings {
 
     private Boolean darkMode;
+    private Boolean shareCv;
 
     public UserSettings() {
+
         this.darkMode = false;
+        this.shareCv = false;
     }
 }

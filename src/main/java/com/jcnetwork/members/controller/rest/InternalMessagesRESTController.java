@@ -3,9 +3,11 @@ package com.jcnetwork.members.controller.rest;
 import com.jcnetwork.members.mapper.InternalMessageMapper;
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.data.InternalMessage;
+import com.jcnetwork.members.model.data.MongoDocument;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.dto.FolderMessagesCountDto;
 import com.jcnetwork.members.model.dto.InternalMessageDto;
+import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.service.ConsultancyService;
 import com.jcnetwork.members.service.InternalMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class InternalMessagesRESTController {
 
     @Autowired
     private ConsultancyService consultancyService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private InternalMessageService messageService;
@@ -49,10 +54,9 @@ public class InternalMessagesRESTController {
             @PathVariable("folder") String folder,
             Pageable pageable) {
 
-        Consultancy consultancy = consultancyService.getByName(consultancyName)
-                .orElseThrow(() -> new ItemNotFoundException("Consultancy not found"));
+        String recipientId = consultancyService.getIdByName(consultancyName);
 
-        Page<InternalMessage> messages = messageService.getByRecipientAndFolder(consultancy, folder, pageable);
+        Page<InternalMessage> messages = messageService.getByRecipientAndFolder(recipientId, folder, pageable);
 
         PageImpl<InternalMessageDto> response = new PageImpl<>(
                 mapper.toDto(messages.getContent()),
@@ -84,16 +88,15 @@ public class InternalMessagesRESTController {
     @GetMapping(path="/count/{consultancy}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity folderMessagesCount(@PathVariable("consultancy") String consultancyName){
 
-        Consultancy consultancy = consultancyService.getByName(consultancyName)
-                .orElseThrow(() -> new ItemNotFoundException("Consultancy not found"));
+        String recipientId = consultancyService.getIdByName(consultancyName);
 
         List<FolderMessagesCountDto> folderMessageCount = new ArrayList<>();
 
         String[] folders = {"Inbox", "Gesendet", "Entwürfe", "Papierkorb"};
 
         for(String folder : folders){
-            Long count = messageService.countAllRecipientsMessagesByFolder(consultancy, folder);
-            Long unreadCount = messageService.countUnreadRecipientsMessagesByFolder(consultancy, folder);
+            Long count = messageService.countAllRecipientsMessagesByFolder(recipientId, folder);
+            Long unreadCount = messageService.countUnreadRecipientsMessagesByFolder(recipientId, folder);
             folderMessageCount.add(new FolderMessagesCountDto(folder, count, unreadCount));
         }
         return ResponseEntity.ok(folderMessageCount);

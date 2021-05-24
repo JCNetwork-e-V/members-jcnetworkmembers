@@ -4,9 +4,62 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="mailbox">
+
+    <head>
+        <!-- summernote -->
+        <link rel="stylesheet" href="/plugins/summernote/summernote-bs4.min.css">
+        <!-- Select2 -->
+        <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    </head>
+
     <div class="row">
         <div class="col-md-3">
-            <a href="" class="btn btn-jcnetwork btn-block mb-3">Neue Nachricht</a>
+            <button id="btn-new-message" class="btn btn-primary btn-block mb-3" data-toggle="modal" data-target="#modal-new-message" th:attr="style=${primaryColor != null} ? 'background-color:' + ${primaryColor}+ '; border-color:' + ${primaryColor}">
+                Neue Nachricht
+            </button>
+
+            <div class="modal fade" id="modal-new-message">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Neue Nachricht Verfassen</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post" th:action="@{sendMessage}" th:object="${newMessage}">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <select id="recipients" class="form-control select2 select2-primary" data-dropdown-css-class="select2-primary" multiple="multiple" data-placeholder="An:" style="width: 100%;" th:field="*{recipientIds}"></select>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Betreff:" th:field="*{subject}">
+                                </div>
+                                <div class="form-group">
+                                    <textarea id="compose-textarea" class="form-control" style="height: 300px" th:field="*{body}"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <div class="btn btn-default btn-file">
+                                        <i class="fas fa-paperclip"></i> Attachment
+                                        <input type="file" name="attachment">
+                                    </div>
+                                    <p class="help-block">Max. 32MB</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <div class="float-right">
+                                    <button type="button" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Entwurf</button>
+                                    <button type="submit" class="btn btn-primary"><i class="far fa-envelope"></i> Senden</button>
+                                </div>
+                                <button type="reset" class="btn btn-default"><i class="fas fa-times"></i> Verwerfen</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
 
             <div class="card">
                 <div class="card-header">
@@ -53,7 +106,7 @@
         <!-- /.col -->
         <div class="col-md-9">
             <!-- messages list card -->
-            <div class="card card-primary card-outline">
+            <div class="card card-primary card-outline" th:attr="style=${primaryColor != null} ? 'border-color:' + ${primaryColor}">
                 <div class="card-header">
                     <h3 class="card-title"></h3>
 
@@ -61,7 +114,7 @@
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" placeholder="Suche">
                             <div class="input-group-append">
-                                <div class="btn btn-jcnetwork">
+                                <div class="btn btn-primary" th:attr="style=${primaryColor != null} ? 'background-color:' + ${primaryColor}+ '; border-color:' + ${primaryColor}">
                                     <i class="fas fa-search"></i>
                                 </div>
                             </div>
@@ -95,6 +148,32 @@
         </div>
         <!-- /.col -->
     </div>
+
+    <div class="modal fade" id="modal-read-message">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nachricht Lesen</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="mailbox-read-info">
+                    <h5 id="read-message-subject"></h5>
+                    <div>
+                        <h6 class="float-left" id="read-message-sender"></h6>
+                        <span id="read-message-timespanSinceSent" class="mailbox-read-time float-right"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="read-message-body"></div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </div>
 
 <div th:fragment="mailbox-controls" class="mailbox-controls">
@@ -129,19 +208,34 @@
 </div>
 
 <th:block th:fragment="mailbox-scripts">
-    <script>
+    <!-- summernote -->
+    <script src="/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- Select2 -->
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
 
+    <script th:inline="javascript">
+
+        var primaryColor = [[${primaryColor}]];
         var currentPage = 0;
         var pageSize = 10;
         var totalPages;
         var folder = "Inbox";
+
+        //Initialize Select2 Elements
+        $('.select2').select2()
 
         // Load messages on first request
         $(document).ready(
             setFolderLinkActive("Inbox"),
             $('.card-title').text("Inbox"),
             getFoldersMessageCount(),
-            getMessages()
+            getMessages(),
+            // Text editor
+            $(function () {
+                $('#compose-textarea').summernote({
+                    dialogsInBody: true
+                })
+            })
         );
 
         function changeFolder(newFolder) {
@@ -157,8 +251,12 @@
             $("a[name='folderLink']").each(function (){
                 if($(this).attr("id") === folderName){
                     $(this).addClass("active");
+                    if(primaryColor !== null) {
+                        $(this).css("background-color", primaryColor);
+                    }
                 } else {
                     $(this).removeClass("active");
+                    $(this).css("background-color", "");
                 }
             });
         }
@@ -209,8 +307,7 @@
                             htmlRow +=
                                 `</td>
                             <td class="mailbox-subject messagebox-subject">
-                                <b>` + item.subject + ` - </b>
-                                 <span>` + item.body + `</span>
+                                <b>` + item.subject + ` - </b><span>` + item.body.replace(/<\/?[^>]+(>|$)/g, "") + `</span>
                             </td>
                             <td class="mailbox-attachment messagebox-small-element"></td>
                             <td class="mailbox-date">` + item.timespanSinceSent + `</td>`
@@ -306,11 +403,6 @@
             });
         }
 
-        // Refresh mail count
-        setInterval(function () {
-            getFoldersMessageCount();
-        }, 10000);
-
         // Check all button
         $(function () {
             //Enable check and uncheck all functionality
@@ -328,6 +420,49 @@
                 $(this).data('clicks', !clicks)
             })
         })
+
+        // Get possible recipients for new Message
+        $('#btn-new-message').one("click", function () {
+            $.ajax({
+                'url': '/api/entity/all',
+                'method': 'GET',
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response) {
+                    var options = "";
+                    // Create select with all possible recipients
+                    $.each(response, function (i, item) {
+                        options += '<option value="' + item.id + '">' + item.name + '</option>';
+                    })
+                    $('#recipients').append(options);
+                },
+            });
+        })
+
+        // Make messages clickable to read content
+        $('#messages_table').on('click', 'td:not(.messagebox-small-element)', function(){
+            var id = $(this).closest('tr').children('td.messagebox-small-element').children('div.icheck-jcnetwork').children('input').attr('id');
+            $.ajax({
+                'url': "/api/messages/" + id,
+                'method': "GET",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response) {
+                    $('#read-message-subject').text(response.subject);
+                    $('#read-message-sender').text("Von: " + response.senderName);
+                    $('#read-message-timespanSinceSent').text(response.timespanSinceSent);
+                    $('#read-message-body').html(response.body);
+                }
+            });
+            $('#modal-read-message').modal();
+            $.ajax({
+                'url': '/api/messages/mark-as-read/' + id,
+                'async': false,
+                'method': 'PUT',
+                'contentType': 'application/json',
+            });
+            $(this).closest('tr').addClass("message-read");
+        });
     </script>
 
 </th:block>

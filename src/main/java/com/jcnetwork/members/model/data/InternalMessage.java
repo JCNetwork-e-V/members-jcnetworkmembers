@@ -1,9 +1,8 @@
 package com.jcnetwork.members.model.data;
 
-import com.jcnetwork.members.model.data.MongoDocument;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Date;
 
@@ -11,9 +10,7 @@ import java.util.Date;
 @Setter
 public class InternalMessage extends MongoDocument {
 
-    @DBRef
-    private MongoDocument recipient;
-    @DBRef
+    private String recipient;
     private MongoDocument sender;
     private String subject;
     private String body;
@@ -22,8 +19,14 @@ public class InternalMessage extends MongoDocument {
 
     private Boolean read;
 
-    public InternalMessage(MongoDocument recipient, MongoDocument sender, String subject, String body){
-        this.recipient = recipient;
+    public InternalMessage(){
+        this.creationDate = new Date();
+        this.read = false;
+        this.folder = "Inbox";
+    }
+
+    public InternalMessage(String recipientId, MongoDocument sender, String subject, String body){
+        this.recipient = recipientId;
         this.sender = sender;
         this.subject = subject;
         this.body = body;

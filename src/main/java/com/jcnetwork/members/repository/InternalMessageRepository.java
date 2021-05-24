@@ -12,11 +12,11 @@ import org.springframework.stereotype.Repository;
 public interface InternalMessageRepository extends MongoRepository<InternalMessage, String> {
 
     Page<InternalMessage> findAllByRecipientAndFolder(
-            @Param("recipient") MongoDocument recipient,
+            @Param("recipient") String recipientId,
             String folder,
             Pageable pageable);
 
-    Long countByRecipientAndFolder(MongoDocument recipient, String folder);
+    Long countByRecipientAndFolder(String recipientId, String folder);
 
-    Long countByRecipientAndFolderAndRead(MongoDocument recipient, String folder, Boolean read);
+    Long countByRecipientAndFolderAndRead(String recipientId, String folder, Boolean read);
 }

@@ -17,5 +17,4 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     @Aggregation(pipeline = {"{$match: {'_id' : ?0}}", "{$project: {count: {$size : [$timeline]}}}"})
     AggregationResults totalTimelineEntriesByUserId(String id);
-
 }

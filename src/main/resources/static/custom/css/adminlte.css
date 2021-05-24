@@ -159,7 +159,7 @@ sup {
 }
 
 a {
-  color: rgb(51, 102, 153);
+  color: #007bff;
   text-decoration: none;
   background-color: transparent;
 }
@@ -17060,7 +17060,7 @@ body.text-sm .input-group-text {
 }
 
 .card-primary.card-outline {
-  border-top: 3px solid rgb(51, 102, 153);
+  border-top: 3px solid #007bff;
 }
 
 .card-primary.card-outline-tabs > .card-header a:hover {

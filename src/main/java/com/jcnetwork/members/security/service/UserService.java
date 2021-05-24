@@ -1,7 +1,9 @@
 package com.jcnetwork.members.security.service;
 
+import com.jcnetwork.members.mapper.EntityMapper;
 import com.jcnetwork.members.model.data.TimelineEntry;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
+import com.jcnetwork.members.model.dto.EntityDetailsDto;
 import com.jcnetwork.members.repository.AccountRoleRepository;
 import com.jcnetwork.members.repository.UserRepository;
 import com.jcnetwork.members.repository.VerificationTokenRepository;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,6 +35,9 @@ public class UserService implements UserDetailsService {
     private MongoTemplate mongoTemplate;
 
     @Autowired
+    private EntityMapper entityMapper;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -42,7 +48,6 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private ArrayOperators.Slice timeline;
 
     public Optional<User> findUserByUsername(String username) {
          Optional<User> user = userRepository.findByAccountUsername(username);
@@ -50,6 +55,14 @@ public class UserService implements UserDetailsService {
              user = userRepository.findByAzureAccountsContaining(username);
          }
          return user;
+    }
+
+    public List<EntityDetailsDto> getAllAsEntity() {
+
+        Query query = new Query();
+        query.fields().include("_id").include("userDetails.firstName").include("userDetails.lastName");
+
+        return entityMapper.userToDto(mongoTemplate.query(User.class).matching(query).all());
     }
 
     public Optional<User> findUserById(String id) {

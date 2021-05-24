@@ -330,9 +330,15 @@
 
                     <div class="tab-pane" id="settings">
                         <form method="post" th:action="@{/user/saveUserSettings}" th:object="${userSettings}">
+                            <label><i class="fas fa-shield-alt"></i> Datenschutz</label>
+                            <div class="form-group">
+                                <input type="checkbox" name="shareCv" checked data-bootstrap-switch data-on-color="success" th:field="*{shareCv}">
+                                <span>Lebenslauf für Vereinsadministratoren freigeben</span>
+                            </div>
+                            <label><i class="fas fa-paint-brush"></i> Darstellung</label>
                             <div class="form-group">
                                 <input type="checkbox" name="darkMode" checked data-bootstrap-switch data-on-color="success" th:field="*{darkMode}">
-                                <label>Dark Mode</label>
+                                <span>Dark Mode (experimentell)</span>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Speichern</button>
