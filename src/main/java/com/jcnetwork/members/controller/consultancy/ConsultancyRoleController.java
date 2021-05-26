@@ -104,6 +104,60 @@ public class ConsultancyRoleController {
         return new RedirectView("roleList");
     }
 
+    @GetMapping("/updateRole/{roleName}")
+    public ModelAndView getAddRole(
+            @PathVariable("consultancy") String consultancyName,
+            @PathVariable("roleName") String roleName) {
+
+        try {
+            Optional<Consultancy> consultancy = consultancyService.getByName(consultancyName);
+
+            ModelAndView modelAndView = utils.createLayoutConsultancy(
+                    "",
+                    consultancyName,
+                    "Rolle bearbeiten",
+                    PRIVILEG_NAME
+            );
+            modelAndView.addObject("role", consultancy.get().getRole(roleName));
+            modelAndView.addObject("organizationalEntities", consultancy.get().getOrganizationalEntities());
+            modelAndView.setViewName("sites/consultancy/admin/roles/addRole");
+            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView(new RedirectView("/accessForbidden"));
+        }
+    }
+
+    @PostMapping("/updateRole")
+    public RedirectView updateRole(
+            @Valid Role role,
+            @PathVariable("consultancy") String consultancyName,
+            RedirectAttributes redirectAttributes) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        Consultancy consultancy = consultancyService.getByName(consultancyName)
+                .orElseThrow( () -> new ItemNotFoundException("Verein existiert nicht")); //TODO real error page
+
+        Set<Role> roles = consultancy.getRoles();
+        for(Role existingRole : roles) {
+            if(existingRole.getName() == role.getName()){
+                roles.remove(role);
+            }
+        }
+
+        roles.add(role);
+        consultancy.setRoles(roles);
+        consultancyService.save(consultancy);
+
+        Toast toast = new Toast(
+                "Speichern Erfolgreich",
+                "Die Rolle " + role.getName() + " wurde geupdated.",
+                "success"
+        );
+        redirectAttributes.addFlashAttribute("toast", toast);
+
+        return new RedirectView("roleList");
+    }
+
     @GetMapping("/roleAllocation")
     public ModelAndView getRoleAllocation(@PathVariable("consultancy") String consultancyName) {
 

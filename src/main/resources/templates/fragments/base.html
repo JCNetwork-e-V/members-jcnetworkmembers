@@ -33,6 +33,106 @@
     <script src="/plugins/toastr/toastr.min.js"></script>
 </div>
 
+<div th:fragment="reporter" th:remove="tag">
+        <div id="report-window" class="btn btn-success report-btn">
+            <div class="row">
+                <div class="col-1 open-close-report">
+                    <i class="fas fa-envelope"></i><br>
+                    <span>Nachricht an die Entwickler</span>
+                </div>
+                <div class="col-11">
+                    <div class="form-group">
+                        <select class="custom-select" name="type" id="report-subject">
+                            <option value="Bugreport">Bug Melden</option>
+                            <option value="Verbesserungsvorschlag">Verbesserungsvorschlag</option>
+                            <option value="Report">Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="report-body" class="form-control" name="body" style="height: 120px" placeholder="Liebes JCNetwork Members Team,..."></textarea>
+                    </div>
+                    <div class="form-group float-right">
+                        <button class="btn btn-default open-close-report">Schließen</button>
+                        <button id="btn-report-submit" class="btn btn-warning">Senden</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        var $reportForm = $('#report-form');
+
+        $('#btn-report-submit').click(function() {
+            $.ajax({
+                'url': "/api/messages/reportSubmission",
+                'method': "POST",
+                'async': false,
+                'data': {
+                    sender: "sender",
+                    subject: $('#report-subject').val(),
+                    body: $('#report-body').val()
+                },
+                'success': function () {
+                    toastr["success"]("Deine Nachricht wurde an die Administratoren gesendet. Vielen Dank für dein Feedback!", "Senden erfolgreich");
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": true,
+                        "newestOnTop": true,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": true,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                },
+                'error': function () {
+                    toastr["error"]("Beim senden der Nachricht ist ein Fehler aufgetreten", "Fehler");
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": true,
+                        "newestOnTop": true,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": true,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                }
+            });
+            if($('#report-window').hasClass("open")){
+                $('#report-window').removeClass("open");
+            } else {
+                $('#report-window').addClass("open");
+            }
+            $('#report-subject').val("Bugreport")
+            $('#report-body').val("");
+        });
+
+        $('.open-close-report').click(function() {
+            if($('#report-window').hasClass("open")){
+                $('#report-window').removeClass("open");
+            } else {
+                $('#report-window').addClass("open");
+            }
+        });
+
+
+    </script>
+</div>
+
 <!-- TOAST -->
 <div th:fragment="toast" th:remove="tag">
     <script th:if="${toast} != null" th:inline="javascript">

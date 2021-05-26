@@ -1,7 +1,6 @@
 package com.jcnetwork.members.service;
 
 import com.jcnetwork.members.model.data.InternalMessage;
-import com.jcnetwork.members.model.dto.NewInternalMessageDto;
 import com.jcnetwork.members.repository.InternalMessageRepository;
 import com.mongodb.MongoException;
 import org.springframework.beans.factory.annotation.Autowired;

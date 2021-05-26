@@ -171,3 +171,42 @@
     border-radius: 18px;
     font-size: 0.82rem;
 }
+
+.report-btn {
+    transition: height 0.5s, right 0.5s;
+
+    position: fixed;
+
+    right: -553px;
+    top: 70px;
+
+    height: 38px;
+    width: 600px;
+
+    border-radius: 0.5rem;
+
+    z-index: 9999;
+    overflow: hidden;
+    text-orientation: mixed;
+    text-align: left;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.report-btn.open{
+    height: 240px;
+    right: -3px;
+}
+
+.report-btn:hover {
+    height: 240px;
+}
+
+.report-btn i {
+    padding-bottom: 5px;
+    font-size: 1.5rem;
+}
+
+.report-btn span {
+    writing-mode: vertical-rl;
+}

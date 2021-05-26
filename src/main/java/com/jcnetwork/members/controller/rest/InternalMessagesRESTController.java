@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,5 +101,25 @@ public class InternalMessagesRESTController {
             folderMessageCount.add(new FolderMessagesCountDto(folder, count, unreadCount));
         }
         return ResponseEntity.ok(folderMessageCount);
+    }
+
+    @PostMapping(path = "/reportSubmission")
+    public ResponseEntity reportSubmission(
+            @RequestParam("sender") String sender,
+            @RequestParam("subject") String subject,
+            @RequestParam("body") String body
+    ) {
+        try {
+            InternalMessage message = new InternalMessage(
+                    userService.getUserIdByUsername("System_Admin"),
+                    null,
+                    subject,
+                    body
+            );
+            messageService.createMessage(message);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body( "Sender not found.");
+        }
+        return ResponseEntity.ok("Report sent.");
     }
 }

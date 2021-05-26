@@ -57,6 +57,17 @@ public class UserService implements UserDetailsService {
          return user;
     }
 
+    public String getUserIdByUsername(String username) throws Exception {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("account.username").is(username));
+        query.fields().include("_id");
+
+        Optional<User> user = mongoTemplate.query(User.class).matching(query).one();
+        if(user.isEmpty()) throw new Exception("User not found");
+        return user.get().getId();
+    }
+
     public List<EntityDetailsDto> getAllAsEntity() {
 
         Query query = new Query();

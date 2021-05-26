@@ -2,7 +2,6 @@ package com.jcnetwork.members.model.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Date;
 
@@ -33,6 +32,16 @@ public class InternalMessage extends MongoDocument {
         this.creationDate = new Date();
         this.read = false;
         this.folder = "Inbox";
+    }
+
+    public InternalMessage(String recipientId, MongoDocument sender, String subject, String body, Boolean read, String folder){
+        this.recipient = recipientId;
+        this.sender = sender;
+        this.subject = subject;
+        this.body = body;
+        this.creationDate = new Date();
+        this.read = read;
+        this.folder = folder;
     }
 
     public String getTimespanSinceSent(){

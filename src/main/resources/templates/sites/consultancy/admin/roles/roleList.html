@@ -39,7 +39,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="role : ${roles}">
+                            <tr th:each="role : ${roles}" th:id="${role.getName()}">
                                 <td th:text="${role.name}"></td>
                                 <td th:text="${role.associatedOrganizationalEntity}"></td>
                                 <td class="table-icon">
@@ -131,6 +131,9 @@
             });
         });
 
+        $('#dataTable tbody').on('click', 'tr', function(){
+            window.location = "updateRole/" + this.id;
+        });
     </script>
 </th:block>
 

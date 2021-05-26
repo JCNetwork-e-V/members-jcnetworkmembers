@@ -28,15 +28,15 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="inputName">Rollenname</label>
-                            <input type="text" id="inputName" class="form-control" th:field="*{name}">
+                            <input type="text" id="inputName" class="form-control" th:field="*{name}" th:value="*{name}">
                         </div>
                         <div class="form-group">
                             <label for="inputDescription">Rollenbeschreibung</label>
-                            <textarea id="inputDescription" class="form-control" rows="4" th:field="*{description}"></textarea>
+                            <textarea id="inputDescription" class="form-control" rows="4" th:field="*{description}" th:value="*{description}"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="inputStatus">Zugeordnete Organisationseinheit</label>
-                            <select id="inputStatus" class="form-control custom-select" th:field="*{associatedOrganizationalEntity}">
+                            <select id="inputStatus" class="form-control custom-select" th:field="*{associatedOrganizationalEntity}" th:value="*{associatedOrganizationalEntity}">
                                 <option selected value="Keine">Keine</option>
                                 <th:block th:each="entity : ${organizationalEntities}">
                                     <option th:value="${entity.name}" th:text="${entity.name}"></option>
@@ -100,7 +100,7 @@
                     <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
-                <input type="submit" value="Rolle erstellen" class="btn btn-success float-right" th:attr="style=${secondaryColor != null} ? 'background-color:' + ${secondaryColor} + '; border-color:' + ${secondaryColor}"><br><br>
+                <input type="submit" value="Speichern" class="btn btn-success float-right" th:attr="style=${secondaryColor != null} ? 'background-color:' + ${secondaryColor} + '; border-color:' + ${secondaryColor}"><br><br>
             </div>
         </div>
     </form>

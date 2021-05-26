@@ -358,18 +358,22 @@
             getFoldersMessageCount();
         }
 
+        function markAsRead(messageId) {
+            $.ajax({
+                'url': '/api/messages/mark-as-read/' + messageId,
+                'async': false,
+                'method': 'PUT',
+                'contentType': 'application/json',
+            });
+            getFoldersMessageCount();
+        }
+
         function markSelectedAsRead() {
             $("input[name='messageSelect']:checked").each(function (){
                 var messageId = $(this).attr("id");
-                $.ajax({
-                    'url': '/api/messages/mark-as-read/' + messageId,
-                    'async': false,
-                    'method': 'PUT',
-                    'contentType': 'application/json',
-                });
+                markAsRead(messageId);
+                $(this).closest('tr').addClass("message-read");
             })
-            getMessages();
-            getFoldersMessageCount();
         }
 
         function deleteSelected(){
@@ -455,12 +459,7 @@
                 }
             });
             $('#modal-read-message').modal();
-            $.ajax({
-                'url': '/api/messages/mark-as-read/' + id,
-                'async': false,
-                'method': 'PUT',
-                'contentType': 'application/json',
-            });
+            markAsRead(id);
             $(this).closest('tr').addClass("message-read");
         });
     </script>
