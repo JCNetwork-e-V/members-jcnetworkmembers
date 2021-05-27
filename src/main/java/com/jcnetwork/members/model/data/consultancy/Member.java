@@ -1,6 +1,5 @@
 package com.jcnetwork.members.model.data.consultancy;
 
-import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.security.model.User;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -15,6 +14,7 @@ public class Member {
     @DBRef
     private User user;
     private Set<String> roles = new HashSet<>();
+    private Set<String> organizationalEntities = new HashSet<>();
 
     // a container for all unexpected fields
     private Map<String, Object> schemalessData;
@@ -39,6 +39,16 @@ public class Member {
     public void removeRole(String roleName) {
         if(this.roles.contains(roleName)){
             this.roles.remove(roleName);
+        }
+    }
+
+    public void addOrganizationalEntity(String entityName) {
+        this.organizationalEntities.add(entityName);
+    }
+
+    public void removeOrganizationalEntity(String entityName) {
+        if(this.organizationalEntities.contains(entityName)){
+            this.organizationalEntities.remove(entityName);
         }
     }
 }

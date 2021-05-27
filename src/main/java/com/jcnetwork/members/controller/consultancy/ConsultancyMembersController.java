@@ -44,7 +44,7 @@ public class ConsultancyMembersController {
                     PRIVILEG_NAME
             );
             modelAndView.addObject("members", consultancy.getMembers());
-            modelAndView.setViewName("sites/consultancy/admin/membersList");
+            modelAndView.setViewName("sites/consultancy/admin/members/membersList");
             return modelAndView;
         } catch (Exception e) {
             return new ModelAndView(new RedirectView("/accessForbidden"));
@@ -70,7 +70,7 @@ public class ConsultancyMembersController {
                     PRIVILEG_NAME
             );
             modelAndView.addObject("userDetails", userDetails);
-            modelAndView.setViewName("sites/consultancy/admin/memberProfile");
+            modelAndView.setViewName("sites/consultancy/admin/members/memberProfile");
             return modelAndView;
         } catch (Exception e) {
             return new ModelAndView(new RedirectView("/accessForbidden"));

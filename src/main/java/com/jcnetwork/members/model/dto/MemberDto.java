@@ -15,5 +15,6 @@ public class MemberDto {
     private String email;
     private UserDetailsDto userDetails;
     private Set<String> roles;
+    private Set<String> organizationalEntities;
     private Map<String, Object> customFields;
 }

@@ -165,7 +165,8 @@ public class ControllerUtils {
         if(privileges.contains("ORGANIZATIONAL_STRUCTURE"))
             sidebar
                 .addNavGroup("Vereinsorganisation")
-                    .addNavItem("Organisationsstruktur", "/" + consultancyName + "/admin/consultancyStructure", "fa-sitemap");
+                    .addNavItem("Organisationsstruktur", "/" + consultancyName + "/admin/consultancyStructure", "fa-sitemap").topLevel()
+                    .addNavItem("Mitglieder Zuteilen", "/" + consultancyName + "/admin/memberAllocation", "fa-user-check");
         if(privileges.contains("ROLE_MANAGEMENT") || privileges.contains("ACCOUNT_SETTINGS")){
             NavGroup ng = sidebar.addNavGroup("Einstellungen");
             if(privileges.contains("ROLE_MANAGEMENT"))

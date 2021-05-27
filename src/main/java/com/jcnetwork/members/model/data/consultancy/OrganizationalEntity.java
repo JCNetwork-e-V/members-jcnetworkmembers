@@ -14,5 +14,4 @@ public class OrganizationalEntity {
 
     private String name;
     private List<OrganizationalEntity> children;
-    private Set<Member> members;
 }

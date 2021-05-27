@@ -79,7 +79,6 @@ public class ConsultancyRoleController {
             @PathVariable("consultancy") String consultancyName,
             RedirectAttributes redirectAttributes) {
 
-        ModelAndView modelAndView = new ModelAndView();
         Consultancy consultancy = consultancyService.getByName(consultancyName)
                 .orElseThrow( () -> new ItemNotFoundException("Verein existiert nicht")); //TODO real error page
 
@@ -127,20 +126,21 @@ public class ConsultancyRoleController {
         }
     }
 
-    @PostMapping("/updateRole")
+    @PostMapping("/updateRole/{roleName}")
     public RedirectView updateRole(
+            @PathVariable String roleName,
             @Valid Role role,
             @PathVariable("consultancy") String consultancyName,
             RedirectAttributes redirectAttributes) {
 
-        ModelAndView modelAndView = new ModelAndView();
         Consultancy consultancy = consultancyService.getByName(consultancyName)
                 .orElseThrow( () -> new ItemNotFoundException("Verein existiert nicht")); //TODO real error page
 
         Set<Role> roles = consultancy.getRoles();
         for(Role existingRole : roles) {
-            if(existingRole.getName() == role.getName()){
-                roles.remove(role);
+            if(existingRole.getName().equals(roleName)){
+                roles.remove(existingRole);
+                break;
             }
         }
 
@@ -155,7 +155,7 @@ public class ConsultancyRoleController {
         );
         redirectAttributes.addFlashAttribute("toast", toast);
 
-        return new RedirectView("roleList");
+        return new RedirectView("/" + consultancyName + "/admin/roleList");
     }
 
     @GetMapping("/roleAllocation")

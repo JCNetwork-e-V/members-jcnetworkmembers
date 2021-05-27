@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainLayout.html}">
+
+<head>
+    <title>Mitglieder zuordnen | JCNetwork Members</title>
+
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+</head>
+
+<body>
+<div layout:fragment="mainContent">
+
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">Weise Mitglieder zu Organisationseinheiten zu</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <select id="allMembersList" class="duallistbox" multiple="multiple"></select>
+                    </div>
+                    <!-- /.form-group -->
+                    <button id="btn-save" class="btn btn-success float-right">Speichern</button>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+</div>
+
+<!-- Page scripts -->
+<th:block layout:fragment="script">
+
+    <!-- Bootstrap4 Duallistbox -->
+    <script src="/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <!-- Page specific script -->
+    <script>
+        //Bootstrap Duallistbox
+        var entityMembersList = $('.duallistbox').bootstrapDualListbox({
+            filterTextClear: 'Alle zeigen',
+            selectedListLabel: 'Organisationseinheit',
+            nonSelectedListLabel: 'Vereinsmitglieder',
+            infoText: '{0} Mitglieder',
+            infoTextFiltered: 'Zeige {0} von {1}',
+            infoTextEmpty: 'Keine Mitglieder vorhanden'
+        })
+
+        var $form = $('#rolesForm');
+
+        var selectedEntity;
+
+        $(document).ready(
+            replaceLabelWithSelect()
+        );
+
+        $('#btn-save').on('click', function() {
+            var secondBoxLabel = $('#entitySelector option:selected').text();
+            $.ajax({
+                'url': "/api/organizationalStructure/"  + window.location.pathname.split('/')[1] + "/" + secondBoxLabel + "/updateMembers",
+                'method': "PUT",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'data': JSON.stringify(entityMembersList.val()),
+                'success': function () {
+                    toastr["success"]("Die Zuweisungen wurden übernommen.", "Speichen erfolgreich");
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": true,
+                        "newestOnTop": true,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": true,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                }
+            });
+        });
+
+        function replaceLabelWithSelect(){
+            var secondBoxLabel = $("label[for='bootstrap-duallistbox-selected-list_']");
+            $.ajax({
+                'url': "/api/organizationalStructure/" + window.location.pathname.split('/')[1] + "/allEntities",
+                'method': "GET",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response) {
+                    // Create select with all organizational entities
+                    var options = getSubEntityNames(response, options);
+
+                    secondBoxLabel.replaceWith(
+                        '<select id="entitySelector" class="custom-select duallistbox-select">' + options + '</select>'
+                    );
+
+                    fillLists();
+
+                    $('#entitySelector').change(function(){
+                        fillLists();
+                    });
+                }
+            });
+        }
+
+        function getSubEntityNames(entity) {
+            var result = '<option>' + entity.name + '</option>';
+            $.each(entity.children, function (i, subEntity) {
+                result += getSubEntityNames(subEntity);
+            })
+            return result;
+        }
+
+        function fillLists() {
+            selectedEntity = $('#entitySelector option:selected').text();
+            var allMembersList = $('#allMembersList');
+
+            $.ajax({
+                'url': "/api/" + window.location.pathname.split('/')[1] + "/members/all",
+                'method': "GET",
+                'contentType': 'application/json',
+                'dataType': "json",
+                'success': function (response) {
+                    allMembersList.children().remove();
+                    entityMembersList.children().remove();
+                    $.each(response, function (i, item) {
+                        if(item.organizationalEntities.indexOf(selectedEntity) !== -1) {
+                            entityMembersList.append('<option value=\"' + item.email + '\" selected>' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
+                        } else {
+                            entityMembersList.append('<option value=\"' + item.email + '\">' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
+                        }
+                    })
+                    entityMembersList.bootstrapDualListbox('refresh');
+                }
+            });
+        }
+    </script>
+
+</th:block>
+
+</body>
+</html>

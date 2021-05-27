@@ -26,6 +26,7 @@ public class MemberMapper {
                 member.getEmail(),
                 userDetailsMapper.toDto(userDetails),
                 member.getRoles(),
+                member.getOrganizationalEntities(),
                 member.getCustomFields()
         );
     }

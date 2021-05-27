@@ -3,8 +3,6 @@ package com.jcnetwork.members.controller.rest;
 import com.jcnetwork.members.mapper.InternalMessageMapper;
 import com.jcnetwork.members.exception.ItemNotFoundException;
 import com.jcnetwork.members.model.data.InternalMessage;
-import com.jcnetwork.members.model.data.MongoDocument;
-import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.dto.FolderMessagesCountDto;
 import com.jcnetwork.members.model.dto.InternalMessageDto;
 import com.jcnetwork.members.security.service.UserService;
@@ -18,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 

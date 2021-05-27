@@ -39,7 +39,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="role : ${roles}" th:id="${role.getName()}">
+                            <tr th:each="role : ${roles}" th:id="${role.getName()}" style="cursor:pointer">
                                 <td th:text="${role.name}"></td>
                                 <td th:text="${role.associatedOrganizationalEntity}"></td>
                                 <td class="table-icon">
