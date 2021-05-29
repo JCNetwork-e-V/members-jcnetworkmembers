@@ -14,7 +14,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            <button id="btn-new-message" class="btn btn-primary btn-block mb-3" data-toggle="modal" data-target="#modal-new-message" th:attr="style=${primaryColor != null} ? 'background-color:' + ${primaryColor}+ '; border-color:' + ${primaryColor}">
+            <button id="btn-new-message" class="btn btn-primary btn-block mb-3" data-toggle="modal" data-target="#modal-new-message">
                 Neue Nachricht
             </button>
 
@@ -106,7 +106,7 @@
         <!-- /.col -->
         <div class="col-md-9">
             <!-- messages list card -->
-            <div class="card card-primary card-outline" th:attr="style=${primaryColor != null} ? 'border-color:' + ${primaryColor}">
+            <div class="card card-primary card-outline">
                 <div class="card-header">
                     <h3 class="card-title"></h3>
 
@@ -114,7 +114,7 @@
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" placeholder="Suche">
                             <div class="input-group-append">
-                                <div class="btn btn-primary" th:attr="style=${primaryColor != null} ? 'background-color:' + ${primaryColor}+ '; border-color:' + ${primaryColor}">
+                                <div class="btn btn-primary">
                                     <i class="fas fa-search"></i>
                                 </div>
                             </div>
@@ -215,7 +215,6 @@
 
     <script th:inline="javascript">
 
-        var primaryColor = [[${primaryColor}]];
         var currentPage = 0;
         var pageSize = 10;
         var totalPages;
@@ -251,12 +250,8 @@
             $("a[name='folderLink']").each(function (){
                 if($(this).attr("id") === folderName){
                     $(this).addClass("active");
-                    if(primaryColor !== null) {
-                        $(this).css("background-color", primaryColor);
-                    }
                 } else {
                     $(this).removeClass("active");
-                    $(this).css("background-color", "");
                 }
             });
         }

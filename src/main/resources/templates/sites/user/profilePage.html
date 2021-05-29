@@ -486,11 +486,11 @@
                             // Create html for table row
                             var htmlTimelineItem = "";
                             var entryDate = new Date(item.date);
-                                var dateString = entryDate.getDate() + ". " + months[entryDate.getMonth()] + " " + entryDate.getFullYear();
+                                var dateString = months[entryDate.getMonth()] + " " + entryDate.getFullYear();
                                 if(dateString !== currentDate) {
                                     htmlTimelineItem +=
                                         `<div class="time-label">
-                                            <span class="bg-danger">` + dateString + `</span>
+                                            <span class="bg-primary">` + dateString + `</span>
                                         </div>`
                                     currentDate = dateString;
                                 }
