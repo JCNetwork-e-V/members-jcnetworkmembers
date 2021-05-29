@@ -63,7 +63,7 @@ public class ConsultancyCreationListener implements ApplicationListener<OnConsul
         account.setUsername(username);
         account.setPassword(passwordPlain);
 
-        User technicalUser = userService.createNewUser(account, consultancy, "CONSULTANCY_ADMIN");
+        User technicalUser = userService.createNewUser(account, "CONSULTANCY_ADMIN");
         technicalUser.getAccount().setIsAccountEnabled(true);
 
         UserDetails userDetails = new UserDetails();

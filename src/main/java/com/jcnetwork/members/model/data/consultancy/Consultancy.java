@@ -51,10 +51,13 @@ public class Consultancy extends MongoDocument {
         if(entity.getName().equals(replacement.getName())) {
             return entity;
         } else {
-            entity.setChildren(new ArrayList<>());
-            for(OrganizationalEntity child : entity.getChildren()){
-                entity.getChildren().add(replaceOrganizationalEntity(child, replacement));
+            List<OrganizationalEntity> updatedChildren = new ArrayList<>();
+            if(entity.getChildren() != null) {
+                for(OrganizationalEntity child : entity.getChildren()){
+                    updatedChildren.add(replaceOrganizationalEntity(child, replacement));
+                }
             }
+            entity.setChildren(updatedChildren);
         }
         return entity;
     }

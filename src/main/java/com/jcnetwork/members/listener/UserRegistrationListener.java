@@ -28,6 +28,6 @@ public class UserRegistrationListener implements ApplicationListener<OnUserRegis
         String token = RandomStringUtils.randomAlphabetic(20);
         userService.createVerificationToken(user, token);
 
-        mailService.sendUserVerificationMail(user.getAccount().getUsername(), token);
+        //mailService.sendUserVerificationMail(user.getAccount().getUsername(), token); TODO enable again
     }
 }

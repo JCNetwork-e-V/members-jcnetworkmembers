@@ -80,10 +80,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id);
     }
 
-    public User createNewUser(Account account, Consultancy consultancy, String roleName) {
+    public User createNewUser(Account account, String roleName) {
 
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
-        account.setIsAccountEnabled(false);
+        account.setIsAccountEnabled(true); //TODO revert to false
         account.setIsAccountNonLocked(true);
 
         User user = new User();

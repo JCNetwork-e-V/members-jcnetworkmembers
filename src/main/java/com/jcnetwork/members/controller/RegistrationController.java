@@ -57,7 +57,6 @@ public class RegistrationController {
     public ModelAndView createNewUser(@Valid RegistrationDto registration, BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView();
-        Optional<Consultancy> consultancy = consultancyService.getByName(registration.getSelectedConsultancy());
         Account account = registration.getAccount();
 
         Optional<User> existingUser = userService.findUserByUsername(account.getUsername());
@@ -65,7 +64,7 @@ public class RegistrationController {
             // TODO error InternalMessage
             modelAndView.setView(new RedirectView("/signup"));
         } else {
-            User registered = userService.createNewUser(account, consultancy.get(), "USER");
+            User registered = userService.createNewUser(account, "USER");
             eventPublisher.publishEvent(new OnUserRegistrationCompleteEvent(registered));
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("account", new Account());
