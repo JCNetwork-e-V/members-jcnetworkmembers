@@ -18,11 +18,17 @@ public class MemberMapper {
     public MemberDto toDto(Member member) {
 
         UserDetails userDetails = new UserDetails();
-        if (member.getUser().getUserDetails() != null){
-            userDetails = member.getUser().getUserDetails();
+        String userId = null;
+        if (member.getUser() != null) {
+            userId = member.getUser().getId();
+            if (member.getUser().getUserDetails() != null){
+                userDetails = member.getUser().getUserDetails();
+            }
         }
 
+
         return new MemberDto(
+                userId,
                 member.getEmail(),
                 userDetailsMapper.toDto(userDetails),
                 member.getRoles(),

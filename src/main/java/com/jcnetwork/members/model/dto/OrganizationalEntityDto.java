@@ -12,5 +12,6 @@ import java.util.List;
 public class OrganizationalEntityDto {
 
     private String name;
+    private EntityDetailsDto head;
     private List<OrganizationalEntityDto> children;
 }

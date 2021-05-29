@@ -36,6 +36,29 @@ public class Consultancy extends MongoDocument {
         return entities;
     }
 
+    public OrganizationalEntity getOrganizationalEntity(String entityName) throws Exception {
+        for(OrganizationalEntity entity : this.getOrganizationalEntities()){
+            if(entity.getName().equals(entityName)) return entity;
+        }
+        throw new Exception("Organizational entity not found");
+    }
+
+    public void updateOrganizationalEntity(OrganizationalEntity organizationalEntity) {
+        replaceOrganizationalEntity(this.rootEntity, organizationalEntity);
+    }
+
+    private OrganizationalEntity replaceOrganizationalEntity(OrganizationalEntity entity, OrganizationalEntity replacement) {
+        if(entity.getName().equals(replacement.getName())) {
+            return entity;
+        } else {
+            entity.setChildren(new ArrayList<>());
+            for(OrganizationalEntity child : entity.getChildren()){
+                entity.getChildren().add(replaceOrganizationalEntity(child, replacement));
+            }
+        }
+        return entity;
+    }
+
     private List<OrganizationalEntity> getChildren(OrganizationalEntity entity){
 
         List<OrganizationalEntity> children = new ArrayList<>();

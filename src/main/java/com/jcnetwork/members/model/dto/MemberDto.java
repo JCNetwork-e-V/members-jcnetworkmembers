@@ -12,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class MemberDto {
 
+    private String userId;
     private String email;
     private UserDetailsDto userDetails;
     private Set<String> roles;

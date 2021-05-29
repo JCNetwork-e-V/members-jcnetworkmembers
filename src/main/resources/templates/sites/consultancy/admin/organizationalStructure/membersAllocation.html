@@ -17,7 +17,7 @@
 
     <div class="card card-default">
         <div class="card-header">
-            <h3 class="card-title">Weise Mitglieder zu Organisationseinheiten zu</h3>
+            <h3 class="card-title">Weise Mitglieder Organisationseinheiten zu</h3>
 
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -32,7 +32,16 @@
                     <div class="form-group">
                         <select id="allMembersList" class="duallistbox" multiple="multiple"></select>
                     </div>
-                    <!-- /.form-group -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <lable for="entity-head-select" class="float-right" style="font-weight: 700;">Leitung:</lable>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select id="entity-head-select" class="custom-select"></select>
+                            </div>
+                        </div>
+                    </div>
                     <button id="btn-save" class="btn btn-success float-right">Speichern</button>
                 </div>
                 <!-- /.col -->
@@ -65,9 +74,10 @@
         var $form = $('#rolesForm');
 
         var selectedEntity;
+        let entityHeads = new Map();
 
         $(document).ready(
-            replaceLabelWithSelect()
+            getOrganizationalEntities()
         );
 
         $('#btn-save').on('click', function() {
@@ -79,29 +89,38 @@
                 'dataType': "json",
                 'data': JSON.stringify(entityMembersList.val()),
                 'success': function () {
-                    toastr["success"]("Die Zuweisungen wurden übernommen.", "Speichen erfolgreich");
-                    toastr.options = {
-                        "closeButton": false,
-                        "debug": true,
-                        "newestOnTop": true,
-                        "progressBar": false,
-                        "positionClass": "toast-top-right",
-                        "preventDuplicates": true,
-                        "onclick": null,
-                        "showDuration": "300",
-                        "hideDuration": "1000",
-                        "timeOut": "5000",
-                        "extendedTimeOut": "1000",
-                        "showEasing": "swing",
-                        "hideEasing": "linear",
-                        "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
-                    }
+                    $.ajax({
+                        'url': "/api/organizationalStructure/" + window.location.pathname.split('/')[1] + "/" + secondBoxLabel + "/setHead",
+                        'method': "PUT",
+                        'contentType': 'application/json',
+                        'dataType': "json",
+                        'data': JSON.stringify($('#entity-head-select').val()),
+                        'success': function () {
+                            toastr["success"]("Die Zuweisungen wurden übernommen.", "Speichen erfolgreich");
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": true,
+                                "newestOnTop": true,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": true,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            }
+                        }
+                    });
                 }
             });
         });
 
-        function replaceLabelWithSelect(){
+        function getOrganizationalEntities(){
             var secondBoxLabel = $("label[for='bootstrap-duallistbox-selected-list_']");
             $.ajax({
                 'url': "/api/organizationalStructure/" + window.location.pathname.split('/')[1] + "/allEntities",
@@ -110,10 +129,10 @@
                 'dataType': "json",
                 'success': function (response) {
                     // Create select with all organizational entities
-                    var options = getSubEntityNames(response, options);
+                    var organizationalEntities = getSubEntityNames(response, organizationalEntities);
 
                     secondBoxLabel.replaceWith(
-                        '<select id="entitySelector" class="custom-select duallistbox-select">' + options + '</select>'
+                        '<select id="entitySelector" class="custom-select duallistbox-select">' + organizationalEntities + '</select>'
                     );
 
                     fillLists();
@@ -127,6 +146,9 @@
 
         function getSubEntityNames(entity) {
             var result = '<option>' + entity.name + '</option>';
+            var headUserId = entity.head.id;
+            if(headUserId === null) {headUserId = 'none'};
+            entityHeads.set(entity.name, headUserId);
             $.each(entity.children, function (i, subEntity) {
                 result += getSubEntityNames(subEntity);
             })
@@ -136,6 +158,7 @@
         function fillLists() {
             selectedEntity = $('#entitySelector option:selected').text();
             var allMembersList = $('#allMembersList');
+            var headPositionSelect = $('#entity-head-select');
 
             $.ajax({
                 'url': "/api/" + window.location.pathname.split('/')[1] + "/members/all",
@@ -152,10 +175,29 @@
                             entityMembersList.append('<option value=\"' + item.email + '\">' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
                         }
                     })
+
+                    if(headPositionSelect.html() == '') {
+                        headPositionSelect.append('<option value=\"none">Ohne Leitung</option>');
+                        $.each(response, function (i, item) {
+                            headPositionSelect.append('<option value=\"' + item.userId + '\">' + item.userDetails.firstName + ' ' + item.userDetails.lastName + '</option>');
+                        })
+                    }
+
+                    var secondBoxLabel = $('#entitySelector').val();
+                    var entityHeadId = entityHeads.get(secondBoxLabel);
+                    var index = $('#entity-head-select option[value="' + entityHeadId + '"]').index();
+                    if(index !== -1) {
+                        $('#entity-head-select').val(entityHeadId);
+                    } else {
+                        $('#entity-head-select').val('none');
+                    }
+
                     entityMembersList.bootstrapDualListbox('refresh');
                 }
             });
         }
+
+
     </script>
 
 </th:block>
