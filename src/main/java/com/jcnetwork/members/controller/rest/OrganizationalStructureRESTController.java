@@ -5,6 +5,7 @@ import com.jcnetwork.members.mapper.OrganizationalEntityMapper;
 import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.consultancy.Member;
 import com.jcnetwork.members.model.data.consultancy.OrganizationalEntity;
+import com.jcnetwork.members.model.dto.OrganizationalEntityDto;
 import com.jcnetwork.members.security.model.User;
 import com.jcnetwork.members.security.service.UserService;
 import com.jcnetwork.members.service.ConsultancyService;
@@ -41,14 +42,14 @@ public class OrganizationalStructureRESTController {
     @PutMapping(path = "/{consultancy}/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOrganizationalStructure(
             @PathVariable("consultancy") String consultancyName,
-            @RequestBody OrganizationalEntity entity) {
+            @RequestBody OrganizationalEntityDto entityDto) {
 
         Consultancy consultancy = consultancyService.getByName(consultancyName)
                 .orElseThrow(() -> new ItemNotFoundException("Consultancy not found"));
 
-        consultancy.setRootEntity(entity);
+        consultancy.setRootEntity(mapper.toOrganizationalEntity(entityDto));
         consultancyService.save(consultancy);
-        return ResponseEntity.ok(entity);
+        return ResponseEntity.ok(entityDto);
     }
 
     @PutMapping(path = "/{consultancy}/{organizationalEntity}/updateMembers", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

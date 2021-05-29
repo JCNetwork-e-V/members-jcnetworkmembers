@@ -3,17 +3,23 @@ package com.jcnetwork.members.mapper;
 import com.jcnetwork.members.model.data.consultancy.OrganizationalEntity;
 import com.jcnetwork.members.model.dto.EntityDetailsDto;
 import com.jcnetwork.members.model.dto.OrganizationalEntityDto;
+import com.jcnetwork.members.security.model.User;
+import com.jcnetwork.members.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class OrganizationalEntityMapper {
 
     @Autowired
     private EntityMapper entityMapper;
+
+    @Autowired
+    private UserService userService;
 
     public OrganizationalEntityDto toDto(OrganizationalEntity organizationalEntity){
 
@@ -37,6 +43,33 @@ public class OrganizationalEntityMapper {
                 organizationalEntityDtos.add(this.toDto(organizationalEntity));
             }
             return organizationalEntityDtos;
+        }
+        return null;
+    }
+
+    public OrganizationalEntity toOrganizationalEntity(OrganizationalEntityDto organizationalEntityDto){
+
+        User head = null;
+        if(organizationalEntityDto.getHead().getId() != null){
+            Optional<User> optionalUser =  userService.findUserById(organizationalEntityDto.getHead().getId());
+            if(optionalUser.isPresent()) head = optionalUser.get();
+        }
+
+        return new OrganizationalEntity(
+                organizationalEntityDto.getName(),
+                head,
+                this.toOrganizationalEntity(organizationalEntityDto.getChildren())
+        );
+    }
+
+    public List<OrganizationalEntity> toOrganizationalEntity(List<OrganizationalEntityDto> organizationalEntityDtos){
+
+        if(organizationalEntityDtos != null){
+            List<OrganizationalEntity> organizationalEntities = new ArrayList<>();
+            for (OrganizationalEntityDto organizationalEntityDto : organizationalEntityDtos){
+                organizationalEntities.add(this.toOrganizationalEntity(organizationalEntityDto));
+            }
+            return organizationalEntities;
         }
         return null;
     }
