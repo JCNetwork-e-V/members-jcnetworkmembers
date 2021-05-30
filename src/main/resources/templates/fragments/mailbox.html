@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="/plugins/summernote/summernote-bs4.min.css">
         <!-- Select2 -->
         <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+        <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     </head>
 
     <div class="row">
@@ -30,7 +31,7 @@
                         <form method="post" th:action="@{sendMessage}" th:object="${newMessage}">
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <select id="recipients" class="form-control select2 select2-primary" data-dropdown-css-class="select2-primary" multiple="multiple" data-placeholder="An:" style="width: 100%;" th:field="*{recipientIds}"></select>
+                                    <select id="recipients" class="select2" multiple="multiple" data-placeholder="An:" style="width: 100%;" th:field="*{recipientIds}"></select>
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Betreff:" th:field="*{subject}">
@@ -220,9 +221,6 @@
         var totalPages;
         var folder = "Inbox";
 
-        //Initialize Select2 Elements
-        $('.select2').select2()
-
         // Load messages on first request
         $(document).ready(
             setFolderLinkActive("Inbox"),
@@ -236,6 +234,13 @@
                 })
             })
         );
+
+        $(function() {
+            //Initialize Select2 Elements
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            })
+        })
 
         function changeFolder(newFolder) {
             if(newFolder !== folder) {
