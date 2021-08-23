@@ -43,7 +43,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="/home" class="brand-link elevation-4" th:attr="style=${primaryColor != null} ? 'background-color:' + ${primaryColor}">
-            <img src="/images/JCNetwork_icon_weiß.png" alt="ICO" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <img th:src="${consultancyIcon}" alt="ICO" class="brand-image img-circle elevation-3">
             <span class="brand-text font-weight-light" th:text="${consultancyName}">JCNetwork Members</span>
         </a>
 

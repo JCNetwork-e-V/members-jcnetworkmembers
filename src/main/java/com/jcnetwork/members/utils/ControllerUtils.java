@@ -68,6 +68,7 @@ public class ControllerUtils {
         modelAndView.addObject("consultancyName", consultancyName);
         modelAndView.addObject("primaryColor", consultancy.getConsultancyDetails().getPrimaryColor());
         modelAndView.addObject("secondaryColor", consultancy.getConsultancyDetails().getSecondaryColor());
+        modelAndView.addObject("consultancyIcon", consultancy.getConsultancyDetails().getIconBase64());
         return modelAndView;
     }
 
