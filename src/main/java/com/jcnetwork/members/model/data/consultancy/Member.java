@@ -16,13 +16,11 @@ public class Member {
     private Set<String> roles = new HashSet<>();
     private Set<String> organizationalEntities = new HashSet<>();
 
-    // a container for all unexpected fields
+    // a container for all custom fields
     private Map<String, Object> schemalessData;
 
     public void addCustomField(String key, Object value) {
-        if (null == schemalessData) {
-            schemalessData = new HashMap<>();
-        }
+        if (schemalessData == null) schemalessData = new HashMap<>();
         schemalessData.put(key, value);
     }
 

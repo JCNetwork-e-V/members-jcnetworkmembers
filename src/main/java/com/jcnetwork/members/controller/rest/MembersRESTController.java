@@ -25,7 +25,17 @@ public class MembersRESTController {
 
         Consultancy consultancy = consultancyService.getByName(consultancyName)
                 .orElseThrow(() -> new Exception("Consultancy not found"));
-
         return ResponseEntity.ok(mapper.toDto(consultancy.getMembers()));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity getMember(
+            @PathVariable("consultancy") String consultancyName,
+            @PathVariable("id") String id
+    ) throws Exception {
+
+        Consultancy consultancy = consultancyService.getByName(consultancyName)
+                .orElseThrow(() -> new Exception("Consultancy not found"));
+        return ResponseEntity.ok(mapper.toDto(consultancy.getMemberById(id)));
     }
 }

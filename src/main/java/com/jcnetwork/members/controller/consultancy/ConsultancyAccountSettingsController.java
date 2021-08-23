@@ -36,7 +36,7 @@ public class ConsultancyAccountSettingsController {
 
         try {
             ModelAndView modelAndView = utils.createLayoutConsultancy(
-                    "accountSettings",
+                    "/accountSettings",
                     consultancyName,
                     "Vereinseinstellungen",
                     PRIVILEGE_NAME
@@ -88,6 +88,6 @@ public class ConsultancyAccountSettingsController {
         );
         redirectAttributes.addFlashAttribute("toast", toast);
 
-        return new RedirectView("/" + consultancyName + "/admin/accountSettings");
+        return new RedirectView("/" + consultancyDetails.getName() + "/admin/accountSettings");
     }
 }

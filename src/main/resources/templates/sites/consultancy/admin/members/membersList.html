@@ -93,8 +93,44 @@
 
     var primaryColor = [[${primaryColor}]];
 
+    function loadUserData (id) {
+
+        var answer = "";
+        $.ajax({
+            'url': '/api/' + window.location.pathname.split('/')[1] + "/members/" + id,
+            'async': false,
+            'method': 'GET',
+            'contentType': 'application/json',
+            'dataType': "json",
+            'success': function (response) {
+
+                answer =
+                    `<div class="row">
+                        <div class="col-md-2">
+                           <img id="profile-picture" class="profile-user-img img-fluid img-circle" src="` + response.userDetails.profilePictureBase64 + `">
+                        </div>
+                        <div class="col-md-5">
+                            <h3>` + response.userDetails.firstName + ` ` + response.userDetails.lastName + `</h3>
+                            <dl class="row">
+                                <dt class="col-sm-4">E-Mail</dt>
+                                <dd class="col-sm-8">` + response.email + `</dd>
+                                <dt class="col-sm-4">Mitglied Seit</dt>
+                                <dd class="col-sm-8">1900</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-5">
+                            <a class="btn btn-primary float-right" href="member/` + id + `">
+                                Zum Profil
+                            </a>
+                        </div>
+                    </div>`
+            },
+        });
+        return answer;
+    };
+
     $(document).ready(function() {
-        $("#dataTable").DataTable({
+        var table = $("#dataTable").DataTable({
             "fnDrawCallback": function( oSettings ) {
                 if(primaryColor !== null){
                     $('.page-item.active').find("a").css("background-color", primaryColor).css("border-color", primaryColor);
@@ -145,11 +181,27 @@
                     text: "Spalten filtern"
                 }
             ]
-        }).buttons().container().appendTo('#dataTable_wrapper .col-md-6:eq(0)');
-    });
+        });
 
-    $('#dataTable tbody').on('click', 'tr', function(){
-        window.location = "member/" + this.id;
+        table.buttons().container().appendTo('#dataTable_wrapper .col-md-6:eq(0)');
+
+        $('#dataTable tbody').on('click', 'tr', function(){
+
+            var tr = $(this);
+            var row = table.row( tr );
+
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child(loadUserData(this.id)).show();
+                tr.addClass('shown');
+            }
+
+        });
     });
     </script>
 </th:block>

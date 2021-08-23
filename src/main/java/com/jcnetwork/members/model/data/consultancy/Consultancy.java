@@ -87,4 +87,11 @@ public class Consultancy extends MongoDocument {
         }
         return null;
     }
+
+    public Member getMemberById(String id) {
+        for(Member member : this.members){
+            if(member.getUser().getId().equals(id)) return member;
+        }
+        return null;
+    }
 }
