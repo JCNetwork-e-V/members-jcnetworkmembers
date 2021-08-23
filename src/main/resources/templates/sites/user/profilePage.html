@@ -88,6 +88,7 @@
                     </div>
                     <!-- /.tab-pane -->
 
+                    <!-- cv pane-->
                     <div class="tab-pane" id="cv">
                         <div id="accordion">
                             <form id="modifyCv" method="post" th:action="@{/user/saveResume}" th:object="${resume}">
@@ -286,13 +287,14 @@
                                 <br>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                        <input type="submit" class="btn btn-success" value="Speichern">
+                                        <input type="submit" class="btn btn-success float-right" value="Speichern">
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
 
+                    <!-- user details pane -->
                     <div class="tab-pane" id="userDetails">
                         <form method="post" class="form-horizontal" th:action="@{/user/saveUserDetails}" th:object="${userDetails}">
                             <input type="hidden" th:field="*{profilePictureBase64}" id="profilePictureBase64">
@@ -322,12 +324,13 @@
                             </div>
                             <div class="form-group row">
                                 <div class="offset-sm-2 col-sm-10">
-                                    <button type="submit" class="btn btn-success">Speichern</button>
+                                    <button type="submit" class="btn btn-success float-right">Speichern</button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
+                    <!-- settings pane -->
                     <div class="tab-pane" id="settings">
                         <form method="post" th:action="@{/user/saveUserSettings}" th:object="${userSettings}">
                             <label><i class="fas fa-shield-alt"></i> Datenschutz</label>
@@ -341,7 +344,7 @@
                                 <span>Dark Mode (experimentell)</span>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success">Speichern</button>
+                                <button type="submit" class="btn btn-success float-right">Speichern</button>
                             </div>
                         </form>
                     </div>

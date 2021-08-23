@@ -1,10 +1,243 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainLayout.html}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Vereinseinstellungen | JCNetwork Members</title>
+
+    <!-- Croppie -->
+    <link rel="stylesheet" href="/plugins/croppie/css/croppie.css">
 </head>
 <body>
+<div layout:fragment="mainContent" class="card-body">
 
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">Vereinsdetails</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <img id="consultancy-icon"
+                                     class="profile-user-img img-fluid img-circle"
+                                     style="width: 100%; height: 100%; max-width: 150px; max-height: 150px; margin-bottom: 20px;"
+                                     th:src="${consultancyDetails.getIconBase64()}"
+                                     alt="Vereinsicon">
+                                <button id="btn-edit-consultancy-icon" class="btn btn-primary picture-edit-btn" data-toggle="modal" data-target="#modal-consultancy-icon">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-10">
+                            <form id="updateDetailsForm" method="post" class="form-horizontal" th:action="@{/updateDetails}" th:object="${consultancyDetails}">
+                                <input type="hidden" th:field="*{iconBase64}" id="iconBase64">
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Vereinsname</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputName" placeholder="Vereinsname" th:field="*{name}" th:value="*{name}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputCity" class="col-sm-2 col-form-label">Stadt</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputCity" placeholder="Stadt" th:field="*{city}" th:value="*{city}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputDomain" class="col-sm-2 col-form-label">Domain</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputDomain" placeholder="vereinsname.de" th:field="*{domain}" th:value="*{domain}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="primaryColorInput" class="col-sm-2 col-form-label">Primärfarbe</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control"  id="primaryColorInput" placeholder="#000000 oder rgb(0,0,0)" th:field="*{primaryColor}" th:value="*{primaryColor}" data-jscolor="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="secondaryColorInput" class="col-sm-2 col-form-label">Sekundärfarbe</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="secondaryColorInput" placeholder="#000000 oder rgb(0,0,0)" th:field="*{secondaryColor}" th:value="*{secondaryColor}" data-jscolor="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="offset-sm-2 col-sm-10">
+                                        <button id="btn-submit-consultancy-details" type="submit" class="btn btn-success float-right">Speichern</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <div class="modal fade" id="modal-consultancy-icon">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Vereinsicon ändern</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="updateIconForm" method="post" th:action="@{/updateIcon}" th:object="${consultancyDetails}">
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input"  id="consultancyIconFile" accept="image/*">
+                                <label class="custom-file-label" for="consultancyIconFile" id="consultancyIconLabel">Wähle Datei</label>
+                            </div>
+                        </div>
+
+                        <div class="picture-crop-container" id="consultancyIconCropContainer">
+                            <div id="uploadConsultancyIcon"></div>
+                            <input type="hidden" th:field="*{iconBase64}" id="croppedConsultancyIconField">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button id="btn-submit-consultancy-icon" type="submit" class="btn btn-success">Vereinsicon speichern</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+</div>
+
+<!-- Page scripts -->
+<th:block layout:fragment="script">
+
+    <!-- Bootstrap Switch -->
+    <script src="/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <!-- Croppie -->
+    <script src="/plugins/croppie/js/croppie.min.js"></script>
+    <!-- JSColor -->
+    <script src="/plugins/jscolor/jscolor.js"></script>
+
+    <script th:inline="javascript" type="text/javascript">
+
+        var $iconForm = $('#updateIconForm');
+        var $detailsForm = $('#updateDetailsForm');
+
+        //Handle consultancy path variable in action attribute
+        $iconForm.submit( function( event ) {
+            $iconForm.attr( 'action', "/" + window.location.pathname.split('/')[1] + "/admin/updateIcon");
+            return;
+        });
+        $detailsForm.submit( function( event ) {
+            $detailsForm.attr( 'action', "/" + window.location.pathname.split('/')[1] + "/admin/updateDetails");
+            return;
+        });
+
+        $("input[data-bootstrap-switch]").each(function(){
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        })
+
+        $('#consultancy-icon').hover(function(){
+            showProfilePicEditBtn();
+        }, function(){
+            $('#btn-edit-consultancy-icon').css("opacity", 0);
+            $('#btn-edit-consultancy-icon').css("visibility", "hidden");
+        });
+
+        $('#btn-edit-consultancy-icon').hover(function(){
+            showProfilePicEditBtn();
+        }, function(){
+            $('#btn-edit-consultancy-icon+').css("opacity", 0);
+            $('#btn-edit-consultancy-icon').css("visibility", "hidden");
+        });
+
+        function showProfilePicEditBtn() {
+            var button = $('#btn-edit-consultancy-icon');
+            button.css("opacity", 1);
+            button.css("visibility", "visible");
+            button.position({
+                my: "right bottom",
+                at: "right bottom",
+                of: $('#consultancy-icon')
+            });
+        }
+
+        // Profile picture upload path
+        document.getElementById('consultancyIconFile').onchange = function () {
+            document.getElementById('consultancyIconLabel').innerHTML = this.value.replace(/.*[\/\\]/, '');
+        };
+
+        // Croppie implementation
+        $(function() {
+            var $profilePictureCrop;
+
+            function readFile(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#consultancyIconCropContainer').addClass('ready');
+                        $profilePictureCrop.croppie('bind', {
+                            url: e.target.result
+                        });
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+                else {
+                    swal("Dein Browser unterstützt leider nicht die FileReader API");
+                }
+            }
+
+            $profilePictureCrop = $('#uploadConsultancyIcon').croppie({
+                viewport: {
+                    width: 200,
+                    height: 200,
+                    type: 'circle'
+                },
+            });
+
+            $('#consultancyIconFile').on('change', function () {
+                readFile(this);
+            });
+            $('#btn-submit-consultancy-icon').on('click', function (ev) {
+                $profilePictureCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'viewport'
+                }).then(function (resp) {
+                    $('#croppedConsultancyIconField').val(resp);
+                });
+            });
+        });
+
+        //Color selection
+        jscolor.presets.default = {
+            alphaChannel:false, borderWidth:0, borderRadius:3, padding:6,
+            shadowBlur:4
+        };
+
+    </script>
+</th:block>
 </body>
 </html>

@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-picture-crop-container" id="profilePictureCropContainer">
+                                <div class="picture-crop-container" id="profilePictureCropContainer">
                                     <div id="uploadProfilePicture"></div>
                                     <input type="hidden" th:field="*{iconBase64}" id="croppedProfilePictureField">
                                 </div>
@@ -118,9 +118,7 @@
         alphaChannel:false, borderWidth:0, borderRadius:3, padding:6,
         shadowBlur:4
     };
-</script>
 
-<script>
     // BS-Stepper init
     document.addEventListener('DOMContentLoaded', function () {
         window.stepper = new Stepper(document.querySelector('.bs-stepper'), {
