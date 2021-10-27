@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nutzerdaten vervollständigen | JCNetwork Members</title>
+
+    <!-- Base Stylesheets -->
+    <div th:replace="fragments/base :: stylesheets"></div>
+
+</head>
+<body class="registration-page">
+
+<form id="form" th:action="@{/dataCompletion}" th:object="${form}" method="post" enctype="multipart/form-data">
+    <div class="registration-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <h2 th:text="'Bitte ergänze die fehlenden Informationen für ' + ${ConsultancyName}" class="card-title"></h2>
+            </div>
+            <div class="card-body">
+
+                <div th:each="dataField : ${form.openDataFields.entrySet()}">
+                    <div class="form-group">
+                        <label th:text="${dataField.key}" th:for="*{openDataFields['__${dataField.key}__']}"></label>
+                        <div th:switch="${dataField.value.class.simpleName}">
+                            <input th:case="'Date'" type="date" class="form-control" th:field="*{openDataFields['__${dataField.key}__']}">
+                            <input th:case="'Integer'" type="number" class="form-control" th:field="*{openDataFields['__${dataField.key}__']}">
+                            <input th:case="*" type="text" class="form-control" th:field="*{openDataFields['__${dataField.key}__']}">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-jcnetwork" th:name="url" th:value="${originalUrl}">Bestätigen</button>
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+</form>
+
+<!-- Base Scripts -->
+<div th:replace="fragments/base :: scripts"></div>
+<script>
+    var $form = $('#form');
+
+    //Handle consultancy path variable in action attribute
+    $form.submit( function( event ) {
+        $form.attr( 'action', window.location.pathname);
+        return;
+    });
+</script>
+
+</body>
+</html>

@@ -15,13 +15,14 @@ public class Member {
     private User user;
     private Set<String> roles = new HashSet<>();
     private Set<String> organizationalEntities = new HashSet<>();
+    private Boolean hasNewDataField;
 
     // a container for all custom fields
     private Map<String, Object> schemalessData;
 
-    public void addCustomField(String key, Object value) {
+    public void addCustomFields(Map<String, Object> dataFields) {
         if (schemalessData == null) schemalessData = new HashMap<>();
-        schemalessData.put(key, value);
+        schemalessData.putAll(dataFields);
     }
 
     public Map<String, Object> getCustomFields() {

@@ -1,14 +1,12 @@
 package com.jcnetwork.members.model.data.consultancy;
 
 import com.jcnetwork.members.model.data.*;
+import com.jcnetwork.members.security.model.User;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -21,6 +19,7 @@ public class Consultancy extends MongoDocument {
     private OrganizationalEntity rootEntity;
     private List<Member> members = new ArrayList<>();
     private Set<Role> roles = new HashSet<>();
+    private Map<String, CustomDataField> customDataFields = new HashMap<>();
 
     private Boolean enabled;
 
@@ -83,7 +82,7 @@ public class Consultancy extends MongoDocument {
 
     public Member getMemberByEmail(String email) {
         for(Member member : this.members){
-            if(member.getEmail().toLowerCase().equals(email.toLowerCase())) return member;
+            if(member.getEmail().equalsIgnoreCase(email)) return member;
         }
         return null;
     }
@@ -93,5 +92,34 @@ public class Consultancy extends MongoDocument {
             if(member.getUser().getId().equals(id)) return member;
         }
         return null;
+    }
+
+    public Member getMemberByUser(User user) throws Exception {
+
+        Set<String> userMails = new HashSet<>();
+        if (user.getAccount() != null) userMails.add(user.getAccount().getUsername());
+        if (user.getAzureAccounts() != null) userMails.addAll(user.getAzureAccounts());
+
+        for(String userMail : userMails) {
+            if(userMail.endsWith(consultancyDetails.getDomain())) {
+                return getMemberByEmail(userMail);
+            }
+        }
+        throw new Exception("User not found");
+    }
+
+    public Map<String, CustomDataField> addCustomDataField(CustomDataField newField) {
+        this.customDataFields.put(newField.getName(), newField);
+        return this.customDataFields;
+    }
+
+    public void deleteCustomDataField(String fieldName) {
+        this.customDataFields.remove(fieldName);
+    }
+
+    public void setDataFieldEnforcement() {
+        for (Member member : this.members) {
+            member.setHasNewDataField(true);
+        }
     }
 }

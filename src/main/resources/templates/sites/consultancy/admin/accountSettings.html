@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/plugins/croppie/css/croppie.css">
 </head>
 <body>
-<div layout:fragment="mainContent" class="card-body">
+<div layout:fragment="mainContent">
 
     <div class="card card-default">
         <div class="card-header">
@@ -96,7 +96,6 @@
     <div class="card card-default">
         <div class="card-header">
             <h3 class="card-title">Datenfelder</h3>
-
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
@@ -104,14 +103,57 @@
             </div>
         </div>
         <!-- /.card-header -->
-        <div class="card-body">
-            <div class="row">
-                <div class="col-12">
-                    <span>Hier könnt ihr eigene Datenfelder anlegen, falls ihr benutzerdefinierte Informationen über eure Mitglieder speichern möchtet.</span>
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
+        <td class="card-body table-responsive p-0">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Bezeichnung</th>
+                        <th>Typ</th>
+                        <th style="text-align: center">Pflichtfeld</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <form id="deleteFieldForm" method="post" class="form-horizontal" th:action="@{/deleteCustomField}">
+                        <tr th:each="field : ${customDataFields.values()}" th:id="${field.name} + '_TR'">
+                            <td th:text="${field.name}"></td>
+                            <td th:text="${field.type}"></td>
+                            <td class="table-icon">
+                                <i class="fas fa-check" th:if='${field.getRequired()}'></i>
+                            </td>
+                            <td style="width: 60px">
+                                <button class="btn btn-danger float-right" type="submit" th:name="fieldName" th:value="${field.name}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </form>
+                    <tr>
+                        <form id="addFieldForm" method="post" class="form-horizontal" th:action="@{/addCustomField}" th:object="${newField}">
+                            <td>
+                                <input class="form-control" type="text" placeholder="Bezeichnung" th:field="*{name}">
+                            </td>
+                            <td>
+                                <select class="form-control" th:field="*{type}">
+                                    <option value="Text">Text</option>
+                                    <option value="Nummer">Nummerisch</option>
+                                    <option value="Datum">Datum</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="icheck-primary" style="text-align: center">
+                                    <input type="checkbox" th:field="*{required}" id="required">
+                                    <label for="required">
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success float-right">Hinzufügen</button>
+                            </td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <!-- /.card-body -->
     </div>
@@ -191,6 +233,8 @@
 
         var $iconForm = $('#updateIconForm');
         var $detailsForm = $('#updateDetailsForm');
+        var $addFieldForm = $('#addFieldForm');
+        var $deleteFieldForm = $('#deleteFieldForm')
 
         //Handle consultancy path variable in action attribute
         $iconForm.submit( function( event ) {
@@ -201,6 +245,14 @@
             $detailsForm.attr( 'action', "/" + window.location.pathname.split('/')[1] + "/admin/updateDetails");
             return;
         });
+        $addFieldForm.submit( function( event ) {
+            $addFieldForm.attr( 'action', "/" + window.location.pathname.split('/')[1] + "/admin/addCustomField");
+            return;
+        })
+        $deleteFieldForm.submit( function( event ) {
+            $deleteFieldForm.attr( 'action', "/" + window.location.pathname.split('/')[1] + "/admin/deleteCustomField");
+            return;
+        })
 
         $("input[data-bootstrap-switch]").each(function(){
             $(this).bootstrapSwitch('state', $(this).prop('checked'));

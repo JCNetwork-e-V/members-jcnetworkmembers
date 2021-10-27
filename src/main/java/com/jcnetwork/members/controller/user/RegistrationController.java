@@ -1,8 +1,6 @@
-package com.jcnetwork.members.controller;
+package com.jcnetwork.members.controller.user;
 
-import com.jcnetwork.members.mapper.ConsultancyMapper;
 import com.jcnetwork.members.model.dto.RegistrationDto;
-import com.jcnetwork.members.model.data.consultancy.Consultancy;
 import com.jcnetwork.members.model.data.user.UserDetails;
 import com.jcnetwork.members.model.event.OnUserDetailsRegistrationEvent;
 import com.jcnetwork.members.model.event.OnUserRegistrationCompleteEvent;
@@ -25,7 +23,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class RegistrationController {

@@ -72,11 +72,9 @@ public class WebSecurityConfiguration {
             http
                     .mvcMatcher("/api/**")
                     .csrf().disable()
-                    //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    //.and() TODO find out if making api stateful has any negative consequences
-                        .authorizeRequests()
-                            .mvcMatchers("/api/generateToken").permitAll()
-                            .mvcMatchers("/api/**").authenticated()
+                    .authorizeRequests()
+                        .mvcMatchers("/api/generateToken").permitAll()
+                        .mvcMatchers("/api/**").authenticated()
                     .and()
                         .addFilterBefore(new JwtAuthenticationFilter(apiTokenService),
                             UsernamePasswordAuthenticationFilter.class);
