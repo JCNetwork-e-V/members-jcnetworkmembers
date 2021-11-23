@@ -1,6 +1,7 @@
 package com.jcnetwork.members.config;
 
 import com.jcnetwork.members.model.data.user.UserDetails;
+import com.jcnetwork.members.model.data.user.UserSettings;
 import com.jcnetwork.members.repository.AccountRoleRepository;
 import com.jcnetwork.members.security.model.Account;
 import com.jcnetwork.members.security.model.AccountRole;
@@ -61,10 +62,14 @@ public class ApplicationInitialization {
                 systemUserDetails.setFirstName("JCNetwork");
                 systemUserDetails.setLastName("Members");
 
+                UserSettings systemUserSettings = new UserSettings();
+                systemUserSettings.setDarkMode(false);
+
                 User user = new User();
                 user.setAccount(systemAccount);
                 user.setUserDetails(systemUserDetails);
                 user.getRoles().add(roleRepository.findByRoleName("ADMIN"));
+                user.setUserSettings(systemUserSettings);
                 userService.saveUser(user);
             }
         };
